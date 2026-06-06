@@ -2,7 +2,14 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Curiosity">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#07090f">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curiosity</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -372,16 +379,14 @@ body {
 
 /* ── BOUTON PARAMÈTRES ACCUEIL ── */
 .settings-btn {
-  position: absolute; top: 14px; right: 14px;
-  width: 28px; height: 28px; border-radius: 6px;
-  background: transparent; border: 1px solid #101820;
+  position: absolute; top: 18px; right: 18px;
+  width: 32px; height: 32px; border-radius: 8px;
+  background: transparent; border: 1px solid #141e2a;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #1a2a32; font-size: 13px;
-  transition: border-color 0.25s, color 0.25s, background 0.25s;
-  opacity: 0.6;
+  cursor: pointer; color: #1e3040; font-size: 15px;
+  transition: border-color 0.2s, color 0.2s;
 }
-.settings-btn:hover { opacity: 1; color: #7a3030; border-color: #2a1418; background: #100a0c; }
-.settings-btn:active { opacity: 1; background: #180c0e; color: #9a4050; border-color: #3a1420; }
+.settings-btn:active { background: #0d1520; color: #4a8aaa; border-color: #1a2e40; }
 .settings-item {
   background: #0c1420; border: 1px solid #182636; border-radius: 10px;
   padding: 16px 18px; display: flex; align-items: center; gap: 14px;
@@ -494,6 +499,20 @@ body {
   opacity: 0; animation: so-dfade 4s 0.2s ease forwards;
 }
 
+
+/* ── BOUTON QUITTER ── */
+.quit-btn {
+  position: absolute; top: 14px; left: 14px;
+  width: 28px; height: 28px; border-radius: 6px;
+  background: transparent; border: 1px solid #101820;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #1a2a32; font-size: 11px;
+  transition: border-color 0.25s, color 0.25s, background 0.25s;
+  opacity: 0.55;
+}
+.quit-btn:hover { opacity: 1; color: #6a8090; border-color: #1e3040; background: #0c1520; }
+.quit-btn:active { opacity: 1; background: #0e1a26; color: #4a8aaa; border-color: #1a3040; }
+
 </style>
 </head>
 <body>
@@ -505,12 +524,7 @@ body {
     <div class="app-name">Curiosity</div>
     <div class="app-version">TEMPORAL BRIDGE PROTOCOL · v2082.1 · BUILD 20820106</div>
     <div class="app-desc">Logiciel de transmission d'objets physiques<br>entre époques par vecteur chrono-quantique</div>
-    <button class="settings-btn" onclick="confirmReset()" title="Supprimer les réponses">
-      <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M1 3h11M4.5 3V2a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 .5.5v1M2 3l.7 8.5a.5.5 0 0 0 .5.5h6.6a.5.5 0 0 0 .5-.5L11 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M5.5 6v4M7.5 6v4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
-      </svg>
-    </button>
+    <button class="settings-btn" onclick="showPage('pageSettings')" title="Paramètres">&#9881;</button>
   </div>
   <div class="content">
     <div class="section-label">Paramètres de transmission</div>
@@ -916,6 +930,25 @@ function showFinal() {
 }
 
 window.addEventListener('beforeunload', saveState);
+
+/* ── Quitter l'app ── */
+function quitApp() {
+  if (window.navigator && window.navigator.standalone) {
+    // Mode PWA iOS — retour écran d'accueil via history
+    window.location.href = 'about:blank';
+    setTimeout(function(){ window.close(); }, 100);
+  } else {
+    window.close();
+  }
+}
+
+/* ── Service Worker ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function(e){ console.log('SW:', e); });
+  });
+}
+
 refreshHome();
 </script>
 
