@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Curiosity</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #07090f;
+  color: #c0d0dc;
+  font-family: Georgia, 'Times New Roman', serif;
+  min-height: 100vh;
+}
+.page { display: none; min-height: 100vh; flex-direction: column; }
+.page.active { display: flex; }
+
+/* TOPBAR */
+.topbar {
+  background: #0a0d14;
+  border-bottom: 1px solid #141e2a;
+  padding: 13px 16px;
+  display: flex; align-items: center; gap: 12px;
+  flex-shrink: 0;
+}
+.back-btn {
+  background: #101620;
+  border: 1px solid #1a2a38;
+  border-radius: 6px;
+  color: #4a8aaa;
+  font-size: 17px;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+.back-btn:active { background: #161e2c; }
+.topbar-title { font-size: 13px; font-weight: bold; color: #7aacc0; letter-spacing: 0.1em; text-transform: uppercase; }
+.topbar-sub { font-size: 9px; color: #1e3040; font-family: monospace; margin-top: 2px; letter-spacing: 0.08em; }
+.content { flex: 1; padding: 22px 18px 36px; overflow-y: auto; }
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 30px 16px 22px;
+  border-bottom: 1px solid #0e1520;
+  margin-bottom: 22px;
+}
+.logo-wrap {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  border: 1px solid #1a3040;
+  margin: 0 auto 14px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.logo-wrap::after {
+  content: '';
+  position: absolute; inset: -7px;
+  border-radius: 50%;
+  border: 1px solid #0e1820;
+}
+.logo-letter { font-size: 32px; font-style: italic; color: #4a8aaa; font-weight: bold; }
+.app-name { font-size: 19px; font-weight: bold; color: #7aacc0; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 5px; }
+.app-version { font-family: monospace; font-size: 8px; color: #1a2e3a; letter-spacing: 0.18em; }
+.app-desc { font-size: 12px; font-style: italic; color: #2a4050; margin-top: 7px; line-height: 1.6; }
+
+.section-label {
+  font-family: monospace; font-size: 8px;
+  color: #1a3040; letter-spacing: 0.22em;
+  margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-label::before, .section-label::after { content: ''; flex: 1; height: 1px; background: #0e1620; }
+
+/* PARAM CARDS — horizontaux */
+.params-row {
+  display: flex; gap: 10px;
+  margin-bottom: 22px;
+}
+.param-card {
+  flex: 1;
+  background: #0c1420;
+  border: 1px solid #182636;
+  border-radius: 12px;
+  padding: 14px 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.25s;
+  text-align: center;
+  min-width: 0;
+}
+.param-card:active { background: #101c2e; }
+.param-card.solved {
+  background: #09160e;
+  border-color: #1a3a22;
+  cursor: default;
+}
+.param-num {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 1px solid #1a2e40;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-style: italic; font-weight: bold;
+  color: #2a4050;
+  flex-shrink: 0;
+  transition: all 0.3s;
+}
+.param-card.solved .param-num {
+  border-color: #1a4828;
+  color: #3a9060;
+  background: #0a1e10;
+}
+.param-title {
+  font-size: 11px; color: #4a7080;
+  line-height: 1.4;
+  font-style: italic;
+}
+.param-card.solved .param-title { color: #2a7840; }
+.param-status {
+  font-family: monospace; font-size: 7px;
+  color: #141e28; letter-spacing: 0.06em;
+  line-height: 1.4;
+}
+.param-card.solved .param-status { color: #1a4828; }
+.param-check { font-size: 18px; color: #3a9060; display: none; }
+.param-card.solved .param-check { display: block; }
+.param-arrow { font-size: 13px; color: #1a2e40; }
+.param-card.solved .param-arrow { display: none; }
+
+/* EMPREINTE DIGITALE */
+.bio-section {
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding-bottom: 10px;
+}
+.fp-container {
+  position: relative;
+  width: 110px; height: 110px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+/* Anneaux de scan futuristes */
+.fp-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+.fp-ring-1 { inset: -8px; border-color: #2a6080; }
+.fp-ring-2 { inset: -18px; border-color: #1a4060; }
+.fp-ring-3 { inset: -28px; border-color: #0e2a40; }
+
+/* Scan actif */
+.fp-container.scanning .fp-ring-1 { animation: ring-pulse 1.2s ease-out forwards; }
+.fp-container.scanning .fp-ring-2 { animation: ring-pulse 1.2s 0.15s ease-out forwards; }
+.fp-container.scanning .fp-ring-3 { animation: ring-pulse 1.2s 0.3s ease-out forwards; }
+
+/* Scan success */
+.fp-container.success .fp-ring-1 { animation: ring-success 0.8s ease-out forwards; }
+.fp-container.success .fp-ring-2 { animation: ring-success 0.8s 0.1s ease-out forwards; }
+.fp-container.success .fp-ring-3 { animation: ring-success 0.8s 0.2s ease-out forwards; }
+
+/* Scan error */
+.fp-container.error .fp-ring-1,
+.fp-container.error .fp-ring-2,
+.fp-container.error .fp-ring-3 { animation: ring-error 0.6s ease-out forwards; border-color: #802020; }
+
+@keyframes ring-pulse {
+  0%   { opacity: 0; transform: scale(0.9); }
+  30%  { opacity: 0.8; }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+@keyframes ring-success {
+  0%   { opacity: 0; transform: scale(0.95); border-color: #2a9050; }
+  40%  { opacity: 1; border-color: #3ab060; }
+  100% { opacity: 0; transform: scale(1.2); border-color: #2a9050; }
+}
+@keyframes ring-error {
+  0%   { opacity: 0; transform: scale(0.95); }
+  40%  { opacity: 0.9; }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+
+/* Ligne de scan qui traverse l'empreinte */
+.fp-scanline {
+  position: absolute;
+  left: 4px; right: 4px; height: 2px;
+  background: linear-gradient(90deg, transparent, #4a9aba, #7ac8e0, #4a9aba, transparent);
+  top: 4px;
+  opacity: 0;
+  border-radius: 1px;
+  pointer-events: none;
+}
+.fp-container.scanning .fp-scanline {
+  animation: scanline-move 1.0s ease-in-out forwards;
+}
+@keyframes scanline-move {
+  0%   { top: 4px; opacity: 0; }
+  10%  { opacity: 0.9; }
+  90%  { opacity: 0.6; }
+  100% { top: calc(100% - 6px); opacity: 0; }
+}
+
+/* SVG empreinte */
+.fp-svg { position: relative; z-index: 2; transition: all 0.4s; }
+.fp-container.scanning .fp-svg { filter: drop-shadow(0 0 8px rgba(74,154,186,0.6)); }
+.fp-container.success  .fp-svg { filter: drop-shadow(0 0 10px rgba(58,176,96,0.7)); }
+.fp-container.error    .fp-svg { filter: drop-shadow(0 0 8px rgba(160,50,50,0.6)); }
+
+/* Particules */
+.fp-particle {
+  position: absolute;
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: #4a9aba;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.fp-container.scanning .fp-p1 { animation: particle 0.8s 0.3s ease-out forwards; top: 20%; left: 10%; }
+.fp-container.scanning .fp-p2 { animation: particle 0.8s 0.5s ease-out forwards; top: 60%; left: 5%; }
+.fp-container.scanning .fp-p3 { animation: particle 0.8s 0.4s ease-out forwards; top: 30%; right: 10%; }
+.fp-container.scanning .fp-p4 { animation: particle 0.8s 0.6s ease-out forwards; top: 70%; right: 8%; }
+@keyframes particle {
+  0%   { opacity: 0; transform: translateY(0) scale(0); }
+  30%  { opacity: 1; transform: translateY(-6px) scale(1); }
+  100% { opacity: 0; transform: translateY(-20px) scale(0.5); }
+}
+
+.bio-label {
+  font-size: 12px; font-weight: bold;
+  color: #4a8aaa; letter-spacing: 0.12em;
+  text-transform: uppercase; text-align: center;
+}
+.bio-sub-label {
+  font-family: monospace; font-size: 8px;
+  color: #1e3040; letter-spacing: 0.1em;
+  text-align: center;
+}
+.bio-error-msg {
+  font-family: monospace; font-size: 9px;
+  color: #9a3030; letter-spacing: 0.1em;
+  text-align: center;
+  min-height: 14px;
+  transition: opacity 0.4s;
+  opacity: 0;
+}
+.bio-error-msg.show { opacity: 1; }
+
+/* ÉNIGME */
+.enigma-badge {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+}
+.eb-line { flex: 1; height: 1px; background: #0e1620; }
+.eb-txt { font-family: monospace; font-size: 7px; color: #1e3040; letter-spacing: 0.2em; }
+
+.enigma-box {
+  background: #090e18;
+  border: 1px solid #131e2c;
+  border-radius: 10px;
+  padding: 24px 18px;
+  margin-bottom: 22px;
+}
+.enigma-text {
+  font-size: 17px; font-style: italic; font-weight: 300;
+  color: #9ab8cc; line-height: 1.85; text-align: center;
+}
+
+.answer-label { font-family: monospace; font-size: 8px; color: #243040; letter-spacing: 0.16em; margin-bottom: 8px; }
+.answer-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.answer-input {
+  flex: 1;
+  background: #0c1420;
+  border: 1px solid #1a2e40;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 16px; font-family: Georgia, serif;
+  color: #c0d0dc;
+  outline: none;
+  -webkit-appearance: none;
+  transition: border-color 0.2s;
+}
+.answer-input:focus { border-color: #2a5a7a; }
+.answer-input.err { border-color: #7a2a2a; animation: shake 0.35s ease; }
+.answer-input.ok  { border-color: #2a7a4a; }
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+.validate-btn {
+  background: #101a28;
+  border: 1px solid #1a3a50;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 12px; font-weight: bold;
+  color: #4a8aaa; letter-spacing: 0.06em;
+  cursor: pointer; font-family: Georgia, serif;
+  white-space: nowrap;
+}
+.validate-btn:active { background: #162030; }
+.feedback {
+  font-family: monospace; font-size: 9px;
+  min-height: 16px; letter-spacing: 0.1em; text-align: center;
+}
+.feedback.err { color: #9a3030; }
+.feedback.ok  { color: #3a8050; }
+
+.solved-banner {
+  background: #091410;
+  border: 1px solid #183428;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  display: none;
+}
+.solved-ico { font-size: 26px; margin-bottom: 8px; }
+.solved-title { font-size: 13px; font-weight: bold; color: #3a9060; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 6px; }
+.solved-sub { font-size: 14px; font-style: italic; color: #1e4830; }
+
+/* SCAN BIO PAGE */
+.bio-scan-wrap {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; padding: 30px 20px;
+}
+.scan-ring {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  border: 1px solid #1a3040;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.scan-spinner {
+  position: absolute; inset: -2px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: #4a9aba;
+  display: none;
+  animation: spin 1.5s linear infinite;
+}
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+.scan-label { font-size: 14px; font-weight: bold; color: #5a9ab0; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; }
+.scan-sub { font-family: monospace; font-size: 9px; color: #1e3040; letter-spacing: 0.1em; text-align: center; min-height: 18px; }
+.scan-btn {
+  background: #0c1a26;
+  border: 1px solid #24546a;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 12px; font-weight: bold;
+  color: #4a9aba; letter-spacing: 0.12em;
+  cursor: pointer; text-transform: uppercase;
+  font-family: Georgia, serif;
+}
+.scan-btn:active { background: #101e2e; }
+
+/* FINAL */
+.final-wrap { padding: 28px 18px 40px; display: flex; flex-direction: column; gap: 20px; }
+.final-seal { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.seal-circle {
+  width: 56px; height: 56px; border-radius: 50%;
+  border: 1px solid #1a3040;
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.seal-from { font-family: monospace; font-size: 8px; color: #1a3040; letter-spacing: 0.16em; text-align: center; }
+.final-divider { display: flex; align-items: center; gap: 8px; }
+.fdl { flex: 1; height: 1px; background: #0e1620; }
+.fdt { font-family: monospace; font-size: 7px; color: #121a22; letter-spacing: 0.12em; }
+.final-msg { font-size: 17px; font-style: italic; font-weight: 300; color: #9ab8cc; line-height: 1.85; text-align: center; min-height: 40px; }
+.final-footer { font-family: monospace; font-size: 8px; color: #121820; letter-spacing: 0.14em; text-align: center; padding-top: 14px; border-top: 1px solid #0c1420; }
+</style>
+</head>
+<body>
+
+<!-- ══ ACCUEIL ══ -->
+<div class="page active" id="pageHome">
+  <div class="hero">
+    <div class="logo-wrap"><div class="logo-letter">C</div></div>
+    <div class="app-name">Curiosity</div>
+    <div class="app-version">TEMPORAL BRIDGE PROTOCOL · v2082.1 · BUILD 20820106</div>
+    <div class="app-desc">Logiciel de transmission d'objets physiques<br>entre époques par vecteur chrono-quantique</div>
+  </div>
+  <div class="content">
+    <div class="section-label">Paramètres de transmission</div>
+    <div class="params-row">
+      <div class="param-card" id="card1" onclick="openEnigma(1)">
+        <div class="param-num" id="num1"><i>I</i></div>
+        <div class="param-title">Vecteur d'ancrage</div>
+        <div class="param-check">&#10022;</div>
+        <div class="param-status" id="st1">EN ATTENTE</div>
+        <div class="param-arrow" id="arr1">&#8595;</div>
+      </div>
+      <div class="param-card" id="card2" onclick="openEnigma(2)">
+        <div class="param-num" id="num2"><i>II</i></div>
+        <div class="param-title">Clé de résonance</div>
+        <div class="param-check">&#10022;</div>
+        <div class="param-status" id="st2">EN ATTENTE</div>
+        <div class="param-arrow" id="arr2">&#8595;</div>
+      </div>
+      <div class="param-card" id="card3" onclick="openEnigma(3)">
+        <div class="param-num" id="num3"><i>III</i></div>
+        <div class="param-title">Signature récepteur</div>
+        <div class="param-check">&#10022;</div>
+        <div class="param-status" id="st3">EN ATTENTE</div>
+        <div class="param-arrow" id="arr3">&#8595;</div>
+      </div>
+    </div>
+
+    <div class="section-label">Authentification biométrique</div>
+    <div class="bio-section">
+      <div class="fp-container" id="fpContainer" onclick="handleBioTap()">
+        <div class="fp-ring fp-ring-1"></div>
+        <div class="fp-ring fp-ring-2"></div>
+        <div class="fp-ring fp-ring-3"></div>
+        <div class="fp-scanline"></div>
+        <div class="fp-particle fp-p1"></div>
+        <div class="fp-particle fp-p2"></div>
+        <div class="fp-particle fp-p3"></div>
+        <div class="fp-particle fp-p4"></div>
+        <!-- SVG empreinte digitale -->
+        <svg class="fp-svg" width="90" height="110" viewBox="0 0 90 110" fill="none" id="fpSvg">
+          <!-- Arche externe -->
+          <path d="M10 65 C10 35, 45 8, 80 65" stroke="#1e3a50" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <!-- Arche 2 -->
+          <path d="M17 68 C17 42, 45 18, 73 68" stroke="#1e4060" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <!-- Arche 3 -->
+          <path d="M24 71 C24 50, 45 28, 66 71" stroke="#1e4870" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <!-- Arche 4 -->
+          <path d="M31 74 C31 57, 45 38, 59 74" stroke="#24587a" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <!-- Arche 5 -->
+          <path d="M38 77 C38 65, 45 48, 52 77" stroke="#2a6888" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <!-- Centre -->
+          <path d="M45 55 L45 80" stroke="#2a7898" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <!-- Lignes basses (ondulations) -->
+          <path d="M10 72 Q20 78, 45 76 Q70 74, 80 72" stroke="#182e40" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+          <path d="M12 80 Q25 88, 45 86 Q65 84, 78 80" stroke="#162838" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+          <path d="M16 88 Q28 96, 45 95 Q62 94, 74 88" stroke="#142030" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+          <!-- Petits côtés -->
+          <path d="M10 65 L10 88" stroke="#162838" stroke-width="1" stroke-linecap="round" fill="none"/>
+          <path d="M80 65 L80 88" stroke="#162838" stroke-width="1" stroke-linecap="round" fill="none"/>
+          <!-- Point central -->
+          <circle cx="45" cy="50" r="2.5" fill="#2a7898" opacity="0.6"/>
+        </svg>
+      </div>
+      <div class="bio-label" id="bioLabel">Poser le doigt</div>
+      <div class="bio-sub-label" id="bioSubLabel">Authentification requise</div>
+      <div class="bio-error-msg" id="bioErrorMsg">&#9651; Paramètres incomplets</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ÉNIGME ══ -->
+<div class="page" id="pageEnigma">
+  <div class="topbar">
+    <div class="back-btn" onclick="goHome()">&#8592;</div>
+    <div>
+      <div class="topbar-title" id="enigmaTitle">ÉNIGME I</div>
+      <div class="topbar-sub">Curiosity · Paramètre de transmission</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="enigma-badge">
+      <div class="eb-line"></div>
+      <div class="eb-txt" id="enigmaBadge">PARAMÈTRE I</div>
+      <div class="eb-line"></div>
+    </div>
+    <div class="enigma-box">
+      <div class="enigma-text" id="enigmaText">—</div>
+    </div>
+    <div id="answerSection">
+      <div class="answer-label">VOTRE RÉPONSE</div>
+      <div class="answer-row">
+        <input class="answer-input" id="answerInput" type="text"
+          placeholder="Saisir la réponse…"
+          autocomplete="off" autocorrect="off" spellcheck="false"/>
+        <button class="validate-btn" onclick="checkAnswer()">Valider</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+    <div class="solved-banner" id="solvedBanner">
+      <div class="solved-ico">&#10022;</div>
+      <div class="solved-title">Paramètre activé</div>
+      <div class="solved-sub" id="solvedSub">Synchronisé.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCAN BIO ══ -->
+<div class="page" id="pageBio">
+  <div class="topbar">
+    <div class="back-btn" onclick="goHome()">&#8592;</div>
+    <div>
+      <div class="topbar-title">Authentification</div>
+      <div class="topbar-sub">Curiosity · Transmission autorisée</div>
+    </div>
+  </div>
+  <div class="bio-scan-wrap">
+    <div class="scan-ring">
+      <div class="scan-spinner" id="scanSpinner"></div>
+      <svg width="60" height="74" viewBox="0 0 60 74" fill="none">
+        <path d="M7 44C7 23,30 5,53 44" stroke="#2a5060" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M13 47C13 30,30 14,47 47" stroke="#2a5870" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M19 50C19 36,30 23,41 50" stroke="#2a6880" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M25 53C25 43,30 33,35 53" stroke="#2a7890" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M30 37 L30 56" stroke="#2a88a0" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M7 51Q18 57,30 55Q42 53,53 51" stroke="#1e3a50" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        <path d="M9 58Q20 65,30 63Q40 61,51 58" stroke="#182e40" stroke-width="1.2" stroke-linecap="round" fill="none"/>
+        <circle cx="30" cy="32" r="2" fill="#2a88a0" opacity="0.7"/>
+      </svg>
+    </div>
+    <div class="scan-label" id="scanLabel">Posez votre doigt</div>
+    <div class="scan-sub" id="scanSub">Tous les paramètres sont actifs · Prête</div>
+    <button class="scan-btn" id="scanBtn" onclick="startScan()">Toucher pour s'authentifier</button>
+  </div>
+</div>
+
+<!-- ══ FINALE ══ -->
+<div class="page" id="pageFinal">
+  <div class="topbar">
+    <div class="back-btn" onclick="goHome()">&#8592;</div>
+    <div>
+      <div class="topbar-title">Message reçu</div>
+      <div class="topbar-sub">Transmis · Authentifié · Déchiffré</div>
+    </div>
+  </div>
+  <div class="final-wrap">
+    <div class="final-seal">
+      <div class="seal-circle">&#x2709;</div>
+      <div class="seal-from">EXPÉDITEUR VÉRIFIÉ · 2082 &#x2192; 2025</div>
+    </div>
+    <div class="final-divider">
+      <div class="fdl"></div>
+      <div class="fdt">MESSAGE DÉCHIFFRÉ · INTÉGRITÉ 100%</div>
+      <div class="fdl"></div>
+    </div>
+    <div class="final-msg" id="finalMsg"></div>
+    <div class="final-footer">CURIOSITY · TEMPORAL BRIDGE v2082.1</div>
+  </div>
+</div>
+
+<script>
+/* ══ CONFIGURATION ══ */
+var ENIGMAS = [
+  { title:'ÉNIGME I',   badge:'PARAMÈTRE I · VECTEUR D\'ANCRAGE',      text:'texte énigme 1', answer:'1', sub:'Le vecteur d\'ancrage est synchronisé.' },
+  { title:'ÉNIGME II',  badge:'PARAMÈTRE II · CLÉ DE RÉSONANCE',        text:'texte énigme 2', answer:'2', sub:'La clé de résonance est calibrée.' },
+  { title:'ÉNIGME III', badge:'PARAMÈTRE III · SIGNATURE DU RÉCEPTEUR', text:'texte énigme 3', answer:'3', sub:'La signature du récepteur est confirmée.' }
+];
+var FINAL_MESSAGE = 'message suite résolution des 3 énigmes';
+/* ══════════════════ */
+
+function loadState() {
+  try { var s = localStorage.getItem('curi_v3'); if (s) return JSON.parse(s); } catch(e) {}
+  return { solved: [false, false, false] };
+}
+function saveState() { try { localStorage.setItem('curi_v3', JSON.stringify(STATE)); } catch(e) {} }
+
+var STATE = loadState();
+var curIdx = 0;
+var scanning = false;
+var fpBusy = false;
+var errorTimer = null;
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goHome() {
+  refreshHome();
+  showPage('pageHome');
+}
+
+function refreshHome() {
+  var count = STATE.solved.filter(Boolean).length;
+  var all = count === 3;
+
+  STATE.solved.forEach(function(solved, i) {
+    var n = i + 1;
+    var card = document.getElementById('card' + n);
+    var st   = document.getElementById('st' + n);
+    var arr  = document.getElementById('arr' + n);
+    if (solved) {
+      card.classList.add('solved');
+      card.onclick = null;
+      st.textContent = 'ACTIVÉ';
+      arr.style.display = 'none';
+    } else {
+      card.classList.remove('solved');
+      (function(idx){ card.onclick = function(){ openEnigma(idx); }; })(n);
+      st.textContent = 'EN ATTENTE';
+      arr.style.display = 'block';
+    }
+  });
+
+  var lbl = document.getElementById('bioLabel');
+  var sub = document.getElementById('bioSubLabel');
+  if (all) {
+    lbl.textContent = 'Poser le doigt';
+    lbl.style.color = '#3a9060';
+    sub.textContent = 'Transmission prête · Authentifiez-vous';
+    sub.style.color = '#1e5030';
+  } else {
+    lbl.textContent = 'Poser le doigt';
+    lbl.style.color = '#4a8aaa';
+    sub.textContent = 'Authentification requise';
+    sub.style.color = '#1e3040';
+  }
+}
+
+/* ── Empreinte tap ── */
+function handleBioTap() {
+  if (fpBusy) return;
+  var all = STATE.solved.every(Boolean);
+
+  if (!all) {
+    triggerFpError();
+    showBioError();
+    return;
+  }
+
+  // Succès — effet scan
+  triggerFpScan(function() {
+    scanning = false;
+    document.getElementById('scanLabel').textContent = 'Posez votre doigt';
+    document.getElementById('scanSub').textContent   = 'Tous les paramètres sont actifs · Prête';
+    document.getElementById('scanSpinner').style.display = 'none';
+    document.getElementById('scanBtn').style.display = 'block';
+    showPage('pageBio');
+  });
+}
+
+function triggerFpScan(cb) {
+  fpBusy = true;
+  var fp = document.getElementById('fpContainer');
+  fp.classList.remove('error', 'success');
+  fp.classList.add('scanning');
+  setTimeout(function() {
+    fp.classList.remove('scanning');
+    fp.classList.add('success');
+    setTimeout(function() {
+      fp.classList.remove('success');
+      fpBusy = false;
+      if (cb) cb();
+    }, 900);
+  }, 1100);
+}
+
+function triggerFpError() {
+  fpBusy = true;
+  var fp = document.getElementById('fpContainer');
+  fp.classList.remove('scanning', 'success');
+  fp.classList.add('error');
+  setTimeout(function() {
+    fp.classList.remove('error');
+    fpBusy = false;
+  }, 700);
+}
+
+function showBioError() {
+  var el = document.getElementById('bioErrorMsg');
+  if (errorTimer) clearTimeout(errorTimer);
+  el.classList.add('show');
+  errorTimer = setTimeout(function() {
+    el.classList.remove('show');
+  }, 2000);
+}
+
+/* ── Énigme ── */
+function openEnigma(n) {
+  curIdx = n - 1;
+  var e = ENIGMAS[curIdx];
+  document.getElementById('enigmaTitle').textContent = e.title;
+  document.getElementById('enigmaBadge').textContent = e.badge;
+  document.getElementById('enigmaText').textContent  = e.text;
+
+  var inp     = document.getElementById('answerInput');
+  var section = document.getElementById('answerSection');
+  var banner  = document.getElementById('solvedBanner');
+  var fb      = document.getElementById('feedback');
+
+  inp.value = '';
+  inp.className = 'answer-input';
+  fb.textContent = ''; fb.className = 'feedback';
+
+  if (STATE.solved[curIdx]) {
+    section.style.display = 'none';
+    banner.style.display  = 'block';
+    document.getElementById('solvedSub').textContent = e.sub;
+  } else {
+    section.style.display = 'block';
+    banner.style.display  = 'none';
+  }
+  showPage('pageEnigma');
+  if (!STATE.solved[curIdx]) setTimeout(function(){ inp.focus(); }, 300);
+}
+
+function checkAnswer() {
+  var inp = document.getElementById('answerInput');
+  var fb  = document.getElementById('feedback');
+  var val = inp.value.trim();
+
+  inp.classList.remove('err', 'ok');
+  fb.textContent = ''; fb.className = 'feedback';
+
+  if (val.toLowerCase() === ENIGMAS[curIdx].answer.toLowerCase()) {
+    inp.classList.add('ok');
+    fb.className = 'feedback ok';
+    fb.textContent = '&#10022; Correct — paramètre activé';
+    STATE.solved[curIdx] = true;
+    saveState();
+
+    // Affiche banner puis retour auto à l'accueil
+    setTimeout(function() {
+      document.getElementById('answerSection').style.display = 'none';
+      document.getElementById('solvedBanner').style.display  = 'block';
+      document.getElementById('solvedSub').textContent = ENIGMAS[curIdx].sub;
+    }, 600);
+
+    setTimeout(function() {
+      goHome();
+    }, 2200);
+
+  } else {
+    inp.classList.add('err');
+    fb.className = 'feedback err';
+    fb.textContent = '✕ Réponse incorrecte — réessayez';
+    setTimeout(function(){ inp.classList.remove('err'); }, 450);
+  }
+}
+
+document.getElementById('answerInput').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') checkAnswer();
+});
+
+/* ── Scan bio page ── */
+function startScan() {
+  if (scanning) return;
+  scanning = true;
+  var spin  = document.getElementById('scanSpinner');
+  var label = document.getElementById('scanLabel');
+  var sub   = document.getElementById('scanSub');
+  var btn   = document.getElementById('scanBtn');
+
+  btn.style.display = 'none';
+  spin.style.display = 'block';
+
+  var steps = [
+    [0,    'Lecture en cours…',           'Analyse dermoglyphique'],
+    [1400, 'Vérification chronologique…', 'Correspondance 2025 ↔ 2082'],
+    [2800, 'Identité confirmée',           'Récepteur désigné · Authentifié']
+  ];
+  steps.forEach(function(s){
+    setTimeout(function(){ label.textContent = s[1]; sub.textContent = s[2]; }, s[0]);
+  });
+  setTimeout(showFinal, 3800);
+}
+
+function showFinal() {
+  var el = document.getElementById('finalMsg');
+  el.textContent = '';
+  showPage('pageFinal');
+  var i = 0, txt = FINAL_MESSAGE;
+  function type() {
+    if (i >= txt.length) return;
+    el.textContent += txt[i]; i++;
+    setTimeout(type, 28);
+  }
+  setTimeout(type, 500);
+}
+
+refreshHome();
+</script>
+</body>
+</html>
