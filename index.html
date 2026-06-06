@@ -369,17 +369,141 @@ body {
 .fdt { font-family: monospace; font-size: 7px; color: #121a22; letter-spacing: 0.12em; }
 .final-msg { font-size: 17px; font-style: italic; font-weight: 300; color: #9ab8cc; line-height: 1.85; text-align: center; min-height: 40px; }
 .final-footer { font-family: monospace; font-size: 8px; color: #121820; letter-spacing: 0.14em; text-align: center; padding-top: 14px; border-top: 1px solid #0c1420; }
+
+/* ── BOUTON PARAMÈTRES ACCUEIL ── */
+.settings-btn {
+  position: absolute; top: 18px; right: 18px;
+  width: 32px; height: 32px; border-radius: 8px;
+  background: transparent; border: 1px solid #141e2a;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #1e3040; font-size: 15px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.settings-btn:active { background: #0d1520; color: #4a8aaa; border-color: #1a2e40; }
+.settings-item {
+  background: #0c1420; border: 1px solid #182636; border-radius: 10px;
+  padding: 16px 18px; display: flex; align-items: center; gap: 14px;
+  cursor: pointer; margin-bottom: 10px; transition: background 0.15s;
+}
+.settings-item:active { background: #101c2e; }
+.settings-item.danger { border-color: #2a1418; }
+.settings-item.danger:active { background: #130c10; }
+.settings-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: #101a28; border: 1px solid #1a2e40;
+  display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0;
+}
+.settings-item.danger .settings-icon { background: #180c10; border-color: #3a1620; }
+.settings-info { flex: 1; }
+.settings-title { font-size: 14px; color: #7aaabb; margin-bottom: 3px; }
+.settings-item.danger .settings-title { color: #9a4050; }
+.settings-desc { font-family: monospace; font-size: 8px; color: #1a2e3a; letter-spacing: 0.08em; }
+.settings-item.danger .settings-desc { color: #3a1a20; }
+.settings-info-block {
+  background: #090e18; border: 1px solid #111820; border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 10px;
+}
+.sib-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid #0d1420; }
+.sib-row:last-child { border-bottom: none; }
+.sib-label { font-family: monospace; font-size: 8px; color: #1a2e3a; letter-spacing: 0.1em; }
+.sib-val { font-family: monospace; font-size: 8px; color: #2a4a5a; letter-spacing: 0.08em; }
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(4,6,10,0.88);
+  display: none; align-items: center; justify-content: center;
+  z-index: 1000; padding: 24px;
+}
+.modal-overlay.show { display: flex; }
+.modal-box {
+  background: #0a0f18; border: 1px solid #1e2e3a; border-radius: 14px;
+  padding: 28px 22px; width: 100%; max-width: 320px; text-align: center;
+}
+.modal-icon { font-size: 28px; margin-bottom: 14px; }
+.modal-title { font-size: 15px; font-weight: bold; color: #9a4050; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+.modal-desc { font-family: monospace; font-size: 10px; color: #2a3a44; letter-spacing: 0.08em; line-height: 1.7; margin-bottom: 22px; }
+.modal-btns { display: flex; gap: 10px; }
+.modal-cancel {
+  flex: 1; padding: 12px; background: #0c1420; border: 1px solid #1a2a38;
+  border-radius: 8px; font-size: 12px; font-weight: bold; color: #4a7080;
+  cursor: pointer; font-family: Georgia, serif; letter-spacing: 0.06em;
+}
+.modal-cancel:active { background: #101c2e; }
+.modal-confirm {
+  flex: 1; padding: 12px; background: #1a0810; border: 1px solid #3a1620;
+  border-radius: 8px; font-size: 12px; font-weight: bold; color: #9a4050;
+  cursor: pointer; font-family: Georgia, serif; letter-spacing: 0.06em;
+}
+.modal-confirm:active { background: #220c12; }
+
+/* ── ANIMATION SUCCÈS ── */
+.success-overlay {
+  position: fixed; inset: 0; background: #03050a;
+  z-index: 500; display: none;
+  align-items: center; justify-content: center;
+  flex-direction: column; overflow: hidden;
+}
+.success-overlay.show { display: flex; }
+.so-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(0,180,120,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,120,0.05) 1px,transparent 1px);
+  background-size: 28px 28px;
+  animation: so-grid-anim 4s ease forwards;
+}
+@keyframes so-grid-anim { 0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0} }
+.so-ring {
+  position: absolute; border-radius: 50%; left: 50%; top: 50%;
+  transform: translate(-50%,-50%) scale(0.4);
+  border: 1px solid rgba(0,210,140,0.35);
+  animation: so-expand 4s ease forwards;
+}
+.so-ring-1 { width: 90px; height: 90px; animation-delay: 0.1s; }
+.so-ring-2 { width: 180px; height: 180px; animation-delay: 0.25s; border-color: rgba(0,200,140,0.22); }
+.so-ring-3 { width: 290px; height: 290px; animation-delay: 0.4s; border-color: rgba(0,190,140,0.14); }
+.so-ring-4 { width: 400px; height: 400px; animation-delay: 0.55s; border-color: rgba(0,180,140,0.08); }
+@keyframes so-expand {
+  0%  { opacity:0; transform:translate(-50%,-50%) scale(0.4); }
+  20% { opacity:1; }
+  70% { opacity:0.4; }
+  100%{ opacity:0; transform:translate(-50%,-50%) scale(1.4); }
+}
+.so-center { position: relative; z-index: 10; text-align: center; padding: 0 30px; }
+.so-check { font-size: 50px; color: #00d080; display: block; margin-bottom: 16px;
+  opacity: 0; animation: so-pop 0.5s ease forwards; }
+@keyframes so-pop { 0%{opacity:0;transform:scale(0.5)} 65%{transform:scale(1.1)} 100%{opacity:1;transform:scale(1)} }
+.so-label { font-family: monospace; font-size: 9px; color: #00a060; letter-spacing: 0.3em;
+  text-transform: uppercase; opacity: 0; animation: so-up 0.5s 0.3s ease forwards; margin-bottom: 6px; }
+.so-param { font-family: Georgia,serif; font-size: 14px; font-style: italic; color: #3a8a60;
+  opacity: 0; animation: so-up 0.5s 0.5s ease forwards; margin-bottom: 20px; }
+@keyframes so-up { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:translateY(0)} }
+.so-progress-wrap { width: 190px; height: 2px; background: #0a1e14; border-radius: 1px; overflow: hidden; }
+.so-progress-bar { height: 100%; background: #00d080; width: 0%;
+  animation: so-prog 3s 0.5s linear forwards; }
+@keyframes so-prog { from{width:0%} to{width:100%} }
+.so-datastream {
+  position: absolute; bottom: 60px; left: 0; right: 0;
+  display: flex; flex-direction: column; gap: 3px; align-items: center;
+  opacity: 0; animation: so-dfade 4s 0.3s ease forwards;
+}
+@keyframes so-dfade { 0%{opacity:0}15%{opacity:1}80%{opacity:1}100%{opacity:0} }
+.so-dataline { font-family: monospace; font-size: 7px; color: #0a3020; letter-spacing: 0.12em; }
+.so-topline {
+  position: absolute; top: 30px; left: 0; right: 0;
+  font-family: monospace; font-size: 7px; color: #082818;
+  letter-spacing: 0.15em; text-align: center;
+  opacity: 0; animation: so-dfade 4s 0.2s ease forwards;
+}
+
 </style>
 </head>
 <body>
 
 <!-- ══ ACCUEIL ══ -->
 <div class="page active" id="pageHome">
-  <div class="hero">
+  <div class="hero" style="position:relative">
     <div class="logo-wrap"><div class="logo-letter">C</div></div>
     <div class="app-name">Curiosity</div>
     <div class="app-version">TEMPORAL BRIDGE PROTOCOL · v2082.1 · BUILD 20820106</div>
     <div class="app-desc">Logiciel de transmission d'objets physiques<br>entre époques par vecteur chrono-quantique</div>
+    <button class="settings-btn" onclick="showPage('pageSettings')" title="Paramètres">&#9881;</button>
   </div>
   <div class="content">
     <div class="section-label">Paramètres de transmission</div>
@@ -542,18 +666,23 @@ body {
 <script>
 /* ══ CONFIGURATION ══ */
 var ENIGMAS = [
-  { title:'ÉNIGME I',   badge:'PARAMÈTRE I · VECTEUR D\'ANCRAGE',      text:'texte énigme 1', answer:'1', sub:'Le vecteur d\'ancrage est synchronisé.' },
-  { title:'ÉNIGME II',  badge:'PARAMÈTRE II · CLÉ DE RÉSONANCE',        text:'texte énigme 2', answer:'2', sub:'La clé de résonance est calibrée.' },
-  { title:'ÉNIGME III', badge:'PARAMÈTRE III · SIGNATURE DU RÉCEPTEUR', text:'texte énigme 3', answer:'3', sub:'La signature du récepteur est confirmée.' }
+  { title:"ÉNIGME I",   badge:"PARAMÈTRE I · VECTEUR D'ANCRAGE",      text:"texte énigme 1", answer:"1", sub:"Vecteur d'ancrage synchronisé." },
+  { title:"ÉNIGME II",  badge:"PARAMÈTRE II · CLÉ DE RÉSONANCE",        text:"texte énigme 2", answer:"2", sub:"Clé de résonance calibrée." },
+  { title:"ÉNIGME III", badge:"PARAMÈTRE III · SIGNATURE DU RÉCEPTEUR", text:"texte énigme 3", answer:"3", sub:"Signature du récepteur confirmée." }
 ];
 var FINAL_MESSAGE = 'message suite résolution des 3 énigmes';
 /* ══════════════════ */
 
+var STORAGE_KEY = 'curiosity_state_v1';
+
 function loadState() {
-  try { var s = localStorage.getItem('curi_v3'); if (s) return JSON.parse(s); } catch(e) {}
+  try {
+    var s = localStorage.getItem(STORAGE_KEY);
+    if (s) { var p = JSON.parse(s); if (p && Array.isArray(p.solved) && p.solved.length === 3) return p; }
+  } catch(e) {}
   return { solved: [false, false, false] };
 }
-function saveState() { try { localStorage.setItem('curi_v3', JSON.stringify(STATE)); } catch(e) {} }
+function saveState() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE)); } catch(e) {} }
 
 var STATE = loadState();
 var curIdx = 0;
@@ -561,66 +690,71 @@ var scanning = false;
 var fpBusy = false;
 var errorTimer = null;
 
+/* ── Navigation ── */
 function showPage(id) {
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
   window.scrollTo(0, 0);
+  if (id === 'pageSettings') updateSettingsPage();
 }
 
-function goHome() {
-  refreshHome();
-  showPage('pageHome');
-}
+function goHome() { refreshHome(); showPage('pageHome'); }
 
+/* ── Accueil ── */
 function refreshHome() {
   var count = STATE.solved.filter(Boolean).length;
   var all = count === 3;
-
   STATE.solved.forEach(function(solved, i) {
     var n = i + 1;
     var card = document.getElementById('card' + n);
     var st   = document.getElementById('st' + n);
     var arr  = document.getElementById('arr' + n);
     if (solved) {
-      card.classList.add('solved');
-      card.onclick = null;
-      st.textContent = 'ACTIVÉ';
-      arr.style.display = 'none';
+      card.classList.add('solved'); card.onclick = null;
+      st.textContent = 'ACTIVÉ'; arr.style.display = 'none';
     } else {
       card.classList.remove('solved');
       (function(idx){ card.onclick = function(){ openEnigma(idx); }; })(n);
-      st.textContent = 'EN ATTENTE';
-      arr.style.display = 'block';
+      st.textContent = 'EN ATTENTE'; arr.style.display = 'block';
     }
   });
-
   var lbl = document.getElementById('bioLabel');
   var sub = document.getElementById('bioSubLabel');
   if (all) {
-    lbl.textContent = 'Poser le doigt';
-    lbl.style.color = '#3a9060';
-    sub.textContent = 'Transmission prête · Authentifiez-vous';
-    sub.style.color = '#1e5030';
+    lbl.textContent = 'Poser le doigt'; lbl.style.color = '#3a9060';
+    sub.textContent = 'Transmission prête · Authentifiez-vous'; sub.style.color = '#1e5030';
   } else {
-    lbl.textContent = 'Poser le doigt';
-    lbl.style.color = '#4a8aaa';
-    sub.textContent = 'Authentification requise';
-    sub.style.color = '#1e3040';
+    lbl.textContent = 'Poser le doigt'; lbl.style.color = '#4a8aaa';
+    sub.textContent = 'Authentification requise'; sub.style.color = '#1e3040';
   }
 }
 
-/* ── Empreinte tap ── */
+/* ── Page paramètres ── */
+function updateSettingsPage() {
+  var count = STATE.solved.filter(Boolean).length;
+  var el = document.getElementById('settingsProgress');
+  if (el) el.textContent = count + ' / 3 paramètre' + (count > 1 ? 's' : '') + ' activé' + (count > 1 ? 's' : '');
+}
+
+function confirmReset() {
+  document.getElementById('modalReset').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modalReset').classList.remove('show');
+}
+function doReset() {
+  STATE.solved = [false, false, false];
+  saveState();
+  closeModal();
+  refreshHome();
+  showPage('pageHome');
+}
+
+/* ── Empreinte ── */
 function handleBioTap() {
   if (fpBusy) return;
   var all = STATE.solved.every(Boolean);
-
-  if (!all) {
-    triggerFpError();
-    showBioError();
-    return;
-  }
-
-  // Succès — effet scan
+  if (!all) { triggerFpError(); showBioError(); return; }
   triggerFpScan(function() {
     scanning = false;
     document.getElementById('scanLabel').textContent = 'Posez votre doigt';
@@ -630,41 +764,26 @@ function handleBioTap() {
     showPage('pageBio');
   });
 }
-
 function triggerFpScan(cb) {
   fpBusy = true;
   var fp = document.getElementById('fpContainer');
-  fp.classList.remove('error', 'success');
-  fp.classList.add('scanning');
+  fp.classList.remove('error','success'); fp.classList.add('scanning');
   setTimeout(function() {
-    fp.classList.remove('scanning');
-    fp.classList.add('success');
-    setTimeout(function() {
-      fp.classList.remove('success');
-      fpBusy = false;
-      if (cb) cb();
-    }, 900);
+    fp.classList.remove('scanning'); fp.classList.add('success');
+    setTimeout(function() { fp.classList.remove('success'); fpBusy = false; if (cb) cb(); }, 900);
   }, 1100);
 }
-
 function triggerFpError() {
   fpBusy = true;
   var fp = document.getElementById('fpContainer');
-  fp.classList.remove('scanning', 'success');
-  fp.classList.add('error');
-  setTimeout(function() {
-    fp.classList.remove('error');
-    fpBusy = false;
-  }, 700);
+  fp.classList.remove('scanning','success'); fp.classList.add('error');
+  setTimeout(function() { fp.classList.remove('error'); fpBusy = false; }, 700);
 }
-
 function showBioError() {
   var el = document.getElementById('bioErrorMsg');
   if (errorTimer) clearTimeout(errorTimer);
   el.classList.add('show');
-  errorTimer = setTimeout(function() {
-    el.classList.remove('show');
-  }, 2000);
+  errorTimer = setTimeout(function() { el.classList.remove('show'); }, 2000);
 }
 
 /* ── Énigme ── */
@@ -674,23 +793,17 @@ function openEnigma(n) {
   document.getElementById('enigmaTitle').textContent = e.title;
   document.getElementById('enigmaBadge').textContent = e.badge;
   document.getElementById('enigmaText').textContent  = e.text;
-
-  var inp     = document.getElementById('answerInput');
+  var inp = document.getElementById('answerInput');
   var section = document.getElementById('answerSection');
   var banner  = document.getElementById('solvedBanner');
-  var fb      = document.getElementById('feedback');
-
-  inp.value = '';
-  inp.className = 'answer-input';
+  var fb = document.getElementById('feedback');
+  inp.value = ''; inp.className = 'answer-input';
   fb.textContent = ''; fb.className = 'feedback';
-
   if (STATE.solved[curIdx]) {
-    section.style.display = 'none';
-    banner.style.display  = 'block';
+    section.style.display = 'none'; banner.style.display = 'block';
     document.getElementById('solvedSub').textContent = e.sub;
   } else {
-    section.style.display = 'block';
-    banner.style.display  = 'none';
+    section.style.display = 'block'; banner.style.display = 'none';
   }
   showPage('pageEnigma');
   if (!STATE.solved[curIdx]) setTimeout(function(){ inp.focus(); }, 300);
@@ -700,34 +813,62 @@ function checkAnswer() {
   var inp = document.getElementById('answerInput');
   var fb  = document.getElementById('feedback');
   var val = inp.value.trim();
-
-  inp.classList.remove('err', 'ok');
+  inp.classList.remove('err','ok');
   fb.textContent = ''; fb.className = 'feedback';
 
   if (val.toLowerCase() === ENIGMAS[curIdx].answer.toLowerCase()) {
     inp.classList.add('ok');
-    fb.className = 'feedback ok';
-    fb.textContent = '&#10022; Correct — paramètre activé';
     STATE.solved[curIdx] = true;
     saveState();
-
-    // Affiche banner puis retour auto à l'accueil
-    setTimeout(function() {
-      document.getElementById('answerSection').style.display = 'none';
-      document.getElementById('solvedBanner').style.display  = 'block';
-      document.getElementById('solvedSub').textContent = ENIGMAS[curIdx].sub;
-    }, 600);
-
-    setTimeout(function() {
+    // Lance l'animation de succès immédiatement
+    launchSuccessAnim(curIdx, function() {
       goHome();
-    }, 2200);
-
+    });
   } else {
     inp.classList.add('err');
     fb.className = 'feedback err';
     fb.textContent = '✕ Réponse incorrecte — réessayez';
     setTimeout(function(){ inp.classList.remove('err'); }, 450);
   }
+}
+
+/* ── Animation succès ── */
+function launchSuccessAnim(idx, cb) {
+  var overlay = document.getElementById('successOverlay');
+  var paramName = document.getElementById('soParamName');
+  var datastream = document.getElementById('soDatastream');
+
+  paramName.textContent = ENIGMAS[idx].sub;
+
+  // Génère les lignes de données
+  var lines = [
+    'SYNC · VECTEUR-' + (idx+1) + ' · OK',
+    'HASH: ' + Math.random().toString(36).substr(2,12).toUpperCase(),
+    'TIMESTAMP: 2082.01.06-' + Math.floor(Math.random()*9999).toString().padStart(4,'0'),
+    'INTÉGRITÉ: 100% · QNT-512',
+    'NEXBRIDGE · TRANSMISSION CONFIRMÉE',
+  ];
+  datastream.innerHTML = '';
+  lines.forEach(function(l, i) {
+    var d = document.createElement('div');
+    d.className = 'so-dataline';
+    d.textContent = l;
+    d.style.animationDelay = (0.2 + i * 0.15) + 's';
+    d.style.animation = 'so-up 0.4s ' + (0.2 + i * 0.15) + 's ease forwards';
+    d.style.opacity = '0';
+    datastream.appendChild(d);
+  });
+
+  // Force reflow pour relancer les animations CSS
+  overlay.classList.remove('show');
+  void overlay.offsetWidth;
+  overlay.classList.add('show');
+
+  // Ferme après 4s et retourne à l'accueil
+  setTimeout(function() {
+    overlay.classList.remove('show');
+    if (cb) cb();
+  }, 4000);
 }
 
 document.getElementById('answerInput').addEventListener('keydown', function(e){
@@ -742,10 +883,7 @@ function startScan() {
   var label = document.getElementById('scanLabel');
   var sub   = document.getElementById('scanSub');
   var btn   = document.getElementById('scanBtn');
-
-  btn.style.display = 'none';
-  spin.style.display = 'block';
-
+  btn.style.display = 'none'; spin.style.display = 'block';
   var steps = [
     [0,    'Lecture en cours…',           'Analyse dermoglyphique'],
     [1400, 'Vérification chronologique…', 'Correspondance 2025 ↔ 2082'],
@@ -770,7 +908,76 @@ function showFinal() {
   setTimeout(type, 500);
 }
 
+window.addEventListener('beforeunload', saveState);
 refreshHome();
 </script>
+
+<!-- ══ PARAMÈTRES ══ -->
+<div class="page" id="pageSettings">
+  <div class="topbar">
+    <div class="back-btn" onclick="goHome()">&#8592;</div>
+    <div>
+      <div class="topbar-title">Paramètres</div>
+      <div class="topbar-sub">Curiosity · Gestion du système</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="section-label">Données</div>
+    <div class="settings-item danger" onclick="confirmReset()">
+      <div class="settings-icon">&#x1F5D1;</div>
+      <div class="settings-info">
+        <div class="settings-title">Supprimer les réponses</div>
+        <div class="settings-desc">Efface la progression sauvegardée · Remet à zéro</div>
+      </div>
+      <div style="font-size:12px;color:#3a1620">›</div>
+    </div>
+
+    <div class="section-label" style="margin-top:18px">Informations système</div>
+    <div class="settings-info-block">
+      <div class="sib-row"><span class="sib-label">APPLICATION</span><span class="sib-val">Curiosity</span></div>
+      <div class="sib-row"><span class="sib-label">PROTOCOLE</span><span class="sib-val">Temporal Bridge v2082.1</span></div>
+      <div class="sib-row"><span class="sib-label">BUILD</span><span class="sib-val">20820106</span></div>
+      <div class="sib-row"><span class="sib-label">CHIFFREMENT</span><span class="sib-val">QNT-512</span></div>
+      <div class="sib-row"><span class="sib-label">PROGRESSION</span><span class="sib-val" id="settingsProgress">0 / 3 paramètres</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL CONFIRMATION RESET ══ -->
+<div class="modal-overlay" id="modalReset">
+  <div class="modal-box">
+    <div class="modal-icon">&#9888;</div>
+    <div class="modal-title">Supprimer les réponses</div>
+    <div class="modal-desc">
+      Toute la progression sera effacée.<br>
+      Les trois énigmes devront être résolues à nouveau.<br><br>
+      Cette action est irréversible.
+    </div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeModal()">Annuler</button>
+      <button class="modal-confirm" onclick="doReset()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ OVERLAY SUCCÈS ÉNIGME ══ -->
+<div class="success-overlay" id="successOverlay">
+  <div class="so-grid"></div>
+  <div class="so-ring so-ring-1"></div>
+  <div class="so-ring so-ring-2"></div>
+  <div class="so-ring so-ring-3"></div>
+  <div class="so-ring so-ring-4"></div>
+  <div class="so-topline" id="soTopLine">NEXBRIDGE · SYNCHRONISATION EN COURS · QNT-512</div>
+  <div class="so-center">
+    <span class="so-check">&#10003;</span>
+    <div class="so-label">Paramètre activé</div>
+    <div class="so-param" id="soParamName">—</div>
+    <div class="so-progress-wrap">
+      <div class="so-progress-bar"></div>
+    </div>
+  </div>
+  <div class="so-datastream" id="soDatastream"></div>
+</div>
+
 </body>
 </html>
