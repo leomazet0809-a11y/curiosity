@@ -567,7 +567,7 @@ body {
           <circle cx="45" cy="50" r="2.5" fill="#2a7898" opacity="0.6"/>
         </svg>
       </div>
-      <div class="bio-label" id="bioLabel">Poser le doigt</div>
+      <div class="bio-label" id="bioLabel">Authentification biométrique</div>
       <div class="bio-sub-label" id="bioSubLabel">Authentification requise</div>
       <div class="bio-error-msg" id="bioErrorMsg">&#9651; Paramètres incomplets</div>
     </div>
@@ -721,10 +721,10 @@ function refreshHome() {
   var lbl = document.getElementById('bioLabel');
   var sub = document.getElementById('bioSubLabel');
   if (all) {
-    lbl.textContent = 'Poser le doigt'; lbl.style.color = '#3a9060';
+    lbl.textContent = 'Authentification biométrique'; lbl.style.color = '#3a9060';
     sub.textContent = 'Transmission prête · Authentifiez-vous'; sub.style.color = '#1e5030';
   } else {
-    lbl.textContent = 'Poser le doigt'; lbl.style.color = '#4a8aaa';
+    lbl.textContent = 'Authentification biométrique'; lbl.style.color = '#4a8aaa';
     sub.textContent = 'Authentification requise'; sub.style.color = '#1e3040';
   }
 }
