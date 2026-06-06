@@ -2,14 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Curiosity">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#07090f">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.svg">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Curiosity</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -269,8 +262,10 @@ body {
   margin-bottom: 22px;
 }
 .enigma-text {
-  font-size: 17px; font-style: italic; font-weight: 300;
-  color: #9ab8cc; line-height: 1.85; text-align: center;
+  font-size: 13px; font-style: normal; font-weight: 300;
+  color: #9ab8cc; line-height: 1.85; text-align: left;
+  white-space: pre-wrap; word-break: break-word;
+  font-family: monospace;
 }
 
 .answer-label { font-family: monospace; font-size: 8px; color: #243040; letter-spacing: 0.16em; margin-bottom: 8px; }
@@ -504,11 +499,12 @@ body {
 .quit-btn {
   position: absolute; top: 14px; left: 14px;
   width: 28px; height: 28px; border-radius: 6px;
-  background: transparent; border: 1px solid #101820;
+  background: transparent; border: 1px solid #181e28;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: #1a2a32; font-size: 11px;
+  cursor: pointer; color: #2a3a44; font-size: 11px;
   transition: border-color 0.25s, color 0.25s, background 0.25s;
-  opacity: 0.55;
+  opacity: 0.7;
+  z-index: 10;
 }
 .quit-btn:hover { opacity: 1; color: #6a8090; border-color: #1e3040; background: #0c1520; }
 .quit-btn:active { opacity: 1; background: #0e1a26; color: #4a8aaa; border-color: #1a3040; }
@@ -687,7 +683,37 @@ body {
 <script>
 /* ══ CONFIGURATION ══ */
 var ENIGMAS = [
-  { title:"ÉNIGME I",   badge:"PARAMÈTRE I · VECTEUR D'ANCRAGE",      text:"texte énigme 1", answer:"1", sub:"Vecteur d'ancrage synchronisé." },
+  { title:"ÉNIGME I",   badge:"PARAMÈTRE I · VECTEUR D'ANCRAGE",      text:`Les archives de notre époque contiennent douze affirmations :
+
+1. En 2081, les villes orbitales comptent 6 niveaux actifs.
+2. Les mémoires humaines sont sauvegardées sur 3 réseaux quantiques.
+3. Chaque cycle solaire déclenche 12 mises à jour globales.
+4. Les drones explorent 9 zones interdites du ciel.
+5. L'intelligence centrale redémarre tous les 4 jours standards.
+6. Les humains augmentés disposent de 8 interfaces neuronales.
+7. Le transport photonique relie 5 continents sous-marinisés.
+8. Les archives planétaires contiennent 2 exaoctets par heure.
+9. Une anomalie temporelle apparaît tous les 7 ans précis.
+10. Les jardins synthétiques produisent 1 cycle de floraison instantané.
+11. Les villes anciennes sont archivées sur 10 couches virtuelles.
+12. Les communications inter-orbitales passent par 11 relais autonomes.
+
+Nous savons qu'exactement six d'entre elles disent la vérité. Les six autres mentent. Retrouve lesquelles.
+
+1. L'affirmation 2 est fausse.
+2. L'affirmation 4 est vraie.
+3. L'affirmation 6 est fausse.
+4. L'affirmation 8 est vraie.
+5. L'affirmation 10 est fausse.
+6. L'affirmation 12 est vraie.
+7. L'affirmation 1 est vraie.
+8. L'affirmation 3 est fausse.
+9. L'affirmation 5 est vraie.
+10. L'affirmation 7 est fausse.
+11. L'affirmation 9 est vraie.
+12. L'affirmation 11 est fausse.
+
+Les six affirmations constituent la clé.`, answer:"24681012", sub:"Vecteur d'ancrage synchronisé." },
   { title:"ÉNIGME II",  badge:"PARAMÈTRE II · CLÉ DE RÉSONANCE",        text:"texte énigme 2", answer:"2", sub:"Clé de résonance calibrée." },
   { title:"ÉNIGME III", badge:"PARAMÈTRE III · SIGNATURE DU RÉCEPTEUR", text:"texte énigme 3", answer:"3", sub:"Signature du récepteur confirmée." }
 ];
@@ -934,19 +960,11 @@ window.addEventListener('beforeunload', saveState);
 /* ── Quitter l'app ── */
 function quitApp() {
   if (window.navigator && window.navigator.standalone) {
-    // Mode PWA iOS — retour écran d'accueil via history
     window.location.href = 'about:blank';
-    setTimeout(function(){ window.close(); }, 100);
+    setTimeout(function(){ window.close(); }, 80);
   } else {
     window.close();
   }
-}
-
-/* ── Service Worker ── */
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js').catch(function(e){ console.log('SW:', e); });
-  });
 }
 
 refreshHome();
@@ -962,7 +980,22 @@ refreshHome();
     </div>
   </div>
   <div class="content">
-    <div class="section-label">Données</div>
+    <div class="section-label">Application</div>
+    <div class="settings-item" onclick="quitApp()">
+      <div class="settings-icon" style="background:#0e1620;border-color:#1a2e3a;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 3H3a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h3" stroke="#4a7a90" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M10.5 5.5l3 2.5-3 2.5M13.5 8H7" stroke="#4a7a90" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="settings-info">
+        <div class="settings-title">Quitter</div>
+        <div class="settings-desc">Fermer l'application · Retour à l'écran d'accueil</div>
+      </div>
+      <div style="font-size:12px;color:#1a3040">›</div>
+    </div>
+
+    <div class="section-label" style="margin-top:8px">Données</div>
     <div class="settings-item danger" onclick="confirmReset()">
       <div class="settings-icon">&#x1F5D1;</div>
       <div class="settings-info">
