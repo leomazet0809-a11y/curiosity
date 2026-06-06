@@ -2,7 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Curiosity">
+  <meta name="theme-color" content="#07090f">
+  <link rel="manifest" href="manifest.json">
 <title>Curiosity</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -509,6 +515,16 @@ body {
 .quit-btn:hover { opacity: 1; color: #6a8090; border-color: #1e3040; background: #0c1520; }
 .quit-btn:active { opacity: 1; background: #0e1a26; color: #4a8aaa; border-color: #1a3040; }
 
+
+/* ── PLEIN ÉCRAN ANDROID / PWA ── */
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+.page { min-height: 100dvh; }
+
 </style>
 </head>
 <body>
@@ -683,7 +699,7 @@ body {
 <script>
 /* ══ CONFIGURATION ══ */
 var ENIGMAS = [
-  { title:"ÉNIGME I",   badge:"PARAMÈTRE I · VECTEUR D'ANCRAGE",      text:`Les archives de notre époque contiennent douze affirmations :
+  { title:"ÉNIGME I - Mensonges & vérités",   badge:"PARAMÈTRE I · VECTEUR D'ANCRAGE",      text:`Les archives de notre époque contiennent douze affirmations :
 
 1. En 2081, les villes orbitales comptent 6 niveaux actifs.
 2. Les mémoires humaines sont sauvegardées sur 3 réseaux quantiques.
@@ -700,20 +716,20 @@ var ENIGMAS = [
 
 Nous savons qu'exactement six d'entre elles disent la vérité. Les six autres mentent. Retrouve lesquelles.
 
-1. L'affirmation 2 est fausse.
-2. L'affirmation 4 est vraie.
-3. L'affirmation 6 est fausse.
-4. L'affirmation 8 est vraie.
-5. L'affirmation 10 est fausse.
-6. L'affirmation 12 est vraie.
-7. L'affirmation 1 est vraie.
-8. L'affirmation 3 est fausse.
-9. L'affirmation 5 est vraie.
-10. L'affirmation 7 est fausse.
-11. L'affirmation 9 est vraie.
-12. L'affirmation 11 est fausse.
+L'affirmation 2 est fausse.
+L'affirmation 4 est vraie.
+L'affirmation 6 est fausse.
+L'affirmation 8 est vraie.
+L'affirmation 10 est fausse.
+L'affirmation 12 est vraie.
+L'affirmation 1 est vraie.
+L'affirmation 3 est fausse.
+L'affirmation 5 est vraie.
+L'affirmation 7 est fausse.
+L'affirmation 9 est vraie.
+L'affirmation 11 est fausse.
 
-Les six affirmations constituent la clé.`, answer:"24681012", sub:"Vecteur d'ancrage synchronisé." },
+Les six affirmations constituent la clé.`, answer:"1", sub:"Vecteur d'ancrage synchronisé." },
   { title:"ÉNIGME II",  badge:"PARAMÈTRE II · CLÉ DE RÉSONANCE",        text:"texte énigme 2", answer:"2", sub:"Clé de résonance calibrée." },
   { title:"ÉNIGME III", badge:"PARAMÈTRE III · SIGNATURE DU RÉCEPTEUR", text:"texte énigme 3", answer:"3", sub:"Signature du récepteur confirmée." }
 ];
@@ -965,6 +981,32 @@ function quitApp() {
   } else {
     window.close();
   }
+}
+
+
+/* ── Plein écran Android ── */
+function goFullscreen() {
+  var el = document.documentElement;
+  if (el.requestFullscreen) { el.requestFullscreen(); }
+  else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); }
+}
+
+// Tente le plein écran au premier tap sur l'écran (requis par les navigateurs)
+document.addEventListener('click', function onFirstTap() {
+  goFullscreen();
+  document.removeEventListener('click', onFirstTap);
+}, { once: true });
+
+// Aussi au chargement si déjà en mode PWA
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+  goFullscreen();
+}
+
+// Service Worker pour fonctionnement offline + PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
 }
 
 refreshHome();
