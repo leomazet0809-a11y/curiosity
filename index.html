@@ -78,6 +78,105 @@ body {
 }
 .section-label::before, .section-label::after { content: ''; flex: 1; height: 1px; background: #0e1620; }
 
+/* ══ ÉNIGME 3 — NAVIGATION STELLAIRE ══ */
+#pageEnigma3 .content { padding: 0; display: flex; flex-direction: column; flex: 1; }
+.stellar-intro {
+  padding: 22px 18px 18px;
+  flex-shrink: 0;
+}
+.stellar-badge {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 16px;
+}
+.stellar-badge-line { flex: 1; height: 1px; background: #141e2a; }
+.stellar-badge-txt {
+  font-family: monospace; font-size: 8px;
+  color: #1a3040; letter-spacing: 0.22em;
+  white-space: nowrap;
+}
+.stellar-text {
+  font-size: 12px; font-style: italic; color: #4a7080;
+  line-height: 1.7; margin-bottom: 20px;
+}
+.stellar-nav-btn {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%;
+  background: #090e1a;
+  border: 1px solid #1a3050;
+  border-radius: 12px;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  color: #4a8aaa;
+  text-decoration: none;
+}
+.stellar-nav-btn:active { background: #0d1626; border-color: #2a5080; }
+.stellar-nav-btn-ico {
+  width: 42px; height: 42px;
+  border: 1px solid #1a3a50;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+}
+.stellar-nav-btn-txt { text-align: left; }
+.stellar-nav-btn-label {
+  font-size: 12px; font-weight: bold;
+  color: #5a9aba; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: block; margin-bottom: 3px;
+}
+.stellar-nav-btn-sub {
+  font-size: 9px; font-family: monospace;
+  color: #1a3040; letter-spacing: 0.1em;
+}
+.stellar-status {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #080e18;
+  border: 1px solid #0e1a28;
+  font-family: monospace; font-size: 9px;
+  color: #1a3040; letter-spacing: 0.12em;
+  text-align: center;
+  transition: all 0.5s;
+}
+.stellar-status.partial {
+  border-color: #1a3850;
+  color: #2a6080;
+  background: #080e1c;
+}
+.stellar-status.complete {
+  border-color: #1a4828;
+  color: #3a9060;
+  background: #07110c;
+}
+
+/* Iframe plein écran star navigator */
+#starNavOverlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 1000;
+  background: #000;
+  flex-direction: column;
+}
+#starNavOverlay.open { display: flex; }
+#starNavOverlay iframe {
+  flex: 1; border: none; width: 100%; height: 100%;
+}
+#starNavClose {
+  position: fixed; top: 10px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  background: rgba(4,10,22,0.9);
+  border: 1px solid rgba(58,123,213,0.3);
+  color: #7aabdc;
+  font-family: monospace; font-size: 9px; letter-spacing: 2px;
+  padding: 6px 14px; cursor: pointer; border-radius: 2px;
+  backdrop-filter: blur(8px);
+  display: none;
+}
+#starNavOverlay.open #starNavClose { display: block; }
+
 /* PARAM CARDS — horizontaux */
 .params-row {
   display: flex; gap: 10px;
@@ -525,6 +624,100 @@ body {
 }
 .page { min-height: 100dvh; }
 
+
+/* ══ STAR NAVIGATOR INTÉGRÉ ══ */
+/* Overlay plein écran */
+#snOverlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 500;
+  background: #000;
+}
+#snOverlay.open { display: block; }
+#sn-back-btn {
+  position: fixed; top: 10px; left: 50%; transform: translateX(-50%);
+  z-index: 600;
+  background: rgba(4,10,22,0.9);
+  border: 1px solid rgba(58,123,213,0.3);
+  color: #7aabdc;
+  font-family: monospace; font-size: 9px; letter-spacing: 2px;
+  padding: 6px 14px; cursor: pointer; border-radius: 2px;
+  backdrop-filter: blur(8px);
+  display: none;
+}
+#snOverlay.open #sn-back-btn { display: block; }
+
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Exo+2:wght@300;400;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--gold:#c8a84b;--blue:#3a7bd5;--panel:rgba(4,10,22,0.93);--red:#e05050}
+#sn-wrap{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Exo 2',sans-serif;color:#c8d8f0;touch-action:none}
+
+/* ═══ CANVAS ═══ */
+#canvas{display:block;width:100%;height:100%;cursor:grab}
+#canvas:active{cursor:grabbing}
+
+/* ═══ HUD TOP ═══ */
+#hud-top{position:fixed;top:0;left:0;right:0;padding:10px 14px 8px;background:linear-gradient(to bottom,rgba(0,0,0,0.88),transparent);display:flex;justify-content:space-between;align-items:center;pointer-events:none;z-index:20}
+#title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;color:var(--gold);opacity:.85}
+#coords{font-size:9px;letter-spacing:1px;color:rgba(100,150,220,0.6);text-align:right}
+
+/* ═══ BOUTONS HUD ═══ */
+.hud-btn{pointer-events:all;background:rgba(4,10,22,0.82);border:1px solid rgba(58,123,213,0.35);color:#7aabdc;font-family:'Exo 2',sans-serif;font-size:9px;letter-spacing:1.5px;padding:5px 10px;cursor:pointer;border-radius:2px;backdrop-filter:blur(8px);transition:all .15s;white-space:nowrap}
+.hud-btn:hover{background:rgba(58,123,213,0.2);color:#c8d8f0;border-color:rgba(58,123,213,0.7)}
+.hud-btn.danger{border-color:rgba(220,80,80,0.4);color:#e08080}
+.hud-btn.danger:hover{background:rgba(220,80,80,0.2);color:#ffb0b0;border-color:rgba(220,80,80,0.8)}
+.hud-btn.admin-on{border-color:rgba(255,200,50,0.6);color:#ffc832}
+.hud-btn.admin-on:hover{background:rgba(255,200,50,0.15)}
+#btn-row-top{display:flex;gap:6px;align-items:center;pointer-events:all}
+
+/* ═══ PANEL BAS ═══ */
+#panel{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid rgba(58,123,213,0.22);padding:8px 14px 14px;z-index:20;max-height:170px;overflow-y:auto;backdrop-filter:blur(14px)}
+#panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+#panel-title{font-size:8px;letter-spacing:2.5px;color:rgba(100,140,200,0.45)}
+#btn-clear{font-size:8px;letter-spacing:1px;padding:3px 8px;border-color:rgba(220,80,80,0.35);color:#c07070}
+#btn-clear:hover{background:rgba(220,80,80,0.18);color:#ffaaaa;border-color:rgba(220,80,80,0.7)}
+#selected-list{display:flex;flex-wrap:wrap;gap:5px}
+.star-tag{display:flex;align-items:center;gap:5px;background:rgba(58,123,213,0.12);border:1px solid rgba(58,123,213,0.3);border-radius:2px;padding:4px 8px;font-size:10px;letter-spacing:1px;color:#a0c4f0;cursor:pointer;animation:tagIn .2s ease;transition:all .15s}
+.star-tag:hover{background:rgba(200,80,80,0.18);border-color:rgba(220,100,80,0.5);color:#ffb090}
+.star-tag:hover .dot{background:#ff8060;box-shadow:0 0 5px #ff8060}
+.star-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 4px var(--gold);transition:all .15s}
+.star-tag .x-btn{font-size:9px;color:rgba(200,140,120,0.5);margin-left:2px}
+@keyframes tagIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+#empty-msg{font-size:9px;letter-spacing:2px;color:rgba(100,140,200,0.28);padding:4px 0}
+
+/* ═══ ZOOM / COMPASS ═══ */
+#zoom-ctrl{position:fixed;right:14px;bottom:100px;display:flex;flex-direction:column;gap:6px;z-index:20}
+.z-btn{width:36px;height:36px;background:rgba(4,10,22,0.82);border:1px solid rgba(58,123,213,0.3);color:#6a9ad0;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:3px;user-select:none;backdrop-filter:blur(8px);transition:all .15s}
+.z-btn:active{background:rgba(58,123,213,0.25);color:#c8d8f0}
+#compass{position:fixed;left:14px;bottom:100px;width:40px;height:40px;z-index:20;opacity:.4}
+
+/* ═══ MODAL MOT DE PASSE ═══ */
+#modal-overlay{position:fixed;inset:0;background:rgba(0,0,10,0.85);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+#modal-overlay.show{display:flex}
+#modal-box{background:rgba(4,10,28,0.98);border:1px solid rgba(58,123,213,0.4);padding:28px 32px;min-width:280px;text-align:center;box-shadow:0 0 40px rgba(20,60,180,0.3)}
+#modal-box h3{font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:3px;color:var(--gold);margin-bottom:6px}
+#modal-box p{font-size:9px;letter-spacing:1.5px;color:rgba(140,180,230,0.6);margin-bottom:18px}
+#modal-input{width:100%;background:rgba(10,20,50,0.8);border:1px solid rgba(58,123,213,0.35);color:#c8d8f0;font-family:'Exo 2',sans-serif;font-size:16px;letter-spacing:6px;padding:10px;text-align:center;outline:none;margin-bottom:12px}
+#modal-input:focus{border-color:rgba(58,123,213,0.8)}
+#modal-error{font-size:9px;color:#e05050;letter-spacing:1px;min-height:14px;margin-bottom:10px}
+#modal-buttons{display:flex;gap:8px;justify-content:center}
+
+/* ═══ PAGE SUCCÈS ═══ */
+#success-page{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;align-items:center;justify-content:center;background:#000;overflow:hidden}
+#success-page>#bg-stars-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+#success-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;width:100%;height:100%;padding:60px 20px 30px;gap:0;opacity:0;transition:opacity 1.2s ease;overflow-y:auto}
+#success-content.visible{opacity:1}
+#success-top-bar{position:fixed;top:14px;left:16px;z-index:10}
+#taurus-canvas{display:block;width:min(360px,80vw);height:min(240px,28vh);flex:none;border:1px solid rgba(200,168,75,0.18);border-radius:4px;box-shadow:0 0 30px rgba(200,168,75,0.12);margin-bottom:24px}
+#success-msg{font-family:'Orbitron',sans-serif;font-size:15px;letter-spacing:5px;color:var(--gold);text-align:center;line-height:2;max-width:500px;flex-shrink:0;text-shadow:0 0 20px rgba(200,168,75,0.5);padding-bottom:20px}
+
+/* ═══ ANIMATION VOYAGE ═══ */
+#warp-overlay{position:fixed;inset:0;z-index:80;display:none;pointer-events:all}
+#warp-overlay canvas{width:100%;height:100%}
+
+/* ═══ ADMIN BADGE ═══ */
+#admin-badge{position:fixed;top:46px;left:50%;transform:translateX(-50%);font-size:8px;letter-spacing:3px;color:rgba(255,200,50,0.6);z-index:20;pointer-events:none;display:none}
+
 </style>
 </head>
 <body>
@@ -641,6 +834,124 @@ body {
       <div class="solved-sub" id="solvedSub">Synchronisé.</div>
     </div>
   </div>
+</div>
+
+<!-- ══ ÉNIGME 3 — NAVIGATION STELLAIRE ══ -->
+<div class="page" id="pageEnigma3">
+  <div class="topbar">
+    <div class="back-btn" onclick="goHome()">&#8592;</div>
+    <div>
+      <div class="topbar-title">ÉNIGME III</div>
+      <div class="topbar-sub">Curiosity · Paramètre de transmission</div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="stellar-intro">
+      <div class="stellar-badge">
+        <div class="stellar-badge-line"></div>
+        <div class="stellar-badge-txt">PARAMÈTRE III · SIGNATURE DU RÉCEPTEUR</div>
+        <div class="stellar-badge-line"></div>
+      </div>
+      <div class="stellar-text" id="e3Text">texte énigme 3</div>
+
+      <button class="stellar-nav-btn" id="openStarNavBtn" onclick="openStarNav()">
+        <div class="stellar-nav-btn-ico">✦</div>
+        <div class="stellar-nav-btn-txt">
+          <span class="stellar-nav-btn-label">Navigation interstellaire</span>
+          <span class="stellar-nav-btn-sub">Ouvrir la carte céleste</span>
+        </div>
+        <span style="font-size:14px;color:#1a3050">›</span>
+      </button>
+
+      <div class="stellar-status" id="stellarStatus">
+        ◌ &nbsp; AUCUNE ÉTOILE SÉLECTIONNÉE
+      </div>
+
+      <div class="solved-banner" id="solvedBanner3" style="display:none;margin-top:16px">
+        <div class="solved-ico">&#10022;</div>
+        <div class="solved-title">Paramètre activé</div>
+        <div class="solved-sub">Signature du récepteur confirmée.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STAR NAVIGATOR INTÉGRÉ ══ -->
+<div id="snOverlay">
+  <button id="sn-back-btn" onclick="closeStarNav()">← RETOUR CURIOSITY</button>
+  <div id="sn-wrap" style="width:100%;height:100%;overflow:hidden;position:relative;">
+<canvas id="canvas"></canvas>
+
+<!-- HUD -->
+<div id="hud-top">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div id="title">CARTE CÉLESTE</div>
+    <div id="admin-badge">◈ MODE ADMIN</div>
+  </div>
+  <div id="btn-row-top">
+    <button class="hud-btn" id="btn-admin-toggle">ADMIN</button>
+    <button class="hud-btn" id="btn-fs">⛶ PLEIN ÉCRAN</button>
+    <button class="hud-btn danger" id="btn-quit">✕ QUITTER</button>
+  </div>
+</div>
+<div id="coords" style="position:fixed;top:42px;right:14px;font-size:9px;letter-spacing:1px;color:rgba(100,150,220,0.5);z-index:20;pointer-events:none;text-align:right"></div>
+
+<!-- ZOOM / COMPASS -->
+<div id="zoom-ctrl">
+  <div class="z-btn" id="btn-plus">+</div>
+  <div class="z-btn" id="btn-center" title="Recentrer">⊕</div>
+  <div class="z-btn" id="btn-minus">−</div>
+</div>
+<svg id="compass" viewBox="0 0 40 40" fill="none">
+  <circle cx="20" cy="20" r="19" stroke="#1a3a6a" stroke-width="1"/>
+  <line x1="20" y1="2" x2="20" y2="38" stroke="#1a3a6a" stroke-width="0.5"/>
+  <line x1="2" y1="20" x2="38" y2="20" stroke="#1a3a6a" stroke-width="0.5"/>
+  <text x="20" y="10" text-anchor="middle" font-size="7" fill="#3a7bd5" font-family="'Exo 2',sans-serif">N</text>
+  <text x="20" y="35" text-anchor="middle" font-size="7" fill="#3a5a8a" font-family="'Exo 2',sans-serif">S</text>
+  <text x="6"  y="22" text-anchor="middle" font-size="7" fill="#3a5a8a" font-family="'Exo 2',sans-serif">W</text>
+  <text x="34" y="22" text-anchor="middle" font-size="7" fill="#3a5a8a" font-family="'Exo 2',sans-serif">E</text>
+</svg>
+
+<!-- PANEL BAS -->
+<div id="panel">
+  <div id="panel-header">
+    <div id="panel-title">ÉTOILES SÉLECTIONNÉES — cliquer pour désélectionner</div>
+    <button class="hud-btn danger" id="btn-clear" style="font-size:8px;padding:3px 8px">✕ TOUT EFFACER</button>
+  </div>
+  <div id="selected-list">
+    <div id="empty-msg">Appuyez sur une étoile pour la sélectionner</div>
+  </div>
+</div>
+
+<!-- MODAL MOT DE PASSE -->
+<div id="modal-overlay">
+  <div id="modal-box">
+    <h3>ACCÈS RESTREINT</h3>
+    <p>SAISIR LE CODE D'AUTHENTIFICATION</p>
+    <input id="modal-input" type="password" maxlength="6" placeholder="••••" autocomplete="off">
+    <div id="modal-error"></div>
+    <div id="modal-buttons">
+      <button class="hud-btn" id="modal-cancel">ANNULER</button>
+      <button class="hud-btn admin-on" id="modal-confirm">VALIDER</button>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY VOYAGE INTERSTELLAIRE -->
+<div id="warp-overlay"><canvas id="warp-canvas"></canvas></div>
+
+<!-- PAGE SUCCÈS -->
+<div id="success-page">
+  <canvas id="bg-stars-canvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+  <div id="success-content">
+    <div id="success-top-bar">
+      <button class="hud-btn" id="btn-back">← RETOUR À LA CARTE</button>
+    </div>
+    <canvas id="taurus-canvas"></canvas>
+    <div id="success-msg">message succès</div>
+  </div>
+</div>
+</div>
 </div>
 
 <!-- ══ SCAN BIO ══ -->
@@ -857,15 +1168,35 @@ function showBioError() {
 function openEnigma(n) {
   curIdx = n - 1;
   var e = ENIGMAS[curIdx];
-  document.getElementById('enigmaTitle').textContent = e.title;
-  document.getElementById('enigmaBadge').textContent = e.badge;
-  document.getElementById('enigmaText').textContent  = e.text;
+
+  // Énigme 3 : page dédiée navigation stellaire
+  if (n === 3) {
+    document.getElementById('e3Text').textContent = e.text;
+    var b3 = document.getElementById('solvedBanner3');
+    var btn3 = document.getElementById('openStarNavBtn');
+    if (STATE.solved[2]) {
+      b3.style.display = 'block';
+      btn3.style.opacity = '0.4';
+      btn3.style.pointerEvents = 'none';
+    } else {
+      b3.style.display = 'none';
+      btn3.style.opacity = '1';
+      btn3.style.pointerEvents = 'auto';
+    }
+    updateStellarStatus();
+    showPage('pageEnigma3');
+    return;
+  }
+
   var inp = document.getElementById('answerInput');
   var section = document.getElementById('answerSection');
   var banner  = document.getElementById('solvedBanner');
   var fb = document.getElementById('feedback');
   inp.value = ''; inp.className = 'answer-input';
   fb.textContent = ''; fb.className = 'feedback';
+  document.getElementById('enigmaTitle').textContent = e.title;
+  document.getElementById('enigmaBadge').textContent = e.badge;
+  document.getElementById('enigmaText').textContent  = e.text;
   if (STATE.solved[curIdx]) {
     section.style.display = 'none'; banner.style.display = 'block';
     document.getElementById('solvedSub').textContent = e.sub;
@@ -874,6 +1205,131 @@ function openEnigma(n) {
   }
   showPage('pageEnigma');
   if (!STATE.solved[curIdx]) setTimeout(function(){ inp.focus(); }, 300);
+}
+
+/* ══ STAR NAVIGATOR — Énigme 3 ══ */
+// Star Navigator intégré — pas besoin d'URL externe
+
+// Clé de stockage partagée avec star-navigator
+var STAR_SEL_KEY = 'celeste_selected_v2';
+// Indices des 4 étoiles cibles dans star-navigator : Aldébaran=12, Elnath=25, Tianguan=127, 119 Tauri=129
+var TARGET_STARS = [12, 25, 127, 129];
+
+var snInitialized = false;
+function openStarNav() {
+  if (STATE.solved[2]) return;
+  var overlay = document.getElementById('snOverlay');
+  overlay.classList.add('open');
+  // Initialiser le Star Navigator au premier lancement
+  if (!snInitialized) {
+    snInitialized = true;
+    initStarNavigator();
+  }
+  startStarPolling();
+}
+
+function closeStarNav() {
+  var overlay = document.getElementById('snOverlay');
+  overlay.classList.remove('open');
+  stopStarPolling();
+  updateStellarStatus();
+  checkStarSolution();
+}
+
+// Bridge pour que le SN puisse communiquer avec Curiosity
+window.CuriosityBridge = {
+  closeStarNav: closeStarNav,
+  onTaurusComplete: function() {
+    // Appelé par le SN quand les 4 étoiles sont sélectionnées
+    // La validation se fait aussi via polling, pas besoin d'action immédiate
+  }
+};
+
+var starPollTimer = null;
+function startStarPolling() {
+  stopStarPolling();
+  starPollTimer = setInterval(function(){
+    var sel = getStarSelection();
+    updateStellarStatusWith(sel);
+    if (checkStarSolutionWith(sel)) stopStarPolling();
+  }, 800);
+}
+function stopStarPolling() {
+  if (starPollTimer) { clearInterval(starPollTimer); starPollTimer = null; }
+}
+
+function onStarNavMessage(e) {
+  if (e.data && e.data.type === 'starSelected') {
+    updateStellarStatus();
+    checkStarSolution();
+  }
+}
+
+function getStarSelection() {
+  try {
+    var raw = localStorage.getItem(STAR_SEL_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e2) {}
+  return [];
+}
+
+function updateStellarStatus() {
+  updateStellarStatusWith(getStarSelection());
+}
+
+function updateStellarStatusWith(sel) {
+  if (STATE.solved[2]) return;
+  var el = document.getElementById('stellarStatus');
+  if (!el) return;
+  var foundTargets = TARGET_STARS.filter(function(t){ return sel.indexOf(t) >= 0; });
+  var n = foundTargets.length;
+  if (n === 0) {
+    el.className = 'stellar-status';
+    el.innerHTML = '◌ &nbsp; AUCUNE ÉTOILE SÉLECTIONNÉE';
+  } else if (n < TARGET_STARS.length) {
+    el.className = 'stellar-status partial';
+    el.innerHTML = '◑ &nbsp; ' + n + ' / 4 ÉTOILES IDENTIFIÉES';
+  } else {
+    // Les 4 cibles sont là — vérifier qu'il n'y a pas d'autres étoiles (sélection stricte)
+    var exact = sel.length === TARGET_STARS.length;
+    if (exact) {
+      el.className = 'stellar-status complete';
+      el.innerHTML = '◉ &nbsp; SIGNATURE COMPLÈTE — VALIDATION EN COURS…';
+    } else {
+      el.className = 'stellar-status partial';
+      el.innerHTML = '◑ &nbsp; 4 / 4 CIBLES + ' + (sel.length - 4) + ' ÉTOILE(S) EN TROP';
+    }
+  }
+}
+
+function checkStarSolution() {
+  return checkStarSolutionWith(getStarSelection());
+}
+
+function checkStarSolutionWith(sel) {
+  if (STATE.solved[2]) return true;
+  // Exactement les 4 étoiles cibles, pas plus
+  if (sel.length !== TARGET_STARS.length) return false;
+  var allFound = TARGET_STARS.every(function(t){ return sel.indexOf(t) >= 0; });
+  if (!allFound) return false;
+  // Résoudre l'énigme 3
+  STATE.solved[2] = true;
+  saveState();
+  updateStellarStatus();
+  // Fermer le star nav si ouvert
+  var overlay = document.getElementById('starNavOverlay');
+  if (overlay.classList.contains('open')) {
+    setTimeout(function(){ closeStarNav(); }, 800);
+  }
+  // Afficher le succès
+  setTimeout(function(){
+    var b3 = document.getElementById('solvedBanner3');
+    var btn3 = document.getElementById('openStarNavBtn');
+    if (b3) b3.style.display = 'block';
+    if (btn3) { btn3.style.opacity='0.4'; btn3.style.pointerEvents='none'; }
+    launchSuccessAnim(2, function(){ goHome(); });
+  }, 600);
+  return true;
 }
 
 function checkAnswer() {
@@ -1014,6 +1470,1039 @@ if ('serviceWorker' in navigator) {
 }
 
 refreshHome();
+
+/* ══ STAR NAVIGATOR — JS INTÉGRÉ ══ */
+function initStarNavigator() {
+(function() {
+// ═══ STAR NAVIGATOR — CODE INTÉGRÉ ═══
+// ═══════════════════════════════════════════════════════════════════
+//  DONNÉES ÉTOILES [nom, RA(h), DEC(°), mag, tempK, constellation]
+// ═══════════════════════════════════════════════════════════════════
+const SD = [
+  ["Sirius",        6.752,-16.716,-1.46, 9940,"Grand Chien"],
+  ["Canopus",       6.399,-52.696,-0.74, 7350,"Carène"],
+  ["Arcturus",     14.261, 19.182,-0.05, 4290,"Bouvier"],
+  ["Vega",         18.615, 38.783, 0.03, 9602,"Lyre"],
+  ["Capella",       5.278, 45.998, 0.08, 4970,"Cocher"],
+  ["Rigel",         5.242, -8.202, 0.12,12100,"Orion"],
+  ["Procyon",       7.655,  5.225, 0.34, 6530,"Petit Chien"],
+  ["Achernar",      1.628,-57.237, 0.46,14000,"Éridan"],
+  ["Betelgeuse",    5.919,  7.407, 0.50, 3500,"Orion"],
+  ["Hadar",        14.064,-60.373, 0.61,22000,"Centaure"],
+  ["Altair",       19.846,  8.868, 0.76, 7680,"Aigle"],
+  ["Acrux",        12.443,-63.099, 0.77,24000,"Croix du Sud"],
+  ["Aldebaran",     4.599, 16.509, 0.85, 3900,"Taureau"],      // idx 12
+  ["Antares",      16.490,-26.432, 0.96, 3400,"Scorpion"],
+  ["Spica",        13.420,-11.161, 1.04,22400,"Vierge"],
+  ["Pollux",        7.755, 28.026, 1.14, 4865,"Gémeaux"],
+  ["Fomalhaut",    22.961,-29.622, 1.16, 8590,"Poisson Austral"],
+  ["Deneb",        20.690, 45.280, 1.25, 8525,"Cygne"],
+  ["Mimosa",       12.795,-59.689, 1.25,22000,"Croix du Sud"],
+  ["Regulus",      10.139, 11.967, 1.35,12460,"Lion"],
+  ["Adhara",        6.977,-28.972, 1.50,22200,"Grand Chien"],
+  ["Castor",        7.577, 31.888, 1.58, 8840,"Gémeaux"],
+  ["Shaula",       17.560,-37.104, 1.62,25000,"Scorpion"],
+  ["Bellatrix",     5.418,  6.350, 1.64,22000,"Orion"],
+  ["Gacrux",       12.519,-57.113, 1.64, 3626,"Croix du Sud"],
+  ["Elnath",        5.438, 28.607, 1.65,13600,"Taureau"],      // idx 25
+  ["Miaplacidus",   9.220,-69.717, 1.67, 9000,"Carène"],
+  ["Alnilam",       5.603, -1.202, 1.70,27000,"Orion"],
+  ["Alioth",       12.900, 55.960, 1.76, 9020,"Grande Ourse"],
+  ["Dubhe",        11.062, 61.751, 1.79, 4660,"Grande Ourse"],
+  ["Mirfak",        3.408, 49.861, 1.79, 6350,"Persée"],
+  ["Wezen",         7.140,-26.393, 1.84, 5818,"Grand Chien"],
+  ["Kaus Australis",18.403,-34.384,1.85, 9960,"Sagittaire"],
+  ["Avior",         8.375,-59.509, 1.86, 3523,"Carène"],
+  ["Alkaid",       13.792, 49.313, 1.86,15540,"Grande Ourse"],
+  ["Sargas",       17.622,-42.998, 1.87, 6300,"Scorpion"],
+  ["Menkent",      14.111,-36.370, 2.06, 4930,"Centaure"],
+  ["Atria",        16.811,-69.028, 1.92, 4150,"Triangle Austral"],
+  ["Alhena",        6.629, 16.399, 1.93, 9260,"Gémeaux"],
+  ["Peacock",      20.427,-56.735, 1.94,17700,"Paon"],
+  ["Mirzam",        6.378,-17.956, 1.98,22000,"Grand Chien"],
+  ["Alphard",       9.460, -8.658, 1.98, 4120,"Hydre"],
+  ["Polaris",       2.530, 89.264, 1.97, 6015,"Petite Ourse"],
+  ["Hamal",         2.120, 23.462, 2.00, 4480,"Bélier"],
+  ["Algieba",      10.333, 19.841, 2.01, 4470,"Lion"],
+  ["Diphda",        0.727,-17.987, 2.04, 4797,"Baleine"],
+  ["Nunki",        18.921,-26.296, 2.05,18700,"Sagittaire"],
+  ["Saiph",         5.796, -9.670, 2.07,26500,"Orion"],
+  ["Alpheratz",     0.140, 29.090, 2.07,13800,"Andromède"],
+  ["Mirach",        1.162, 35.620, 2.07, 3842,"Andromède"],
+  ["Almach",        2.065, 42.330, 2.10, 4250,"Andromède"],
+  ["Schedar",       0.675, 56.537, 2.24, 4552,"Cassiopée"],
+  ["Caph",          0.153, 59.150, 2.28, 7079,"Cassiopée"],
+  ["Ruchbah",       1.430, 60.235, 2.68, 8912,"Cassiopée"],
+  ["Segin",         1.907, 63.670, 3.38,15174,"Cassiopée"],
+  ["Navi",          0.945, 60.717, 2.47, 6700,"Cassiopée"],
+  ["Mintaka",       5.533, -0.300, 2.23,29500,"Orion"],
+  ["Alnitak",       5.679, -1.943, 1.74,29500,"Orion"],
+  ["Meissa",        5.588,  9.934, 3.33,26000,"Orion"],
+  ["Saiph2",        5.796, -9.670, 2.07,26500,"Orion"],
+  ["Rigel K.",     14.660,-60.833, 2.30, 4865,"Centaure"],
+  ["Graffias",     16.090,-19.806, 2.62,17000,"Scorpion"],
+  ["Dschubba",     16.005,-22.622, 2.32,27400,"Scorpion"],
+  ["Lesath",       17.531,-37.296, 2.69,22000,"Scorpion"],
+  ["Girtab",       17.623,-42.988, 2.41,11000,"Scorpion"],
+  ["Acrab",        16.090,-19.806, 2.62,15000,"Scorpion"],
+  ["Denebola",     11.817, 14.572, 2.14, 8500,"Lion"],
+  ["Zosma",        11.235, 20.524, 2.56, 9350,"Lion"],
+  ["Algenubi",      9.764, 11.982, 2.97, 5270,"Lion"],
+  ["Phecda",       11.897, 53.695, 2.41, 9355,"Grande Ourse"],
+  ["Merak",        11.031, 56.383, 2.37, 9377,"Grande Ourse"],
+  ["Megrez",       12.257, 57.033, 3.31, 9480,"Grande Ourse"],
+  ["Mizar",        13.399, 54.926, 2.27, 9000,"Grande Ourse"],
+  ["Alcor",        13.421, 54.988, 3.99, 9000,"Grande Ourse"],
+  ["Pherkad",      15.345, 71.834, 3.05, 8280,"Petite Ourse"],
+  ["Kochab",       14.845, 74.156, 2.08, 4030,"Petite Ourse"],
+  ["Enif",         21.736,  9.875, 2.39, 4462,"Pégase"],
+  ["Markab",       23.079, 15.183, 2.49, 9765,"Pégase"],
+  ["Scheat",       23.063, 28.083, 2.42, 3689,"Pégase"],
+  ["Algenib",       0.221, 15.183, 2.83,22000,"Pégase"],
+  ["Sadalsuud",    21.526, -5.571, 2.90, 5700,"Verseau"],
+  ["Sadalmelik",   22.097, -0.320, 2.95, 5383,"Verseau"],
+  ["Deneb Algedi", 21.784,-16.128, 2.85, 7301,"Capricorne"],
+  ["Sadr",         20.370, 40.257, 2.20, 5790,"Cygne"],
+  ["Gienah Cyg",   20.770, 33.971, 2.46, 4996,"Cygne"],
+  ["Albireo",      19.512, 27.960, 3.05, 4080,"Cygne"],
+  ["Tarazed",      19.771, 10.614, 2.72, 4210,"Aigle"],
+  ["Sulafat",      18.982, 32.690, 3.25, 9510,"Lyre"],
+  ["Eltanin",      17.943, 51.489, 2.24, 3930,"Dragon"],
+  ["Rastaban",     17.507, 52.301, 2.79, 5425,"Dragon"],
+  ["Thuban",       14.073, 64.376, 3.65, 9700,"Dragon"],
+  ["Unukalhai",    15.737,  6.426, 2.65, 4498,"Serpent"],
+  ["Rasalhague",   17.582, 12.560, 2.08, 7570,"Ophiuchus"],
+  ["Cebalrai",     17.722,  4.567, 2.77, 4430,"Ophiuchus"],
+  ["Sabik",        17.172,-15.724, 2.43, 8900,"Ophiuchus"],
+  ["Gienah Crv",   12.264,-17.542, 2.59, 4875,"Corbeau"],
+  ["Kraz",         12.573,-23.397, 2.65, 5100,"Corbeau"],
+  ["Algorab",      12.498,-16.516, 2.95,10400,"Corbeau"],
+  ["Suhail",        9.133,-43.433, 2.21, 3000,"Voiles"],
+  ["Naos",          8.060,-40.003, 2.21,42000,"Poupe"],
+  ["Menkar",        3.038,  4.090, 2.53, 3900,"Baleine"],
+  ["Propus",        6.241, 22.506, 3.28, 3990,"Gémeaux"],
+  ["Tejat",         6.383, 22.514, 2.88, 3900,"Gémeaux"],
+  ["Hassaleh",      5.992, 44.947, 2.69, 4160,"Cocher"],
+  ["Menkib",        3.966, 53.504, 2.90,37000,"Persée"],
+  ["Atik",          3.963, 31.884, 3.83,22000,"Persée"],
+  ["Zubenelgenubi",14.842,-16.042, 2.75, 8500,"Balance"],
+  ["Zubeneschamali",15.283,-9.383, 2.61,11000,"Balance"],
+  ["Alphecca",     15.578, 26.715, 2.22, 9700,"Couronne Boréale"],
+  ["Seginus",      14.534, 38.308, 3.03, 7800,"Bouvier"],
+  ["Izar",         14.750, 27.074, 2.37, 4800,"Bouvier"],
+  ["Muphrid",      13.911, 18.398, 2.68, 6100,"Bouvier"],
+  ["Vindemiatrix", 13.036, 10.959, 2.83, 5086,"Vierge"],
+  ["Porrima",      12.694, -1.449, 2.74, 7100,"Vierge"],
+  ["Heze",         13.578, -0.596, 3.37,10300,"Vierge"],
+  ["Ankaa",         0.438,-42.306, 2.40, 4436,"Phénix"],
+  ["Wasat",         7.335, 21.982, 3.53, 8000,"Gémeaux"],
+  ["Cor Caroli",   12.934, 38.318, 2.89, 9000,"Chiens de Chasse"],
+  ["Pherkad2",     15.410, 71.648, 5.02, 9200,"Petite Ourse"],
+  // ── Taureau (étoiles supplémentaires pour la carte) ──
+  ["Alcyone",       3.791, 24.105, 2.87,12300,"Taureau"],     // idx 125
+  ["Atlas",         3.819, 24.053, 3.63,12000,"Taureau"],     // 126
+  ["Electra",       3.748, 24.113, 3.70,14000,"Taureau"],     // 127
+  ["Maia",          3.773, 24.367, 3.87,13000,"Taureau"],     // 128
+  ["Merope",        3.776, 23.948, 4.18,14000,"Taureau"],     // 129
+  ["Ain",           4.477, 19.181, 3.53, 4950,"Taureau"],     // 130
+  ["Prima Hyadum",  4.329, 15.628, 3.65, 4900,"Taureau"],     // 131
+  ["Zeta Tau",      5.627, 21.143, 2.97,19000,"Taureau"],     // 132
+  ["Tianguan",      5.436, 21.142, 3.00,18000,"Taureau"],     // 133
+  ["Chamukuy",      4.429, 15.962, 3.84, 5300,"Taureau"],     // 134
+  ["119 Tauri",     5.647, 18.594, 4.33, 3800,"Taureau"],     // 135 — géante rouge
+];
+
+// ── 4 étoiles officielles du Taureau pour le jeu ──
+// Aldébaran=12, Elnath=25, Tianguan=133, 119 Tauri=135
+const TAURUS_INDICES = [12, 25, 127, 129]; // Aldébaran=12, Elnath=25, Tianguan=127, 119 Tauri=129
+// Connexions pour dessin Taureau (page succès)
+const TAURUS_LINKS = [
+  [12, 25],    // Aldébaran → Elnath
+  [12, 127],   // Aldébaran → Tianguan
+  [127, 129],  // Tianguan → 119 Tauri
+  [12, 129],   // Aldébaran → 119 Tauri
+  [25, 127],   // Elnath → Tianguan
+];
+
+// ═══════════════════════════════════════════════════════════════════
+//  ÉTAT
+// ═══════════════════════════════════════════════════════════════════
+const STORAGE_KEY = 'celeste_selected_v2';
+const ADMIN_PW    = '0809';
+let adminMode = false;
+
+// Charger sélection depuis localStorage
+function loadSelected() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return new Set(JSON.parse(raw));
+  } catch(e){}
+  return new Set();
+}
+function saveSelected() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...state.selected])); } catch(e){}
+}
+
+const MAP_W = 6000, MAP_H = 3200;
+let W, H;
+let state = { ox:0, oy:0, zoom:1, selected: loadSelected() };
+const MIN_ZOOM = 0.12, MAX_ZOOM = 24;
+
+const canvas   = document.getElementById('canvas');
+const ctx      = canvas.getContext('2d');
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  draw();
+}
+window.addEventListener('resize', resize);
+
+function initView() {
+  state.zoom = Math.max(W/MAP_W, H/MAP_H) * 1.05;
+  state.ox = (W - MAP_W*state.zoom) / 2;
+  state.oy = (H - MAP_H*state.zoom) / 2;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  COORDS
+// ═══════════════════════════════════════════════════════════════════
+function starToMap(ra,dec){ return {x:MAP_W*(1-ra/24), y:MAP_H*(1-(dec+90)/180)}; }
+function mapToScreen(mx,my){
+  // Coordonnées normalisées [-1, 1] par rapport au centre de la carte
+  const nx = (mx/MAP_W - 0.5)*2;
+  const ny = (my/MAP_H - 0.5)*2;
+  // Distorsion sphérique légère (barrel très faible)
+  const BULGE = 0.13;
+  const r2 = nx*nx + ny*ny;
+  const factor = 1 + BULGE * r2;
+  const bx = nx * factor;
+  const by = ny * factor;
+  // Retour en coordonnées écran
+  const sx = (bx/2 + 0.5)*MAP_W*state.zoom + state.ox;
+  const sy = (by/2 + 0.5)*MAP_H*state.zoom + state.oy;
+  return {x:sx, y:sy};
+}
+function screenToMap(sx,sy){ return {x:(sx-state.ox)/state.zoom, y:(sy-state.oy)/state.zoom}; }
+
+const starPositions = SD.map(d => starToMap(d[1],d[2]));
+
+// ═══════════════════════════════════════════════════════════════════
+//  COULEURS
+// ═══════════════════════════════════════════════════════════════════
+function starRGB(temp){
+  if(temp>30000) return [180,200,255];
+  if(temp>20000) return [200,220,255];
+  if(temp>10000) return [220,235,255];
+  if(temp> 7500) return [240,245,255];
+  if(temp> 6000) return [255,250,240];
+  if(temp> 5000) return [255,240,200];
+  if(temp> 4000) return [255,210,150];
+  return [255,160,100];
+}
+function rgbStr(rgb,a){ return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a})`; }
+
+// ═══════════════════════════════════════════════════════════════════
+//  ÉTOILES DE FOND & NÉBULEUSES
+// ═══════════════════════════════════════════════════════════════════
+const BG = [];        // étoiles DANS la carte
+const BG_OUT = [];    // étoiles HORS carte (décor non sélectionnable)
+(function(){
+  let s=99991; const rng=()=>{s^=s<<13;s^=s>>17;s^=s<<5;return(s>>>0)/4294967296};
+  // Étoiles dans la carte
+  for(let i=0;i<3500;i++) BG.push({x:rng()*MAP_W, y:rng()*MAP_H, r:rng()*0.7+0.15, a:rng()*0.45+0.08});
+  // Étoiles hors-carte : grande zone étendue, densité décroissante avec la distance
+  const EXT=7;
+  for(let i=0;i<10000;i++){
+    const x=(rng()*EXT - (EXT-1)/2)*MAP_W;
+    const y=(rng()*EXT - (EXT-1)/2)*MAP_H;
+    // Garder seulement celles HORS de la carte
+    if(x>=0&&x<=MAP_W&&y>=0&&y<=MAP_H) continue;
+    // Distance normalisée au bord le plus proche de la carte
+    const dx=x<0?-x:x>MAP_W?x-MAP_W:0;
+    const dy=y<0?-y:y>MAP_H?y-MAP_H:0;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    const maxDist=Math.max(MAP_W,MAP_H)*3;
+    const falloff=Math.max(0,1-dist/maxDist); // 1 près du bord → 0 loin
+    // Reject probabiliste : moins d'étoiles loin des bords
+    if(rng()>falloff*1.8+0.05) continue;
+    // Plus on est loin, plus l'étoile est petite et discrète
+    const nearFactor=Math.min(1,falloff*2);
+    BG_OUT.push({
+      x, y,
+      r: rng()*0.5*nearFactor+0.08,
+      a: rng()*0.25*nearFactor+0.03
+    });
+  }
+})();
+// ── Étoiles filantes (shooting stars) ──
+const SHOOTING_STARS = [];
+function spawnShootingStar(){
+  // Direction aléatoire mais toujours en mouvement vers l'extérieur
+  const angle = Math.random()*Math.PI*2;
+  const speed = 0.18 + Math.random()*0.22; // très lent en unités carte/frame
+  const len   = 80 + Math.random()*180;    // longueur traîne (unités carte)
+  // Spawn dans la zone carte + débordement
+  const x = (Math.random()-0.1)*MAP_W*1.2;
+  const y = (Math.random()-0.1)*MAP_H*1.2;
+  SHOOTING_STARS.push({
+    x, y,
+    vx: Math.cos(angle)*speed,
+    vy: Math.sin(angle)*speed,
+    len,
+    life: 1.0,          // 1→0
+    decay: 0.004 + Math.random()*0.004,
+    width: 0.4 + Math.random()*0.8,
+    col: Math.random()<0.2 ? [220,200,255] : [255,255,255]
+  });
+}
+// 1 étoile filante toutes les ~10 secondes
+let lastShootingSpawn = Date.now() - 8000; // première dans ~2s
+function maybeSpawnShootingStar(){
+  const now = Date.now();
+  const interval = 9000 + Math.random()*2000; // 9-11s
+  if(SHOOTING_STARS.length === 0 && now - lastShootingSpawn > interval){
+    spawnShootingStar();
+    lastShootingSpawn = now;
+  }
+}
+
+const NEB=[
+  {x:.28*MAP_W,y:.52*MAP_H,rx:320,ry:190,c:[40,20,90], a:.09,ang:.4},
+  {x:.63*MAP_W,y:.44*MAP_H,rx:280,ry:160,c:[20,40,100],a:.08,ang:-.3},
+  {x:.50*MAP_W,y:.28*MAP_H,rx:380,ry:220,c:[10,30,80], a:.07,ang:.1},
+  {x:.14*MAP_W,y:.72*MAP_H,rx:250,ry:140,c:[70,15,50], a:.07,ang:-.6},
+  {x:.82*MAP_W,y:.64*MAP_H,rx:270,ry:160,c:[30,60,20], a:.06,ang:.8},
+  {x:.44*MAP_W,y:.82*MAP_H,rx:430,ry:260,c:[15,25,80], a:.08,ang:.2},
+  {x:.72*MAP_W,y:.18*MAP_H,rx:350,ry:200,c:[55,15,70], a:.07,ang:-.5},
+];
+
+// ═══════════════════════════════════════════════════════════════════
+//  DESSIN PRINCIPAL
+// ═══════════════════════════════════════════════════════════════════
+let animFrame = 0;
+function draw(){
+  animFrame++;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#00010c'; ctx.fillRect(0,0,W,H);
+  ctx.save();
+
+  // Étoiles hors-carte (décor, dessinées avant tout le reste)
+  BG_OUT.forEach(s=>{
+    const sc=mapToScreen(s.x,s.y);
+    if(sc.x<-2||sc.x>W+2||sc.y<-2||sc.y>H+2) return;
+    ctx.beginPath(); ctx.arc(sc.x,sc.y,Math.max(.3,s.r),0,Math.PI*2);
+    ctx.fillStyle=`rgba(170,195,240,${s.a})`; ctx.fill();
+  });
+
+  // Nébuleuses
+  NEB.forEach(n=>{
+    const sc=mapToScreen(n.x,n.y); const rs=n.rx*state.zoom;
+    if(sc.x<-rs*2||sc.x>W+rs*2||sc.y<-rs*2||sc.y>H+rs*2) return;
+    ctx.save(); ctx.translate(sc.x,sc.y); ctx.rotate(n.ang); ctx.scale(1,n.ry/n.rx);
+    const g=ctx.createRadialGradient(0,0,0,0,0,rs);
+    g.addColorStop(0,rgbStr(n.c,n.a)); g.addColorStop(.5,rgbStr(n.c,n.a*.4)); g.addColorStop(1,rgbStr(n.c,0));
+    ctx.beginPath(); ctx.arc(0,0,rs,0,Math.PI*2); ctx.fillStyle=g; ctx.fill(); ctx.restore();
+  });
+
+  // Voie lactée
+  const ml=ctx.createLinearGradient(state.ox,state.oy+MAP_H*state.zoom*.25,state.ox+MAP_W*state.zoom,state.oy+MAP_H*state.zoom*.75);
+  ml.addColorStop(0,'transparent'); ml.addColorStop(.3,'rgba(20,35,75,.05)'); ml.addColorStop(.5,'rgba(30,50,90,.08)'); ml.addColorStop(.7,'rgba(20,35,75,.05)'); ml.addColorStop(1,'transparent');
+  ctx.fillStyle=ml; ctx.fillRect(state.ox,state.oy,MAP_W*state.zoom,MAP_H*state.zoom);
+
+  // Étoiles fond
+  BG.forEach(s=>{
+    const sc=mapToScreen(s.x,s.y);
+    if(sc.x<-2||sc.x>W+2||sc.y<-2||sc.y>H+2) return;
+    ctx.beginPath(); ctx.arc(sc.x,sc.y,Math.max(.4,s.r),0,Math.PI*2);
+    ctx.fillStyle=`rgba(180,205,245,${s.a})`; ctx.fill();
+  });
+
+  // Grille
+  ctx.strokeStyle='rgba(20,50,110,.12)'; ctx.lineWidth=.5; ctx.setLineDash([2,10]);
+  for(let ra=0;ra<=24;ra+=2){const mx=MAP_W*(1-ra/24);const s1=mapToScreen(mx,0),s2=mapToScreen(mx,MAP_H);if(s1.x<-10||s1.x>W+10)continue;ctx.beginPath();ctx.moveTo(s1.x,s1.y);ctx.lineTo(s2.x,s2.y);ctx.stroke();}
+  for(let dec=-80;dec<=80;dec+=20){const my=MAP_H*(1-(dec+90)/180);const s1=mapToScreen(0,my),s2=mapToScreen(MAP_W,my);if(s1.y<-10||s1.y>H+10)continue;ctx.beginPath();ctx.moveTo(s1.x,s1.y);ctx.lineTo(s2.x,s2.y);ctx.stroke();}
+  ctx.setLineDash([]);
+
+  // Étoiles principales
+  SD.forEach((d,i)=>{
+    const [name,ra,dec,mag,temp,cst]=d;
+    const mp=starPositions[i]; const sc=mapToScreen(mp.x,mp.y);
+    if(sc.x<-30||sc.x>W+30||sc.y<-30||sc.y>H+30) return;
+    const isSel=state.selected.has(i);
+    const isAdmin=adminMode&&TAURUS_INDICES.includes(i);
+    const rgb=starRGB(temp);
+    const baseR=Math.max(.8,4.2-mag*.85);
+    const r=isSel?baseR*1.6:isAdmin?baseR*1.4:baseR;
+    const tw=isSel||isAdmin?1:(1+.06*Math.sin(animFrame*.035+i*1.9));
+
+    if(isSel){
+      const pulse=1+.25*Math.sin(animFrame*.09);
+      const hR=r*14*pulse;
+      const h=ctx.createRadialGradient(sc.x,sc.y,0,sc.x,sc.y,hR);
+      h.addColorStop(0,'rgba(220,190,70,.55)'); h.addColorStop(.3,'rgba(200,160,50,.18)'); h.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(sc.x,sc.y,hR,0,Math.PI*2); ctx.fillStyle=h; ctx.fill();
+      ctx.save();
+      const dlen=r*9; ctx.strokeStyle=`rgba(230,210,100,${.35+.15*Math.sin(animFrame*.09)})`; ctx.lineWidth=.7;
+      ctx.beginPath(); ctx.moveTo(sc.x-dlen,sc.y); ctx.lineTo(sc.x+dlen,sc.y); ctx.moveTo(sc.x,sc.y-dlen); ctx.lineTo(sc.x,sc.y+dlen); ctx.stroke();
+      ctx.restore();
+    } else if(isAdmin){
+      // Halo orange vif admin Taureau
+      const hR=r*10;
+      const h=ctx.createRadialGradient(sc.x,sc.y,0,sc.x,sc.y,hR);
+      h.addColorStop(0,'rgba(255,160,30,.7)'); h.addColorStop(.4,'rgba(255,120,20,.25)'); h.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(sc.x,sc.y,hR,0,Math.PI*2); ctx.fillStyle=h; ctx.fill();
+    }
+
+    // Halo normal
+    const haloR=r*(isAdmin?5:3.5)*tw;
+    const glow=ctx.createRadialGradient(sc.x,sc.y,0,sc.x,sc.y,haloR);
+    glow.addColorStop(0,rgbStr(rgb,isSel?.7:isAdmin?.8:.45));
+    glow.addColorStop(.5,rgbStr(rgb,isSel?.3:isAdmin?.35:.15));
+    glow.addColorStop(1,rgbStr(rgb,0));
+    ctx.beginPath(); ctx.arc(sc.x,sc.y,haloR,0,Math.PI*2); ctx.fillStyle=glow; ctx.fill();
+
+    // Corps
+    ctx.beginPath(); ctx.arc(sc.x,sc.y,r*tw,0,Math.PI*2);
+    ctx.fillStyle=isSel?'#ffe898':isAdmin?'#ffaa40':rgbStr(rgb,1); ctx.fill();
+
+    // Nom : visible si sélectionné, si zoom élevé, ou si admin et étoile Taureau
+    const showName = isSel || (state.zoom>3.0) || isAdmin;
+    if(showName){
+      ctx.font=`${isSel?10:isAdmin?10:8}px 'Exo 2'`;
+      ctx.fillStyle=isSel?'rgba(255,228,100,.95)':isAdmin?'rgba(255,180,60,.92)':'rgba(130,170,230,.55)';
+      ctx.textAlign='left'; ctx.fillText(name,sc.x+r+5,sc.y+3);
+    }
+  });
+
+  // ── Étoiles filantes ──
+  // Mise à jour et dessin
+  maybeSpawnShootingStar();
+  for(let i=SHOOTING_STARS.length-1;i>=0;i--){
+    const s=SHOOTING_STARS[i];
+    s.x+=s.vx; s.y+=s.vy;
+    s.life-=s.decay;
+    if(s.life<=0){ SHOOTING_STARS.splice(i,1); lastShootingSpawn=Date.now(); continue; }
+    // Positions écran
+    const head=mapToScreen(s.x,s.y);
+    const tail=mapToScreen(s.x-s.vx*(s.len/s.width*0.6), s.y-s.vy*(s.len/s.width*0.6));
+    // Culling large
+    if(head.x<-200||head.x>W+200||head.y<-200||head.y>H+200) continue;
+    const grad=ctx.createLinearGradient(tail.x,tail.y,head.x,head.y);
+    const a=s.life*0.55;
+    grad.addColorStop(0,`rgba(${s.col[0]},${s.col[1]},${s.col[2]},0)`);
+    grad.addColorStop(0.7,`rgba(${s.col[0]},${s.col[1]},${s.col[2]},${a*0.3})`);
+    grad.addColorStop(1,`rgba(${s.col[0]},${s.col[1]},${s.col[2]},${a})`);
+    ctx.strokeStyle=grad;
+    ctx.lineWidth=Math.max(0.3, s.width*Math.sqrt(state.zoom)*0.5);
+    ctx.beginPath(); ctx.moveTo(tail.x,tail.y); ctx.lineTo(head.x,head.y); ctx.stroke();
+  }
+
+  ctx.restore();
+
+  // Vignette très discrète sur les bords de l'écran
+  const vSize=Math.min(W,H)*0.10;
+  const vL=ctx.createLinearGradient(0,0,vSize,0);
+  vL.addColorStop(0,'rgba(0,1,12,0.18)'); vL.addColorStop(1,'rgba(0,1,12,0)');
+  ctx.fillStyle=vL; ctx.fillRect(0,0,vSize,H);
+  const vR=ctx.createLinearGradient(W-vSize,0,W,0);
+  vR.addColorStop(0,'rgba(0,1,12,0)'); vR.addColorStop(1,'rgba(0,1,12,0.18)');
+  ctx.fillStyle=vR; ctx.fillRect(W-vSize,0,vSize,H);
+  const vT=ctx.createLinearGradient(0,0,0,vSize);
+  vT.addColorStop(0,'rgba(0,1,12,0.18)'); vT.addColorStop(1,'rgba(0,1,12,0)');
+  ctx.fillStyle=vT; ctx.fillRect(0,0,W,vSize);
+  const vB=ctx.createLinearGradient(0,H-vSize,0,H);
+  vB.addColorStop(0,'rgba(0,1,12,0)'); vB.addColorStop(1,'rgba(0,1,12,0.18)');
+  ctx.fillStyle=vB; ctx.fillRect(0,H-vSize,W,vSize);
+
+  updateCoords();
+  updatePanelHeight();
+}
+
+function updateCoords(){
+  const mc=screenToMap(W/2,H/2);
+  const ra=Math.max(0,Math.min(24,(1-mc.x/MAP_W)*24));
+  const dec=((1-mc.y/MAP_H)*180)-90;
+  const raH=Math.floor(ra),raM=Math.floor((ra-raH)*60);
+  document.getElementById('coords').innerHTML=`AR: ${raH}h ${raM.toString().padStart(2,'0')}m &nbsp;DEC: ${dec>=0?'+':''}${dec.toFixed(1)}°`;
+}
+
+function updatePanelHeight(){
+  const ph=document.getElementById('panel').offsetHeight;
+  document.getElementById('zoom-ctrl').style.bottom=(ph+14)+'px';
+  document.getElementById('compass').style.bottom=(ph+14)+'px';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  PAN & ZOOM
+// ═══════════════════════════════════════════════════════════════════
+let pointers={},lastPinch=null,lastPan=null,tapStart=null,moved=false;
+
+function isOverUI(x,y){
+  const el=document.elementFromPoint(x,y);
+  return el && el!==canvas;
+}
+canvas.addEventListener('pointerdown',e=>{
+  if(isOverUI(e.clientX,e.clientY)) return;
+  e.preventDefault();
+  try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
+  pointers[e.pointerId]={x:e.clientX,y:e.clientY};
+  if(Object.keys(pointers).length===1){
+    lastPan={x:e.clientX,y:e.clientY};
+    tapStart={x:e.clientX,y:e.clientY,time:Date.now()};
+    moved=false;
+  }
+});
+canvas.addEventListener('pointermove',e=>{
+  if(!pointers[e.pointerId]) return;
+  e.preventDefault();
+  pointers[e.pointerId]={x:e.clientX,y:e.clientY};
+  const pts=Object.values(pointers);
+  if(pts.length===2){
+    const dx=pts[0].x-pts[1].x,dy=pts[0].y-pts[1].y,dist=Math.sqrt(dx*dx+dy*dy);
+    if(lastPinch!==null) applyZoom(dist/lastPinch,(pts[0].x+pts[1].x)/2,(pts[0].y+pts[1].y)/2);
+    lastPinch=dist; moved=true;
+  } else if(pts.length===1&&lastPan){
+    const dx=e.clientX-lastPan.x,dy=e.clientY-lastPan.y;
+    if(Math.abs(dx)+Math.abs(dy)>3) moved=true;
+    state.ox+=dx; state.oy+=dy;
+    clampPan();
+    lastPan={x:e.clientX,y:e.clientY}; draw();
+  }
+});
+canvas.addEventListener('pointerup',e=>{
+  if(!pointers[e.pointerId]) return;
+  e.preventDefault();
+  const wasOne=Object.keys(pointers).length===1;
+  delete pointers[e.pointerId]; lastPinch=null; lastPan=null;
+  if(wasOne&&tapStart&&!moved){
+    const dt=Date.now()-tapStart.time,ddx=e.clientX-tapStart.x,ddy=e.clientY-tapStart.y;
+    if(dt<400&&Math.sqrt(ddx*ddx+ddy*ddy)<14) handleTap(e.clientX,e.clientY);
+  }
+  tapStart=null;
+});
+canvas.addEventListener('pointercancel',e=>{ delete pointers[e.pointerId]; lastPan=null; lastPinch=null; });
+canvas.addEventListener('wheel',e=>{e.preventDefault();applyZoom(e.deltaY<0?1.12:.89,e.clientX,e.clientY);},{passive:false});
+
+function clampPan(){
+  const cw=MAP_W*state.zoom, ch=MAP_H*state.zoom;
+  // Marge de débordement autorisée : 30% de l'écran au-delà des bords de carte
+  const marginX = W*0.30;
+  const marginY = H*0.30;
+  if(cw<=W){ state.ox=(W-cw)/2; } // carte entière visible : centrer
+  else { state.ox=Math.min(marginX, Math.max(W-cw-marginX, state.ox)); }
+  if(ch<=H){ state.oy=(H-ch)/2; }
+  else { state.oy=Math.min(marginY, Math.max(H-ch-marginY, state.oy)); }
+}
+
+function applyZoom(ratio,cx,cy){
+  const nz=Math.max(MIN_ZOOM,Math.min(MAX_ZOOM,state.zoom*ratio));
+  const f=nz/state.zoom; state.ox=cx-f*(cx-state.ox); state.oy=cy-f*(cy-state.oy); state.zoom=nz;
+  clampPan(); draw();
+}
+document.getElementById('btn-plus').addEventListener('click',()=>applyZoom(1.3,W/2,H/2));
+document.getElementById('btn-minus').addEventListener('click',()=>applyZoom(.77,W/2,H/2));
+document.getElementById('btn-center').addEventListener('click',()=>{
+  // Recentrer sur le centre de la carte en gardant le zoom actuel
+  state.ox = (W - MAP_W*state.zoom) / 2;
+  state.oy = (H - MAP_H*state.zoom) / 2;
+  draw();
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  SÉLECTION
+// ═══════════════════════════════════════════════════════════════════
+function handleTap(sx,sy){
+  const TAP_R=22; let best=null,bestDist=TAP_R;
+  SD.forEach((_,i)=>{
+    const sc=mapToScreen(starPositions[i].x,starPositions[i].y);
+    const dist=Math.sqrt((sc.x-sx)**2+(sc.y-sy)**2);
+    if(dist<bestDist){bestDist=dist;best=i;}
+  });
+  if(best!==null){
+    if(state.selected.has(best)) state.selected.delete(best);
+    else state.selected.add(best);
+    saveSelected(); updatePanel(); draw();
+    checkTaurusComplete();
+  }
+}
+
+function deselect(i){ state.selected.delete(i); saveSelected(); updatePanel(); draw(); checkTaurusComplete(); }
+
+function updatePanel(){
+  const list=document.getElementById('selected-list');
+  list.innerHTML='';
+  if(state.selected.size===0){
+    const em=document.createElement('div');
+    em.id='empty-msg';
+    em.textContent='Appuyez sur une étoile pour la sélectionner';
+    list.appendChild(em);
+    return;
+  }
+  [...state.selected].sort((a,b)=>a-b).forEach(i=>{
+    const d=SD[i]; if(!d) return;
+    const [name,,,,, cst]=d;
+    const tag=document.createElement('div'); tag.className='star-tag';
+    const dot=document.createElement('div'); dot.className='dot';
+    const nameSpan=document.createElement('span'); nameSpan.textContent=name;
+    const cstSpan=document.createElement('span');
+    cstSpan.style.cssText='opacity:.4;font-size:8px;margin-left:5px';
+    cstSpan.textContent=cst;
+    const xSpan=document.createElement('span'); xSpan.className='x-btn'; xSpan.textContent='✕';
+    tag.appendChild(dot); tag.appendChild(nameSpan); tag.appendChild(cstSpan); tag.appendChild(xSpan);
+    tag.addEventListener('click',()=>deselect(i));
+    list.appendChild(tag);
+  });
+}
+
+// Vérifier si toutes les étoiles Taureau sont sélectionnées
+let warpTriggered = false;
+function checkTaurusComplete(){
+  if(warpTriggered) return;
+  const allFour = TAURUS_INDICES.every(i => state.selected.has(i));
+  const exactlyFour = allFour && state.selected.size === TAURUS_INDICES.length;
+  const fourPlusExtras = allFour && state.selected.size > TAURUS_INDICES.length;
+
+  if(exactlyFour){
+    warpTriggered = true;
+    if(window.CuriosityBridge) window.CuriosityBridge.onTaurusComplete();
+    setTimeout(()=>{ startWarpTransition(); }, 300);
+  }
+  // Signal visuel si les 4 sont là + extras
+  updateGlowOverlay(fourPlusExtras);
+}
+
+// Overlay d'éclaircissement quand les 4 sont sélectionnées + extras
+let glowOverlayActive = false;
+function updateGlowOverlay(active){
+  if(active === glowOverlayActive) return;
+  glowOverlayActive = active;
+  let ov = document.getElementById('glow-overlay');
+  if(!ov){
+    ov = document.createElement('div');
+    ov.id = 'glow-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;z-index:5;pointer-events:none;background:radial-gradient(ellipse at center, rgba(180,200,255,0.07) 0%, rgba(100,140,220,0.04) 50%, transparent 80%);opacity:0;transition:opacity 1.5s ease';
+    document.body.appendChild(ov);
+  }
+  ov.style.opacity = active ? '1' : '0';
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  PLEIN ÉCRAN
+// ═══════════════════════════════════════════════════════════════════
+function enterFullscreen(){
+  const el=document.documentElement;
+  if(el.requestFullscreen) el.requestFullscreen();
+  else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if(el.mozRequestFullScreen) el.mozRequestFullScreen();
+}
+function exitFullscreen(){
+  if(document.exitFullscreen) document.exitFullscreen();
+  else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+  else if(document.mozCancelFullScreen) document.mozCancelFullScreen();
+}
+function isFullscreen(){ return !!(document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement); }
+
+document.getElementById('btn-fs').addEventListener('click',()=>{
+  if(isFullscreen()) exitFullscreen(); else enterFullscreen();
+});
+document.addEventListener('fullscreenchange',()=>{
+  document.getElementById('btn-fs').textContent=isFullscreen()?'⛶ QUITTER PLEIN ÉCRAN':'⛶ PLEIN ÉCRAN';
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  BOUTON QUITTER
+// ═══════════════════════════════════════════════════════════════════
+document.getElementById('btn-quit').addEventListener('click',()=>{
+  if(isFullscreen()) exitFullscreen();
+  if(window.CuriosityBridge) window.CuriosityBridge.closeStarNav();
+  else showQuitScreen();
+});
+
+function showQuitScreen(){
+  const overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,1,12,0.97);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;font-family:\'Exo 2\',sans-serif;';
+  overlay.innerHTML=`
+    <div style="font-family:\'Orbitron\',sans-serif;font-size:13px;letter-spacing:5px;color:#c8a84b;opacity:.8">CARTE CÉLESTE</div>
+    <div style="font-size:9px;letter-spacing:3px;color:rgba(100,150,220,0.5)">SESSION TERMINÉE</div>
+    <button id="btn-resume" style="margin-top:16px;background:rgba(4,10,22,0.9);border:1px solid rgba(58,123,213,0.4);color:#7aabdc;font-family:\'Exo 2\',sans-serif;font-size:10px;letter-spacing:2px;padding:10px 20px;cursor:pointer;border-radius:2px;">↩ REPRENDRE</button>
+  `;
+  document.body.appendChild(overlay);
+  overlay.querySelector('#btn-resume').addEventListener('click',()=>{ document.body.removeChild(overlay); });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  MODE ADMIN
+// ═══════════════════════════════════════════════════════════════════
+const modal=document.getElementById('modal-overlay');
+const modalInput=document.getElementById('modal-input');
+const modalError=document.getElementById('modal-error');
+
+document.getElementById('btn-admin-toggle').addEventListener('click',()=>{
+  if(adminMode){
+    // Désactiver sans mot de passe
+    adminMode=false;
+    updateAdminUI();
+    draw();
+  } else {
+    // Demander le mot de passe
+    modalError.textContent='';
+    modalInput.value='';
+    modal.classList.add('show');
+    setTimeout(()=>modalInput.focus(),100);
+  }
+});
+
+document.getElementById('modal-cancel').addEventListener('click',()=>modal.classList.remove('show'));
+document.getElementById('modal-confirm').addEventListener('click',tryAdminLogin);
+modalInput.addEventListener('keydown',e=>{ if(e.key==='Enter') tryAdminLogin(); });
+
+function tryAdminLogin(){
+  if(modalInput.value===ADMIN_PW){
+    adminMode=true; modal.classList.remove('show');
+    updateAdminUI(); draw();
+  } else {
+    modalError.textContent='CODE INVALIDE';
+    modalInput.value=''; modalInput.focus();
+    setTimeout(()=>{ modalError.textContent=''; },2000);
+  }
+}
+
+function updateAdminUI(){
+  const btn=document.getElementById('btn-admin-toggle');
+  const badge=document.getElementById('admin-badge');
+  if(adminMode){
+    btn.textContent='◈ DÉSACTIVER ADMIN'; btn.classList.add('admin-on');
+    badge.style.display='block';
+  } else {
+    btn.textContent='ADMIN'; btn.classList.remove('admin-on');
+    badge.style.display='none';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  EFFACER SÉLECTION
+// ═══════════════════════════════════════════════════════════════════
+document.getElementById('btn-clear').addEventListener('click',()=>{
+  state.selected.clear(); saveSelected(); updatePanel(); draw();
+  updateGlowOverlay(false);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  ANIMATION WARP (voyage interstellaire)
+// ═══════════════════════════════════════════════════════════════════
+const warpOverlay=document.getElementById('warp-overlay');
+const warpCanvas=document.getElementById('warp-canvas');
+const wctx=warpCanvas.getContext('2d');
+let warpRAF=null;
+
+function startWarpTransition(){
+  // Phase 1 : fondu CSS 2s vers le noir (z-index SOUS le warpCanvas)
+  let fadeDiv = document.getElementById('warp-fade');
+  if(!fadeDiv){
+    fadeDiv = document.createElement('div');
+    fadeDiv.id = 'warp-fade';
+    fadeDiv.style.cssText = 'position:fixed;inset:0;z-index:78;background:#00010c;opacity:0;pointer-events:none;transition:opacity 2s ease';
+    document.body.appendChild(fadeDiv);
+  }
+  fadeDiv.style.transition = 'opacity 2s ease';
+  fadeDiv.style.opacity = '0';
+  fadeDiv.getBoundingClientRect(); // reflow
+  fadeDiv.style.opacity = '1';
+
+  // Phase 2 : lancer l'animation warp par-dessus PENDANT le fondu (à 1.5s)
+  // Le warp démarre invisible (alpha géré dans ses premières frames) et
+  // prend le relais sans coupure
+  setTimeout(()=>{
+    _startWarpAnim();
+    // Retirer le fadeDiv progressivement une fois le warp visible
+    setTimeout(()=>{
+      fadeDiv.style.transition = 'opacity 0.5s ease';
+      fadeDiv.style.opacity = '0';
+    }, 600);
+  }, 1500);
+}
+
+function _startWarpAnim(){
+  warpCanvas.width=window.innerWidth; warpCanvas.height=window.innerHeight;
+  warpOverlay.style.display='block';
+  // 900 étoiles pour densité maximale
+  const stars=[];
+  for(let i=0;i<900;i++) stars.push({
+    x:(Math.random()-.5)*2.2, y:(Math.random()-.5)*2.2,
+    z:Math.random(), speed:Math.random()*.022+.003,
+    col: Math.random()<.12?[255,180,80]:Math.random()<.1?[140,200,255]:Math.random()<.05?[255,120,200]:[220,235,255],
+    size: Math.random()<.1 ? 2.5 : 1   // quelques étoiles géantes
+  });
+  const WW=warpCanvas.width, WH=warpCanvas.height, CX=WW/2, CY=WH/2;
+  const DURATION=12000;
+  const start=Date.now();
+  // Enregistrer état initial z pour le retour
+  const initZ=stars.map(s=>s.z);
+
+  let nebAngle=0;
+  function frame(){
+    const elapsed=Date.now()-start;
+    const t=Math.min(elapsed/DURATION,1);
+    // Accélération en 3 phases : montée lente (0-40%), accélération (40-85%), flash (85-100%)
+    const ease = t<.4 ? t*t*6.25 : t<.85 ? 1-(1-(t-.4)/.45)*(1-(t-.4)/.45)*.3 : 1;
+    const speedFactor = 0.5 + ease*55;
+    const alpha = t<.12?t/.12 : t>.92?(1-t)/.08 : 1; // démarrage doux sur 12%
+    nebAngle += 0.008;
+
+    // Traîne motion blur — opacité variable selon phase
+    wctx.fillStyle=`rgba(0,1,16,${t<.3?.65:t<.7?.82:.94})`;
+    wctx.fillRect(0,0,WW,WH);
+
+    // Nébuleuses colorées rotatives (phase centrale)
+    if(t>.1&&t<.88){
+      const nebA=(t-.1<.2?(t-.1)/.2:t>.7?(1-(t-.7)/.18):1)*0.06*alpha;
+      const nebColors=[[80,30,160],[20,80,200],[160,40,80],[30,140,120]];
+      nebColors.forEach((col,ni)=>{
+        const angle=nebAngle+ni*Math.PI/2;
+        const dist=Math.min(WW,WH)*0.28*(1+Math.sin(t*Math.PI)*.3);
+        const nx=CX+Math.cos(angle)*dist;
+        const ny=CY+Math.sin(angle)*dist;
+        const nr=Math.min(WW,WH)*(0.25+t*.15);
+        const ng=wctx.createRadialGradient(nx,ny,0,nx,ny,nr);
+        ng.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},${nebA*1.5})`);
+        ng.addColorStop(.5,`rgba(${col[0]},${col[1]},${col[2]},${nebA*.5})`);
+        ng.addColorStop(1,'rgba(0,0,0,0)');
+        wctx.beginPath(); wctx.arc(nx,ny,nr,0,Math.PI*2);
+        wctx.fillStyle=ng; wctx.fill();
+      });
+    }
+
+    // Halo central qui pulse et grossit
+    if(t>.15){
+      const hA=Math.min(1,(t-.15)/.6)*.18*alpha;
+      const hR=Math.min(WW,WH)*(0.15+ease*.55);
+      const pulse=1+.06*Math.sin(elapsed*.003);
+      const hg=wctx.createRadialGradient(CX,CY,0,CX,CY,hR*pulse);
+      hg.addColorStop(0,`rgba(120,80,255,${hA*2})`);
+      hg.addColorStop(.3,`rgba(60,40,180,${hA})`);
+      hg.addColorStop(.7,`rgba(20,10,80,${hA*.4})`);
+      hg.addColorStop(1,'rgba(0,0,0,0)');
+      wctx.beginPath(); wctx.arc(CX,CY,hR*pulse,0,Math.PI*2);
+      wctx.fillStyle=hg; wctx.fill();
+    }
+
+    // Étoiles filantes avec épaisseur variable
+    stars.forEach(s=>{
+      s.z-=s.speed*speedFactor*.0167;
+      if(s.z<=0.001) s.z=1;
+      const px=CX+s.x*(1/s.z)*WW*.45;
+      const py=CY+s.y*(1/s.z)*WH*.45;
+      const prevZ=Math.min(1,s.z+s.speed*speedFactor*.0167);
+      const ppx=CX+s.x*(1/prevZ)*WW*.45;
+      const ppy=CY+s.y*(1/prevZ)*WH*.45;
+      const ddx=px-ppx, ddy=py-ppy;
+      if(Math.abs(ddx)<0.05&&Math.abs(ddy)<0.05) return;
+      if(px<-80||px>WW+80||py<-80||py>WH+80) return;
+      const bright=Math.min(1,(1-s.z)*2)*alpha;
+      const lw=Math.max(.3,(1-s.z)*3.5*(s.size||1)*Math.min(1,speedFactor/20));
+      const grad=wctx.createLinearGradient(ppx,ppy,px,py);
+      grad.addColorStop(0,`rgba(${s.col[0]},${s.col[1]},${s.col[2]},0)`);
+      grad.addColorStop(1,`rgba(${s.col[0]},${s.col[1]},${s.col[2]},${bright})`);
+      wctx.strokeStyle=grad; wctx.lineWidth=lw;
+      wctx.beginPath(); wctx.moveTo(ppx,ppy); wctx.lineTo(px,py); wctx.stroke();
+    });
+
+    // Anneaux de distorsion multiples
+    if(t>.25&&t<.88){
+      [0,.15,.3].forEach((offset,ri)=>{
+        const rt=((t-.25+offset)/.63)%1;
+        if(rt<=0||rt>=1) return;
+        const rR=rt*Math.max(WW,WH)*0.9;
+        const rA=(1-rt)*0.35*(ri===0?1:.6)*alpha;
+        const rColors=[[140,180,255],[180,140,255],[100,200,255]];
+        const rc=rColors[ri];
+        wctx.beginPath(); wctx.arc(CX,CY,rR,0,Math.PI*2);
+        wctx.strokeStyle=`rgba(${rc[0]},${rc[1]},${rc[2]},${rA})`;
+        wctx.lineWidth=1.5+rt*3; wctx.stroke();
+      });
+    }
+
+    // Éclair central ponctuel à mi-parcours
+    if(t>.48&&t<.54){
+      const flashT=(t-.48)/.06;
+      const fA=flashT<.5?flashT/.5:(1-flashT)/.5;
+      wctx.fillStyle=`rgba(200,220,255,${fA*.4})`;
+      wctx.fillRect(0,0,WW,WH);
+    }
+
+    // Flash final
+    if(t>.9){
+      const flashA=(t-.9)/.1;
+      wctx.fillStyle=`rgba(235,245,255,${flashA})`;
+      wctx.fillRect(0,0,WW,WH);
+    }
+
+    if(t<1){ warpRAF=requestAnimationFrame(frame); }
+    else { showSuccessPage(); }
+  }
+  warpRAF=requestAnimationFrame(frame);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  PAGE SUCCÈS
+// ═══════════════════════════════════════════════════════════════════
+function showSuccessPage(){
+  warpTriggered = false;
+  warpOverlay.style.display='none';
+  if(warpRAF){ cancelAnimationFrame(warpRAF); warpRAF=null; }
+  const page=document.getElementById('success-page');
+  page.style.display='flex';
+  drawBgStars();
+  drawTaurusConstellation();
+  setTimeout(()=>{ document.getElementById('success-content').classList.add('visible'); },200);
+}
+
+// Fond étoilé animé page succès
+function drawBgStars(){
+  const c=document.getElementById('bg-stars-canvas');
+  c.width=window.innerWidth; c.height=window.innerHeight;
+  const x=c.getContext('2d');
+  const bgs=[];
+  for(let i=0;i<300;i++) bgs.push({px:Math.random()*c.width,py:Math.random()*c.height,r:Math.random()*.9+.1,a:Math.random()*.5+.05,phase:Math.random()*Math.PI*2});
+  let af=0;
+  function loop(){
+    x.fillStyle='#00010c'; x.fillRect(0,0,c.width,c.height);
+    bgs.forEach(s=>{
+      const tw=s.a*(1+.2*Math.sin(af*.03+s.phase));
+      x.beginPath(); x.arc(s.px,s.py,s.r,0,Math.PI*2);
+      x.fillStyle=`rgba(200,220,255,${tw})`; x.fill();
+    });
+    af++; requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+// Dessin constellation Taureau — plein canvas, grande taille
+function drawTaurusConstellation(){
+  const tc=document.getElementById('taurus-canvas');
+  // Dimensionner le canvas à la taille réelle de l'élément
+  // Taille cohérente avec le CSS (360x240 ou 80vw x 28vh)
+  tc.width=Math.min(360, window.innerWidth*0.8);
+  tc.height=Math.min(240, window.innerHeight*0.28);
+  const tx=tc.getContext('2d');
+  const TW=tc.width, TH=tc.height;
+
+  const tauStars=TAURUS_INDICES.map(i=>SD[i]);
+  const ras=tauStars.map(s=>s[1]), decs=tauStars.map(s=>s[2]);
+  const minRA=Math.min(...ras), maxRA=Math.max(...ras);
+  const minDEC=Math.min(...decs), maxDEC=Math.max(...decs);
+  const pad=Math.min(TW,TH)*0.22; // marge généreuse pour les noms
+  function proj(ra,dec){
+    const x=pad+(1-(ra-minRA)/(maxRA-minRA))*(TW-pad*2);
+    const y=pad+(1-(dec-minDEC)/(maxDEC-minDEC))*(TH-pad*2);
+    return {x,y};
+  }
+
+  // Fond
+  tx.fillStyle='rgba(0,1,14,0)'; tx.fillRect(0,0,TW,TH);
+
+  // Étoiles de fond fixes (seed déterministe)
+  const bgRng=(function(){let s=55555;return()=>{s^=s<<13;s^=s>>17;s^=s<<5;return(s>>>0)/4294967296};})();
+  for(let i=0;i<200;i++){
+    const bx=bgRng()*TW, by=bgRng()*TH, br=bgRng()*.6+.1, ba=bgRng()*.35+.04;
+    tx.beginPath(); tx.arc(bx,by,br,0,Math.PI*2);
+    tx.fillStyle=`rgba(180,205,245,${ba})`; tx.fill();
+  }
+  // Sauvegarder le fond
+  const bgData=tx.getImageData(0,0,TW,TH);
+
+  // Animation progressive des lignes
+  let lineProgress=0;
+  const totalLines=TAURUS_LINKS.length;
+  let animAF=0;
+
+  function animateLines(){
+    lineProgress++;
+    // Restaurer fond
+    tx.putImageData(bgData,0,0);
+
+    // Lignes déjà tracées — avec glow
+    TAURUS_LINKS.slice(0,lineProgress).forEach(([ai,bi])=>{
+      const pa=proj(SD[ai][1],SD[ai][2]);
+      const pb=proj(SD[bi][1],SD[bi][2]);
+      // Glow large
+      tx.shadowColor='rgba(200,168,75,0.6)';
+      tx.shadowBlur=18;
+      tx.strokeStyle='rgba(200,168,75,0.5)'; tx.lineWidth=2.5;
+      tx.setLineDash([]);
+      tx.beginPath(); tx.moveTo(pa.x,pa.y); tx.lineTo(pb.x,pb.y); tx.stroke();
+      // Ligne fine brillante par-dessus
+      tx.shadowBlur=6;
+      tx.strokeStyle='rgba(255,230,140,0.85)'; tx.lineWidth=1;
+      tx.beginPath(); tx.moveTo(pa.x,pa.y); tx.lineTo(pb.x,pb.y); tx.stroke();
+      tx.shadowBlur=0;
+      tx.setLineDash([]);
+    });
+
+    // Étoiles (toujours visibles)
+    TAURUS_INDICES.forEach(i=>{
+      const [name,ra,dec,mag,temp]=SD[i];
+      const p=proj(ra,dec);
+      const rgb=starRGB(temp);
+      const r=Math.max(4, 12-mag*1.8); // grande taille
+      // Grand halo
+      tx.shadowColor=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.6)`;
+      tx.shadowBlur=r*3;
+      const g=tx.createRadialGradient(p.x,p.y,0,p.x,p.y,r*3.5);
+      g.addColorStop(0,rgbStr(rgb,.9)); g.addColorStop(.4,rgbStr(rgb,.35)); g.addColorStop(1,rgbStr(rgb,0));
+      tx.beginPath(); tx.arc(p.x,p.y,r*3.5,0,Math.PI*2); tx.fillStyle=g; tx.fill();
+      // Corps
+      tx.shadowBlur=r*2;
+      tx.beginPath(); tx.arc(p.x,p.y,r,0,Math.PI*2); tx.fillStyle=rgbStr(rgb,1); tx.fill();
+      tx.shadowBlur=0;
+      // Nom — toujours affiché, taille adaptée au canvas
+      tx.shadowBlur=0;
+      const fontSize=Math.max(10,Math.min(14,TW/26));
+      tx.font=`${fontSize}px 'Exo 2'`;
+      tx.fillStyle='rgba(230,200,100,0.95)'; tx.textAlign='left';
+      // Décaler vers le bas si proche du bord supérieur
+      const labelY = p.y < TH*0.15 ? p.y+r+fontSize+2 : p.y+5;
+      tx.fillText(name, p.x+r+6, labelY);
+    });
+
+    if(lineProgress<totalLines) setTimeout(animateLines,280);
+  }
+  setTimeout(animateLines,500);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  RETOUR DEPUIS PAGE SUCCÈS
+// ═══════════════════════════════════════════════════════════════════
+document.getElementById('btn-back').addEventListener('click',()=>{
+  const page=document.getElementById('success-page');
+  // Fondu sortant sur 2 secondes via CSS transition
+  page.style.transition='opacity 2s ease';
+  page.style.opacity='0';
+  setTimeout(()=>{
+    page.style.display='none';
+    page.style.opacity='';
+    page.style.transition='';
+    document.getElementById('success-content').classList.remove('visible');
+  }, 2000);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+//  BOUCLE PRINCIPALE
+// ═══════════════════════════════════════════════════════════════════
+let lastRaf=0;
+function loop(ts){ if(ts-lastRaf>48){draw();lastRaf=ts;} requestAnimationFrame(loop); }
+
+// ═══════════════════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════════════════
+resize(); initView(); updatePanel(); draw();
+requestAnimationFrame(loop);
+
+// Plein écran auto désactivé (intégré dans Curiosity)
+// Le plein écran est géré par Curiosity via btn-fs
+})();
+}
 </script>
 
 <!-- ══ PARAMÈTRES ══ -->
