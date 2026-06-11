@@ -101,6 +101,7 @@ body {
 .stellar-text {
   font-size: 12px; font-style: italic; color: #c8e4f4;
   line-height: 1.7; margin-bottom: 20px;
+  white-space: pre-wrap; word-break: break-word;
 }
 .stellar-nav-btn {
   display: flex; align-items: center; justify-content: center; gap: 12px;
@@ -672,7 +673,11 @@ body {
   display: none;
   position: fixed; inset: 0; z-index: 500;
   background: #000;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+#snOverlay::-webkit-scrollbar { display: none; }
 #snOverlay.open { display: block; }
 #sn-back-btn {
   position: fixed; top: 13px; left: 14px; transform: none;
@@ -696,7 +701,7 @@ body {
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;600;700&family=Exo+2:wght@300;400;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 :root{--gold:#c8a84b;--blue:#3a7bd5;--panel:rgba(4,10,22,0.93);--red:#e05050}
-#sn-wrap{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Exo 2',sans-serif;color:#c8d8f0;touch-action:none}
+#sn-wrap{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Exo 2',sans-serif;color:#c8d8f0;touch-action:none;scrollbar-width:none;-ms-overflow-style:none}#sn-wrap::-webkit-scrollbar{display:none}
 
 /* ═══ CANVAS ═══ */
 #canvas{display:block;width:100%;height:100%;cursor:grab}
@@ -717,7 +722,7 @@ body {
 #btn-row-top{display:flex;gap:6px;align-items:center;pointer-events:all}
 
 /* ═══ PANEL BAS ═══ */
-#panel{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid rgba(58,123,213,0.22);padding:8px 14px 14px;z-index:20;max-height:170px;overflow-y:auto;backdrop-filter:blur(14px)}
+#panel{position:fixed;bottom:0;left:0;right:0;background:var(--panel);border-top:1px solid rgba(58,123,213,0.22);padding:8px 14px 14px;z-index:20;max-height:170px;overflow-y:auto;backdrop-filter:blur(14px);scrollbar-width:none;-ms-overflow-style:none}#panel::-webkit-scrollbar{display:none}
 #panel-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
 #panel-title{font-size:8px;letter-spacing:2.5px;color:rgba(100,140,200,0.45)}
 #btn-clear{font-size:8px;letter-spacing:1px;padding:3px 8px;border-color:rgba(220,80,80,0.35);color:#c07070}
@@ -941,34 +946,7 @@ body {
         <div class="stellar-badge-txt">PARAMÈTRE III · SIGNATURE DES RÉCEPTEURS</div>
         <div class="stellar-badge-line"></div>
       </div>
-      <div class="stellar-text" id="e3Text">Les récepteurs permettent d'établir la connexion entre deux époques.<br>
-        
-        Depuis plusieurs décennies notre civilisation a caché 4 récepteurs, quelque part dans l'univers.<br><br>
-
-        
-        Le premier brille comme un œil — une géante orange<br>
-        parmi les plus brillantes du ciel boréal.<br>
-        Son nom arabe signifie "le suiveur" :<br>
-        il suit les Pléiades dans leur course nocturne.<br><br>
-        
-        Le deuxième marque l'extrémité d'un ensemble.<br>
-        Étoile frontière, elle appartient autant<br>
-        à une constellation voisine qu'à celle-ci.<br>
-        Les Romains l'appelaient "l'extrémité acérée".<br><br>
-        
-        Le troisième porte un nom venu d'Orient.<br>
-        En mandarin ancien, il désigne une porte —<br>
-        celle que les empereurs regardaient<br>
-        pour lire l'avenir dans les étoiles.<br><br>
-        
-        Le quatrième est discret.<br>
-        Une géante rouge presque silencieuse,<br>
-        de même nature que l'œil,<br>
-        mais cent fois plus effacée dans la nuit.<br>
-        Son seul identifiant : un numéro.<br><br>
-        
-        
-        Trouve les 4 récepteurs.</div>
+      <div class="stellar-text" id="e3Text"></div>
 
       <button class="stellar-nav-btn" id="openStarNavBtn" onclick="openStarNav()">
         <div class="stellar-nav-btn-ico">✦</div>
@@ -978,6 +956,140 @@ body {
         </div>
         <span style="font-size:14px;color:#1a3050">›</span>
       </button>
+
+      <div style="position:relative;width:100%;margin:18px 0 0;overflow:hidden;border-radius:12px;line-height:0">
+        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <defs>
+            <radialGradient id="ng1" cx="38%" cy="42%" r="52%">
+              <stop offset="0%" stop-color="#1a4060" stop-opacity="0.7"/>
+              <stop offset="40%" stop-color="#0d2035" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#07090f" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="ng2" cx="72%" cy="55%" r="45%">
+              <stop offset="0%" stop-color="#0d3040" stop-opacity="0.6"/>
+              <stop offset="50%" stop-color="#091828" stop-opacity="0.35"/>
+              <stop offset="100%" stop-color="#07090f" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="ng3" cx="55%" cy="28%" r="35%">
+              <stop offset="0%" stop-color="#1a3050" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="#07090f" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="ng4" cx="20%" cy="70%" r="30%">
+              <stop offset="0%" stop-color="#0a2840" stop-opacity="0.45"/>
+              <stop offset="100%" stop-color="#07090f" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="ng5" cx="85%" cy="25%" r="28%">
+              <stop offset="0%" stop-color="#163048" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#07090f" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="gs1" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#4a9aba" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#4a9aba" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="gs2" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#c8a84b" stop-opacity="0.85"/>
+              <stop offset="100%" stop-color="#c8a84b" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="gs3" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#e8e0f0" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#e8e0f0" stop-opacity="0"/>
+            </radialGradient>
+            <linearGradient id="topfade" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#07090f" stop-opacity="1"/>
+              <stop offset="25%" stop-color="#07090f" stop-opacity="0"/>
+              <stop offset="75%" stop-color="#07090f" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#07090f" stop-opacity="1"/>
+            </linearGradient>
+            <linearGradient id="sidefade" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#07090f" stop-opacity="1"/>
+              <stop offset="10%" stop-color="#07090f" stop-opacity="0"/>
+              <stop offset="90%" stop-color="#07090f" stop-opacity="0"/>
+              <stop offset="100%" stop-color="#07090f" stop-opacity="1"/>
+            </linearGradient>
+          </defs>
+          <!-- Fond noir profond -->
+          <rect width="400" height="220" fill="#07090f"/>
+          <!-- Étoiles de fond — petits points -->
+          <g opacity="0.6">
+            <circle cx="12" cy="18" r="0.4" fill="#b0c8e0"/><circle cx="34" cy="7" r="0.5" fill="#c0d0e8"/>
+            <circle cx="58" cy="32" r="0.3" fill="#a0b8d0"/><circle cx="82" cy="14" r="0.6" fill="#d0e0f0"/>
+            <circle cx="103" cy="44" r="0.4" fill="#b8cce0"/><circle cx="127" cy="9" r="0.5" fill="#c8d8ec"/>
+            <circle cx="151" cy="28" r="0.3" fill="#a8bcd4"/><circle cx="174" cy="51" r="0.4" fill="#b0c4dc"/>
+            <circle cx="198" cy="16" r="0.6" fill="#d8e8f8"/><circle cx="222" cy="38" r="0.3" fill="#a0b4cc"/>
+            <circle cx="247" cy="11" r="0.5" fill="#c0d4e8"/><circle cx="271" cy="46" r="0.4" fill="#b4c8e0"/>
+            <circle cx="293" cy="22" r="0.3" fill="#a8bcdc"/><circle cx="318" cy="55" r="0.6" fill="#d0e4f4"/>
+            <circle cx="342" cy="8" r="0.4" fill="#b8cce4"/><circle cx="366" cy="33" r="0.5" fill="#c4d8f0"/>
+            <circle cx="388" cy="19" r="0.3" fill="#a4b8d8"/><circle cx="19" cy="68" r="0.4" fill="#b0c4dc"/>
+            <circle cx="44" cy="82" r="0.5" fill="#bcd0e8"/><circle cx="71" cy="61" r="0.3" fill="#a8bcdc"/>
+            <circle cx="96" cy="95" r="0.6" fill="#c8dce8"/><circle cx="118" cy="74" r="0.4" fill="#b4c8e4"/>
+            <circle cx="143" cy="88" r="0.3" fill="#a4b8d4"/><circle cx="167" cy="67" r="0.5" fill="#c0d4ec"/>
+            <circle cx="192" cy="103" r="0.4" fill="#b8cce8"/><circle cx="216" cy="79" r="0.3" fill="#a8bcd8"/>
+            <circle cx="240" cy="92" r="0.6" fill="#d4e4f4"/><circle cx="265" cy="71" r="0.4" fill="#bccce4"/>
+            <circle cx="289" cy="108" r="0.5" fill="#c4d8f0"/><circle cx="312" cy="84" r="0.3" fill="#a0b4cc"/>
+            <circle cx="337" cy="97" r="0.4" fill="#b0c8e4"/><circle cx="361" cy="73" r="0.6" fill="#ccdcf0"/>
+            <circle cx="383" cy="89" r="0.3" fill="#a8bcdc"/><circle cx="27" cy="122" r="0.4" fill="#b4c8e0"/>
+            <circle cx="52" cy="140" r="0.5" fill="#c0d0e8"/><circle cx="76" cy="118" r="0.3" fill="#a4b8d4"/>
+            <circle cx="101" cy="148" r="0.6" fill="#d0e0f0"/><circle cx="126" cy="130" r="0.4" fill="#b8cce8"/>
+            <circle cx="149" cy="142" r="0.3" fill="#a0b4cc"/><circle cx="173" cy="121" r="0.5" fill="#bccce4"/>
+            <circle cx="197" cy="155" r="0.4" fill="#b4c8e0"/><circle cx="221" cy="133" r="0.3" fill="#a8bcdc"/>
+            <circle cx="246" cy="147" r="0.6" fill="#d4e4f4"/><circle cx="270" cy="125" r="0.4" fill="#c0d4ec"/>
+            <circle cx="294" cy="160" r="0.5" fill="#b0c4dc"/><circle cx="318" cy="138" r="0.3" fill="#a4b8d8"/>
+            <circle cx="343" cy="151" r="0.4" fill="#c8dce8"/><circle cx="367" cy="128" r="0.6" fill="#d0e4f8"/>
+            <circle cx="391" cy="144" r="0.3" fill="#a8bcdc"/><circle cx="15" cy="172" r="0.5" fill="#b8cce4"/>
+            <circle cx="39" cy="188" r="0.4" fill="#a4b8d4"/><circle cx="64" cy="176" r="0.3" fill="#bccde8"/>
+            <circle cx="88" cy="198" r="0.6" fill="#c4d4ec"/><circle cx="113" cy="183" r="0.4" fill="#b0c4dc"/>
+            <circle cx="137" cy="195" r="0.3" fill="#a8bcd8"/><circle cx="162" cy="174" r="0.5" fill="#d0e0f0"/>
+            <circle cx="186" cy="207" r="0.4" fill="#b8cce8"/><circle cx="210" cy="189" r="0.3" fill="#a4b8d4"/>
+            <circle cx="234" cy="202" r="0.6" fill="#ccd8f0"/><circle cx="258" cy="178" r="0.4" fill="#b4c8e0"/>
+            <circle cx="283" cy="210" r="0.5" fill="#c0d4ec"/><circle cx="307" cy="192" r="0.3" fill="#a8bcd8"/>
+            <circle cx="332" cy="205" r="0.4" fill="#d4e4f4"/><circle cx="356" cy="181" r="0.6" fill="#bcccec"/>
+            <circle cx="380" cy="197" r="0.3" fill="#a0b4cc"/>
+          </g>
+          <!-- Étoiles moyennes -->
+          <g opacity="0.75">
+            <circle cx="65" cy="52" r="0.9" fill="#d0e4f8"/><circle cx="155" cy="39" r="1.1" fill="#c8d8f0"/>
+            <circle cx="231" cy="88" r="0.8" fill="#b8ccec"/><circle cx="308" cy="45" r="1.2" fill="#d8e8fc"/>
+            <circle cx="376" cy="110" r="0.9" fill="#c0d4f0"/><circle cx="42" cy="148" r="1.0" fill="#d0e0f4"/>
+            <circle cx="189" cy="162" r="0.8" fill="#b4c8e8"/><circle cx="274" cy="175" r="1.1" fill="#ccdcf0"/>
+            <circle cx="349" cy="158" r="0.9" fill="#c4d4ec"/><circle cx="120" cy="190" r="1.0" fill="#d4e4f8"/>
+          </g>
+          <!-- Nébuleuses colorées -->
+          <ellipse cx="152" cy="92" rx="130" ry="90" fill="url(#ng1)"/>
+          <ellipse cx="288" cy="121" rx="110" ry="80" fill="url(#ng2)"/>
+          <ellipse cx="220" cy="62" rx="90" ry="60" fill="url(#ng3)"/>
+          <ellipse cx="80" cy="154" rx="75" ry="55" fill="url(#ng4)"/>
+          <ellipse cx="340" cy="55" rx="70" ry="50" fill="url(#ng5)"/>
+          <!-- Étoiles brillantes avec halo -->
+          <g>
+            <circle cx="148" cy="78" r="6" fill="url(#gs1)" opacity="0.35"/>
+            <circle cx="148" cy="78" r="1.8" fill="#7ad0e8"/>
+            <circle cx="148" cy="78" r="0.9" fill="#d0f0ff"/>
+          </g>
+          <g>
+            <circle cx="262" cy="104" r="5" fill="url(#gs2)" opacity="0.4"/>
+            <circle cx="262" cy="104" r="1.5" fill="#e8c070"/>
+            <circle cx="262" cy="104" r="0.7" fill="#fff0d0"/>
+          </g>
+          <g>
+            <circle cx="84" cy="120" r="4" fill="url(#gs3)" opacity="0.3"/>
+            <circle cx="84" cy="120" r="1.2" fill="#e0ecf8"/>
+            <circle cx="84" cy="120" r="0.6" fill="#ffffff"/>
+          </g>
+          <g>
+            <circle cx="328" cy="88" r="5" fill="url(#gs1)" opacity="0.3"/>
+            <circle cx="328" cy="88" r="1.4" fill="#5ab8d8"/>
+            <circle cx="328" cy="88" r="0.7" fill="#c0e8f8"/>
+          </g>
+          <g>
+            <circle cx="196" cy="148" r="4" fill="url(#gs2)" opacity="0.3"/>
+            <circle cx="196" cy="148" r="1.2" fill="#d8b060"/>
+            <circle cx="196" cy="148" r="0.6" fill="#ffe8b0"/>
+          </g>
+          <!-- Fondu bords pour intégration parfaite -->
+          <rect width="400" height="220" fill="url(#topfade)"/>
+          <rect width="400" height="220" fill="url(#sidefade)"/>
+        </svg>
+      </div>
 
       <div class="stellar-status" id="stellarStatus">
         ◌ &nbsp; AUCUNE ÉTOILE SÉLECTIONNÉE
@@ -1433,7 +1545,7 @@ function openEnigma(n) {
 // Clé de stockage partagée avec star-navigator
 var STAR_SEL_KEY = 'celeste_selected_v2';
 // Indices des 4 étoiles cibles dans star-navigator : Aldébaran=12, Elnath=25, Tianguan=127, 119 Tauri=129
-var TARGET_STARS = [12, 25, 127, 129];
+var TARGET_STARS = [12, 25, 133, 135];
 
 var snInitialized = false;
 function openStarNav() {
@@ -1699,149 +1811,157 @@ function initStarNavigator() {
 //  DONNÉES ÉTOILES [nom, RA(h), DEC(°), mag, tempK, constellation]
 // ═══════════════════════════════════════════════════════════════════
 const SD = [
-  ["Sirius",        6.752,-16.716,-1.46, 9940,"Grand Chien"],
-  ["Canopus",       6.399,-52.696,-0.74, 7350,"Carène"],
-  ["Arcturus",     14.261, 19.182,-0.05, 4290,"Bouvier"],
-  ["Vega",         18.615, 38.783, 0.03, 9602,"Lyre"],
-  ["Capella",       5.278, 45.998, 0.08, 4970,"Cocher"],
-  ["Rigel",         5.242, -8.202, 0.12,12100,"Orion"],
-  ["Procyon",       7.655,  5.225, 0.34, 6530,"Petit Chien"],
-  ["Achernar",      1.628,-57.237, 0.46,14000,"Éridan"],
-  ["Betelgeuse",    5.919,  7.407, 0.50, 3500,"Orion"],
-  ["Hadar",        14.064,-60.373, 0.61,22000,"Centaure"],
-  ["Altair",       19.846,  8.868, 0.76, 7680,"Aigle"],
-  ["Acrux",        12.443,-63.099, 0.77,24000,"Croix du Sud"],
-  ["Aldebaran",     4.599, 16.509, 0.85, 3900,"Taureau"],      // idx 12
-  ["Antares",      16.490,-26.432, 0.96, 3400,"Scorpion"],
-  ["Spica",        13.420,-11.161, 1.04,22400,"Vierge"],
-  ["Pollux",        7.755, 28.026, 1.14, 4865,"Gémeaux"],
-  ["Fomalhaut",    22.961,-29.622, 1.16, 8590,"Poisson Austral"],
-  ["Deneb",        20.690, 45.280, 1.25, 8525,"Cygne"],
-  ["Mimosa",       12.795,-59.689, 1.25,22000,"Croix du Sud"],
-  ["Regulus",      10.139, 11.967, 1.35,12460,"Lion"],
-  ["Adhara",        6.977,-28.972, 1.50,22200,"Grand Chien"],
-  ["Castor",        7.577, 31.888, 1.58, 8840,"Gémeaux"],
-  ["Shaula",       17.560,-37.104, 1.62,25000,"Scorpion"],
-  ["Bellatrix",     5.418,  6.350, 1.64,22000,"Orion"],
-  ["Gacrux",       12.519,-57.113, 1.64, 3626,"Croix du Sud"],
-  ["Elnath",        5.438, 28.607, 1.65,13600,"Taureau"],      // idx 25
-  ["Miaplacidus",   9.220,-69.717, 1.67, 9000,"Carène"],
-  ["Alnilam",       5.603, -1.202, 1.70,27000,"Orion"],
-  ["Alioth",       12.900, 55.960, 1.76, 9020,"Grande Ourse"],
-  ["Dubhe",        11.062, 61.751, 1.79, 4660,"Grande Ourse"],
-  ["Mirfak",        3.408, 49.861, 1.79, 6350,"Persée"],
-  ["Wezen",         7.140,-26.393, 1.84, 5818,"Grand Chien"],
-  ["Kaus Australis",18.403,-34.384,1.85, 9960,"Sagittaire"],
-  ["Avior",         8.375,-59.509, 1.86, 3523,"Carène"],
-  ["Alkaid",       13.792, 49.313, 1.86,15540,"Grande Ourse"],
-  ["Sargas",       17.622,-42.998, 1.87, 6300,"Scorpion"],
-  ["Menkent",      14.111,-36.370, 2.06, 4930,"Centaure"],
-  ["Atria",        16.811,-69.028, 1.92, 4150,"Triangle Austral"],
-  ["Alhena",        6.629, 16.399, 1.93, 9260,"Gémeaux"],
-  ["Peacock",      20.427,-56.735, 1.94,17700,"Paon"],
-  ["Mirzam",        6.378,-17.956, 1.98,22000,"Grand Chien"],
-  ["Alphard",       9.460, -8.658, 1.98, 4120,"Hydre"],
-  ["Polaris",       2.530, 89.264, 1.97, 6015,"Petite Ourse"],
-  ["Hamal",         2.120, 23.462, 2.00, 4480,"Bélier"],
-  ["Algieba",      10.333, 19.841, 2.01, 4470,"Lion"],
-  ["Diphda",        0.727,-17.987, 2.04, 4797,"Baleine"],
-  ["Nunki",        18.921,-26.296, 2.05,18700,"Sagittaire"],
-  ["Saiph",         5.796, -9.670, 2.07,26500,"Orion"],
-  ["Alpheratz",     0.140, 29.090, 2.07,13800,"Andromède"],
-  ["Mirach",        1.162, 35.620, 2.07, 3842,"Andromède"],
-  ["Almach",        2.065, 42.330, 2.10, 4250,"Andromède"],
-  ["Schedar",       0.675, 56.537, 2.24, 4552,"Cassiopée"],
-  ["Caph",          0.153, 59.150, 2.28, 7079,"Cassiopée"],
-  ["Ruchbah",       1.430, 60.235, 2.68, 8912,"Cassiopée"],
-  ["Segin",         1.907, 63.670, 3.38,15174,"Cassiopée"],
-  ["Navi",          0.945, 60.717, 2.47, 6700,"Cassiopée"],
-  ["Mintaka",       5.533, -0.300, 2.23,29500,"Orion"],
-  ["Alnitak",       5.679, -1.943, 1.74,29500,"Orion"],
-  ["Meissa",        5.588,  9.934, 3.33,26000,"Orion"],
-  ["Saiph2",        5.796, -9.670, 2.07,26500,"Orion"],
-  ["Rigel K.",     14.660,-60.833, 2.30, 4865,"Centaure"],
-  ["Graffias",     16.090,-19.806, 2.62,17000,"Scorpion"],
-  ["Dschubba",     16.005,-22.622, 2.32,27400,"Scorpion"],
-  ["Lesath",       17.531,-37.296, 2.69,22000,"Scorpion"],
-  ["Girtab",       17.623,-42.988, 2.41,11000,"Scorpion"],
-  ["Acrab",        16.090,-19.806, 2.62,15000,"Scorpion"],
-  ["Denebola",     11.817, 14.572, 2.14, 8500,"Lion"],
-  ["Zosma",        11.235, 20.524, 2.56, 9350,"Lion"],
-  ["Algenubi",      9.764, 11.982, 2.97, 5270,"Lion"],
-  ["Phecda",       11.897, 53.695, 2.41, 9355,"Grande Ourse"],
-  ["Merak",        11.031, 56.383, 2.37, 9377,"Grande Ourse"],
-  ["Megrez",       12.257, 57.033, 3.31, 9480,"Grande Ourse"],
-  ["Mizar",        13.399, 54.926, 2.27, 9000,"Grande Ourse"],
-  ["Alcor",        13.421, 54.988, 3.99, 9000,"Grande Ourse"],
-  ["Pherkad",      15.345, 71.834, 3.05, 8280,"Petite Ourse"],
-  ["Kochab",       14.845, 74.156, 2.08, 4030,"Petite Ourse"],
-  ["Enif",         21.736,  9.875, 2.39, 4462,"Pégase"],
-  ["Markab",       23.079, 15.183, 2.49, 9765,"Pégase"],
-  ["Scheat",       23.063, 28.083, 2.42, 3689,"Pégase"],
-  ["Algenib",       0.221, 15.183, 2.83,22000,"Pégase"],
-  ["Sadalsuud",    21.526, -5.571, 2.90, 5700,"Verseau"],
-  ["Sadalmelik",   22.097, -0.320, 2.95, 5383,"Verseau"],
-  ["Deneb Algedi", 21.784,-16.128, 2.85, 7301,"Capricorne"],
-  ["Sadr",         20.370, 40.257, 2.20, 5790,"Cygne"],
-  ["Gienah Cyg",   20.770, 33.971, 2.46, 4996,"Cygne"],
-  ["Albireo",      19.512, 27.960, 3.05, 4080,"Cygne"],
-  ["Tarazed",      19.771, 10.614, 2.72, 4210,"Aigle"],
-  ["Sulafat",      18.982, 32.690, 3.25, 9510,"Lyre"],
-  ["Eltanin",      17.943, 51.489, 2.24, 3930,"Dragon"],
-  ["Rastaban",     17.507, 52.301, 2.79, 5425,"Dragon"],
-  ["Thuban",       14.073, 64.376, 3.65, 9700,"Dragon"],
-  ["Unukalhai",    15.737,  6.426, 2.65, 4498,"Serpent"],
-  ["Rasalhague",   17.582, 12.560, 2.08, 7570,"Ophiuchus"],
-  ["Cebalrai",     17.722,  4.567, 2.77, 4430,"Ophiuchus"],
-  ["Sabik",        17.172,-15.724, 2.43, 8900,"Ophiuchus"],
-  ["Gienah Crv",   12.264,-17.542, 2.59, 4875,"Corbeau"],
-  ["Kraz",         12.573,-23.397, 2.65, 5100,"Corbeau"],
-  ["Algorab",      12.498,-16.516, 2.95,10400,"Corbeau"],
-  ["Suhail",        9.133,-43.433, 2.21, 3000,"Voiles"],
-  ["Naos",          8.060,-40.003, 2.21,42000,"Poupe"],
-  ["Menkar",        3.038,  4.090, 2.53, 3900,"Baleine"],
-  ["Propus",        6.241, 22.506, 3.28, 3990,"Gémeaux"],
-  ["Tejat",         6.383, 22.514, 2.88, 3900,"Gémeaux"],
-  ["Hassaleh",      5.992, 44.947, 2.69, 4160,"Cocher"],
-  ["Menkib",        3.966, 53.504, 2.90,37000,"Persée"],
-  ["Atik",          3.963, 31.884, 3.83,22000,"Persée"],
-  ["Zubenelgenubi",14.842,-16.042, 2.75, 8500,"Balance"],
-  ["Zubeneschamali",15.283,-9.383, 2.61,11000,"Balance"],
-  ["Alphecca",     15.578, 26.715, 2.22, 9700,"Couronne Boréale"],
-  ["Seginus",      14.534, 38.308, 3.03, 7800,"Bouvier"],
-  ["Izar",         14.750, 27.074, 2.37, 4800,"Bouvier"],
-  ["Muphrid",      13.911, 18.398, 2.68, 6100,"Bouvier"],
-  ["Vindemiatrix", 13.036, 10.959, 2.83, 5086,"Vierge"],
-  ["Porrima",      12.694, -1.449, 2.74, 7100,"Vierge"],
-  ["Heze",         13.578, -0.596, 3.37,10300,"Vierge"],
-  ["Ankaa",         0.438,-42.306, 2.40, 4436,"Phénix"],
-  ["Wasat",         7.335, 21.982, 3.53, 8000,"Gémeaux"],
-  ["Cor Caroli",   12.934, 38.318, 2.89, 9000,"Chiens de Chasse"],
-  ["Pherkad2",     15.410, 71.648, 5.02, 9200,"Petite Ourse"],
-  // ── Taureau (étoiles supplémentaires pour la carte) ──
-  ["Alcyone",       3.791, 24.105, 2.87,12300,"Taureau"],     // idx 125
-  ["Atlas",         3.819, 24.053, 3.63,12000,"Taureau"],     // 126
-  ["Electra",       3.748, 24.113, 3.70,14000,"Taureau"],     // 127
-  ["Maia",          3.773, 24.367, 3.87,13000,"Taureau"],     // 128
-  ["Merope",        3.776, 23.948, 4.18,14000,"Taureau"],     // 129
-  ["Ain",           4.477, 19.181, 3.53, 4950,"Taureau"],     // 130
-  ["Prima Hyadum",  4.329, 15.628, 3.65, 4900,"Taureau"],     // 131
-  ["Zeta Tau",      5.627, 21.143, 2.97,19000,"Taureau"],     // 132
-  ["Tianguan",      5.436, 21.142, 3.00,18000,"Taureau"],     // 133
-  ["Chamukuy",      4.429, 15.962, 3.84, 5300,"Taureau"],     // 134
-  ["119 Tauri",     5.647, 18.594, 4.33, 3800,"Taureau"],     // 135 — géante rouge
+  // Coordonnées J2000.0 — sources : Wikipedia / Yale BSC5
+  ["Sirius",        6.7523,-16.7161,-1.46, 9940,"Grand Chien"],   // 0  α CMa  06h45m08s -16°42'58"
+  ["Canopus",       6.3992,-52.6958,-0.74, 7400,"Carène"],        // 1  α Car  06h23m57s -52°41'44"
+  ["Arcturus",     14.2610, 19.1822,-0.05, 4290,"Bouvier"],       // 2  α Boo  14h15m40s +19°10'57"
+  ["Vega",         18.6157, 38.7836, 0.03, 9602,"Lyre"],          // 3  α Lyr  18h36m56s +38°47'01"
+  ["Capella",       5.2782, 45.9980, 0.08, 4970,"Cocher"],        // 4  α Aur  05h16m41s +45°59'53"
+  ["Rigel",         5.2422, -8.2016, 0.12,12100,"Orion"],         // 5  β Ori  05h14m32s -08°12'06"
+  ["Procyon",       7.6552,  5.2250, 0.34, 6530,"Petit Chien"],   // 6  α CMi  07h39m18s +05°13'30"
+  ["Achernar",      1.6286,-57.2367, 0.46,14000,"Éridan"],        // 7  α Eri  01h37m43s -57°14'12"
+  ["Betelgeuse",    5.9194,  7.4071, 0.50, 3500,"Orion"],         // 8  α Ori  05h55m10s +07°24'26"
+  ["Hadar",        14.0639,-60.3730, 0.61,22000,"Centaure"],      // 9  β Cen  14h03m50s -60°22'23"
+  ["Altair",       19.8463,  8.8683, 0.76, 7680,"Aigle"],         // 10 α Aql  19h50m47s +08°52'06"
+  ["Acrux",        12.4430,-63.0991, 0.77,24000,"Croix du Sud"],  // 11 α Cru  12h26m36s -63°05'57"
+  ["Aldebaran",     4.5987, 16.5093, 0.85, 3900,"Taureau"],       // 12 α Tau  04h35m55s +16°30'33"
+  ["Antares",      16.4901,-26.4320, 0.96, 3400,"Scorpion"],      // 13 α Sco  16h29m24s -26°25'55"
+  ["Spica",        13.4199,-11.1613, 1.04,22400,"Vierge"],        // 14 α Vir  13h25m12s -11°09'41"
+  ["Pollux",        7.7553, 28.0262, 1.14, 4865,"Gémeaux"],       // 15 β Gem  07h45m19s +28°01'34"
+  ["Fomalhaut",    22.9608,-29.6223, 1.16, 8590,"Poisson Austral"],// 16 α PsA  22h57m39s -29°37'20"
+  ["Deneb",        20.6905, 45.2803, 1.25, 8525,"Cygne"],         // 17 α Cyg  20h41m26s +45°16'49"
+  ["Mimosa",       12.7954,-59.6888, 1.25,22000,"Croix du Sud"],  // 18 β Cru  12h47m43s -59°41'20"
+  ["Regulus",      10.1395, 11.9672, 1.35,12460,"Lion"],          // 19 α Leo  10h08m22s +11°58'02"
+  ["Adhara",        6.9771,-28.9722, 1.50,22200,"Grand Chien"],   // 20 ε CMa  06h58m38s -28°58'20"
+  ["Castor",        7.5768, 31.8883, 1.58, 8840,"Gémeaux"],       // 21 α Gem  07h34m36s +31°53'18"
+  ["Shaula",       17.5601,-37.1038, 1.62,25000,"Scorpion"],      // 22 λ Sco  17h33m36s -37°06'14"
+  ["Bellatrix",     5.4184,  6.3497, 1.64,22000,"Orion"],         // 23 γ Ori  05h25m08s +06°20'59"
+  ["Gacrux",       12.5194,-57.1133, 1.64, 3626,"Croix du Sud"],  // 24 γ Cru  12h31m10s -57°06'48"
+  ["Elnath",        5.4382, 28.6075, 1.65,13600,"Taureau"],       // 25 β Tau  05h26m18s +28°36'27"
+  ["Miaplacidus",   9.2199,-69.7172, 1.67, 9000,"Carène"],        // 26 β Car  09h13m12s -69°43'02"
+  ["Alnilam",       5.6036, -1.2019, 1.70,27000,"Orion"],         // 27 ε Ori  05h36m13s -01°12'07"
+  ["Alioth",       12.9004, 55.9598, 1.76, 9020,"Grande Ourse"],  // 28 ε UMa  12h54m02s +55°57'35"
+  ["Dubhe",        11.0621, 61.7511, 1.79, 4660,"Grande Ourse"],  // 29 α UMa  11h03m44s +61°45'04"
+  ["Mirfak",        3.4053, 49.8613, 1.79, 6350,"Persée"],        // 30 α Per  03h24m19s +49°51'40"
+  ["Wezen",         7.1399,-26.3931, 1.84, 5818,"Grand Chien"],   // 31 δ CMa  07h08m24s -26°23'36"
+  ["Kaus Australis",18.4032,-34.3846,1.85, 9960,"Sagittaire"],    // 32 ε Sgr  18h24m10s -34°23'05"
+  ["Avior",         8.3750,-59.5092, 1.86, 3523,"Carène"],        // 33 ε Car  08h22m31s -59°30'34"
+  ["Alkaid",       13.7924, 49.3133, 1.86,15540,"Grande Ourse"],  // 34 η UMa  13h47m32s +49°18'48"
+  ["Sargas",       17.6218,-42.9978, 1.87, 6300,"Scorpion"],      // 35 θ Sco  17h37m19s -42°59'52"
+  ["Menkent",      14.1113,-36.3700, 2.06, 4930,"Centaure"],      // 36 θ Cen  14h06m41s -36°22'12"
+  ["Atria",        16.8113,-69.0278, 1.92, 4150,"Triangle Austral"],// 37 α TrA 16h48m40s -69°01'40"
+  ["Alhena",        6.6285, 16.3993, 1.93, 9260,"Gémeaux"],       // 38 γ Gem  06h37m43s +16°23'57"
+  ["Peacock",      20.4274,-56.7351, 1.94,17700,"Paon"],          // 39 α Pav  20h25m39s -56°44'06"
+  ["Mirzam",        6.3783,-17.9559, 1.98,22000,"Grand Chien"],   // 40 β CMa  06h22m42s -17°57'22"
+  ["Alphard",       9.4599, -8.6584, 1.98, 4120,"Hydre"],         // 41 α Hya  09h27m35s -08°39'31"
+  ["Polaris",       2.5300, 89.2641, 1.97, 6015,"Petite Ourse"],  // 42 α UMi  02h31m49s +89°15'51"
+  ["Hamal",         2.1199, 23.4625, 2.00, 4480,"Bélier"],        // 43 α Ari  02h07m10s +23°27'45"
+  ["Algieba",      10.3330, 19.8413, 2.01, 4470,"Lion"],          // 44 γ Leo  10h19m58s +19°50'29"
+  ["Diphda",        0.7265,-17.9866, 2.04, 4797,"Baleine"],       // 45 β Cet  00h43m35s -17°59'12"
+  ["Nunki",        18.9213,-26.2960, 2.05,18700,"Sagittaire"],    // 46 σ Sgr  18h55m16s -26°17'48"
+  ["Saiph",         5.7953, -9.6696, 2.07,26500,"Orion"],         // 47 κ Ori  05h47m45s -09°40'11"
+  ["Alpheratz",     0.1397, 29.0905, 2.07,13800,"Andromède"],     // 48 α And  00h08m23s +29°05'26"
+  ["Mirach",        1.1622, 35.6203, 2.07, 3842,"Andromède"],     // 49 β And  01h09m44s +35°37'14"
+  ["Almach",        2.0653, 42.3298, 2.10, 4250,"Andromède"],     // 50 γ And  02h03m54s +42°19'47"
+  ["Schedar",       0.6753, 56.5373, 2.24, 4552,"Cassiopée"],     // 51 α Cas  00h40m31s +56°32'15"
+  ["Caph",          0.1531, 59.1498, 2.28, 7079,"Cassiopée"],     // 52 β Cas  00h09m11s +59°08'59"
+  ["Ruchbah",       1.4302, 60.2353, 2.68, 8912,"Cassiopée"],     // 53 δ Cas  01h25m49s +60°14'07"
+  ["Segin",         1.9070, 63.6700, 3.38,15174,"Cassiopée"],     // 54 ε Cas  01h54m24s +63°40'12"
+  ["Navi",          0.9453, 60.7167, 2.47, 6700,"Cassiopée"],     // 55 γ Cas  00h56m42s +60°43'00"
+  ["Mintaka",       5.5331, -0.2991, 2.23,29500,"Orion"],         // 56 δ Ori  05h32m00s -00°17'57"
+  ["Alnitak",       5.6793, -1.9426, 1.74,29500,"Orion"],         // 57 ζ Ori  05h40m46s -01°56'34"
+  ["Meissa",        5.5878,  9.9342, 3.33,26000,"Orion"],         // 58 λ Ori  05h35m08s +09°56'03"
+  ["Saiph",         5.7953, -9.6696, 2.07,26500,"Orion"],         // 59 κ Ori (doublon pour constellation)
+  ["Rigil Kent.",  14.6601,-60.8330, 2.30, 4865,"Centaure"],      // 60 α Cen  14h39m36s -60°50'00"
+  ["Graffias",     16.0904,-19.8057, 2.62,17000,"Scorpion"],      // 61 β Sco  16h05m26s -19°48'20"
+  ["Dschubba",     16.0054,-22.6217, 2.32,27400,"Scorpion"],      // 62 δ Sco  16h00m20s -22°37'18"
+  ["Lesath",       17.5314,-37.2960, 2.69,22000,"Scorpion"],      // 63 υ Sco  17h30m46s -37°17'45"
+  ["Girtab",       17.6230,-42.9978, 2.41,11000,"Scorpion"],      // 64 θ Sco  17h37m19s -42°59'52"
+  ["Acrab",        16.0904,-19.8057, 2.62,15000,"Scorpion"],      // 65 β1 Sco
+  ["Denebola",     11.8175, 14.5720, 2.14, 8500,"Lion"],          // 66 β Leo  11h49m04s +14°34'19"
+  ["Zosma",        11.2350, 20.5236, 2.56, 9350,"Lion"],          // 67 δ Leo  11h14m06s +20°31'25"
+  ["Algenubi",      9.7637, 11.9820, 2.97, 5270,"Lion"],          // 68 ε Leo  09h45m51s +23°46'27"
+  ["Phecda",       11.8970, 53.6947, 2.41, 9355,"Grande Ourse"],  // 69 γ UMa  11h53m50s +53°41'41"
+  ["Merak",        11.0308, 56.3825, 2.37, 9377,"Grande Ourse"],  // 70 β UMa  11h01m50s +56°22'57"
+  ["Megrez",       12.2571, 57.0326, 3.31, 9480,"Grande Ourse"],  // 71 δ UMa  12h15m26s +57°01'58"
+  ["Mizar",        13.3989, 54.9255, 2.27, 9000,"Grande Ourse"],  // 72 ζ UMa  13h23m56s +54°55'31"
+  ["Alcor",        13.4206, 54.9880, 3.99, 9000,"Grande Ourse"],  // 73 80 UMa 13h25m14s +54°59'17"
+  ["Pherkad",      15.3454, 71.8340, 3.05, 8280,"Petite Ourse"],  // 74 γ UMi  15h20m44s +71°50'02"
+  ["Kochab",       14.8450, 74.1558, 2.08, 4030,"Petite Ourse"],  // 75 β UMi  14h50m42s +74°09'21"
+  ["Enif",         21.7363,  9.8750, 2.39, 4462,"Pégase"],        // 76 ε Peg  21h44m11s +09°52'30"
+  ["Markab",       23.0794, 15.1835, 2.49, 9765,"Pégase"],        // 77 α Peg  23h04m46s +15°12'19"
+  ["Scheat",       23.0631, 28.0826, 2.42, 3689,"Pégase"],        // 78 β Peg  23h03m46s +28°04'58"
+  ["Algenib",       0.2214, 15.1835, 2.83,22000,"Pégase"],        // 79 γ Peg  00h13m14s +15°11'01"
+  ["Sadalsuud",    21.5260, -5.5711, 2.90, 5700,"Verseau"],       // 80 β Aqr  21h31m34s -05°34'16"
+  ["Sadalmelik",   22.0965, -0.3198, 2.95, 5383,"Verseau"],       // 81 α Aqr  22h05m47s -00°19'11"
+  ["Deneb Algedi", 21.7840,-16.1278, 2.85, 7301,"Capricorne"],    // 82 δ Cap  21h47m02s -16°07'38"
+  ["Sadr",         20.3703, 40.2567, 2.20, 5790,"Cygne"],         // 83 γ Cyg  20h22m14s +40°15'24"
+  ["Gienah Cyg",   20.7697, 33.9706, 2.46, 4996,"Cygne"],        // 84 ε Cyg  20h46m13s +33°58'13"
+  ["Albireo",      19.5120, 27.9597, 3.05, 4080,"Cygne"],        // 85 β Cyg  19h30m43s +27°57'35"
+  ["Tarazed",      19.7711, 10.6136, 2.72, 4210,"Aigle"],        // 86 γ Aql  19h46m15s +10°36'48"
+  ["Sulafat",      18.9824, 32.6898, 3.25, 9510,"Lyre"],         // 87 γ Lyr  18h58m57s +32°41'22"
+  ["Eltanin",      17.9433, 51.4886, 2.24, 3930,"Dragon"],       // 88 γ Dra  17h56m36s +51°29'20"
+  ["Rastaban",     17.5074, 52.3011, 2.79, 5425,"Dragon"],       // 89 β Dra  17h30m26s +52°18'05"
+  ["Thuban",       14.0730, 64.3756, 3.65, 9700,"Dragon"],       // 90 α Dra  14h04m23s +64°22'33"
+  ["Unukalhai",    15.7374,  6.4258, 2.65, 4498,"Serpent"],      // 91 α Ser  15h44m16s +06°25'32"
+  ["Rasalhague",   17.5823, 12.5600, 2.08, 7570,"Ophiuchus"],    // 92 α Oph  17h34m56s +12°33'36"
+  ["Cebalrai",     17.7220,  4.5669, 2.77, 4430,"Ophiuchus"],    // 93 β Oph  17h43m28s +04°34'02"
+  ["Sabik",        17.1724,-15.7244, 2.43, 8900,"Ophiuchus"],    // 94 η Oph  17h10m23s -15°43'27"
+  ["Gienah Crv",   12.2635,-17.5417, 2.59, 4875,"Corbeau"],      // 95 γ Crv  12h15m49s -17°32'31"
+  ["Kraz",         12.5734,-23.3966, 2.65, 5100,"Corbeau"],      // 96 β Crv  12h34m24s -23°23'48"
+  ["Algorab",      12.4977,-16.5158, 2.95,10400,"Corbeau"],      // 97 δ Crv  12h29m52s -16°30'56"
+  ["Suhail",        9.1330,-43.4328, 2.21, 3000,"Voiles"],       // 98 λ Vel  09h07m60s -43°25'57"
+  ["Naos",          8.0597,-40.0031, 2.21,42000,"Poupe"],        // 99 ζ Pup  08h03m35s -40°00'12"
+  ["Menkar",        3.0381,  4.0897, 2.53, 3900,"Baleine"],      // 100 α Cet 03h02m17s +04°05'23"
+  ["Propus",        6.2406, 22.5064, 3.28, 3990,"Gémeaux"],      // 101 η Gem 06h14m53s +22°30'24"
+  ["Tejat",         6.3831, 22.5136, 2.88, 3900,"Gémeaux"],      // 102 μ Gem  06h22m58s +22°30'49"
+  ["Hassaleh",      5.9923, 44.9474, 2.69, 4160,"Cocher"],       // 103 ι Aur  05h59m32s +44°56'51"
+  ["Menkib",        3.9664, 53.5044, 2.90,37000,"Persée"],       // 104 ξ Per  03h58m58s +35°47'28"
+  ["Atik",          3.9631, 31.8836, 3.83,22000,"Persée"],       // 105 ο Per  03h57m51s +31°53'02"
+  ["Zubenelgenubi",14.8420,-16.0417, 2.75, 8500,"Balance"],      // 106 α Lib  14h50m53s -16°02'30"
+  ["Zubeneschamali",15.2828, -9.3833, 2.61,11000,"Balance"],     // 107 β Lib  15h17m00s -09°22'59"
+  ["Alphecca",     15.5782, 26.7150, 2.22, 9700,"Couronne Boréale"],// 108 α CrB 15h34m41s +26°42'53"
+  ["Seginus",      14.5344, 38.3081, 3.03, 7800,"Bouvier"],      // 109 γ Boo  14h32m05s +38°18'30"
+  ["Izar",         14.7498, 27.0744, 2.37, 4800,"Bouvier"],      // 110 ε Boo  14h44m59s +27°04'27"
+  ["Muphrid",      13.9111, 18.3977, 2.68, 6100,"Bouvier"],      // 111 η Boo  13h54m42s +18°23'52"
+  ["Vindemiatrix", 13.0358, 10.9594, 2.83, 5086,"Vierge"],       // 112 ε Vir  13h02m11s +10°57'33"
+  ["Porrima",      12.6942, -1.4494, 2.74, 7100,"Vierge"],       // 113 γ Vir  12h41m40s -01°26'58"
+  ["Heze",         13.5783, -0.5958, 3.37,10300,"Vierge"],       // 114 ζ Vir  13h34m42s -00°35'45"
+  ["Ankaa",         0.4381,-42.3058, 2.40, 4436,"Phénix"],       // 115 α Phe  00h26m17s -42°18'22"
+  ["Wasat",         7.3352, 21.9824, 3.53, 8000,"Gémeaux"],      // 116 δ Gem  07h20m07s +21°58'56"
+  ["Cor Caroli",   12.9337, 38.3183, 2.89, 9000,"Chiens de Chasse"],// 117 α CVn 12h56m02s +38°19'06"
+  ["Pherkad2",     15.4098, 71.6480, 5.02, 9200,"Petite Ourse"], // 118 11 UMi
+  // ── Taureau — positions J2000 précises ──
+  ["Alcyone",       3.7913, 24.1053, 2.87,12300,"Taureau"],      // 119 η Tau  03h47m29s +24°06'18"  Pléiades
+  ["Atlas",         3.8194, 24.0533, 3.63,12000,"Taureau"],      // 120 27 Tau  03h49m10s +24°03'12"  Pléiades
+  ["Electra",       3.7479, 24.1133, 3.70,14000,"Taureau"],      // 121 17 Tau  03h44m52s +24°06'48"  Pléiades
+  ["Maia",          3.7731, 24.3670, 3.87,13000,"Taureau"],      // 122 20 Tau  03h45m50s +24°22'04"  Pléiades
+  ["Merope",        3.7756, 23.9481, 4.18,14000,"Taureau"],      // 123 23 Tau  03h46m20s +23°56'54"  Pléiades
+  ["Ain",           4.4771, 19.1806, 3.53, 4950,"Taureau"],      // 124 ε Tau  04h28m37s +19°10'50"  Hyades
+  ["Prima Hyadum",  4.3289, 15.6278, 3.65, 4900,"Taureau"],      // 125 γ Tau  04h19m47s +15°37'40"  Hyades
+  ["Zeta Tau",      5.6272, 21.1428, 2.97,19000,"Taureau"],      // 126 ζ Tau  05h37m39s +21°08'33"  corne sud
+  ["Tianguan",      5.4438, 21.1422, 3.00,18000,"Taureau"],      // 127 ζ Tau = Tianguan 05h26m18s (même que Zeta Tau — alias)
+  ["Chamukuy",      4.4292, 15.9617, 3.84, 5300,"Taureau"],      // 128 θ2 Tau 04h25m45s +15°57'42"  Hyades
+  // ── Les vraies cibles du jeu (indices 129-131) ──
+  ["Ain",           4.4771, 19.1806, 3.53, 4950,"Taureau"],      // 129 doublon Ain
+  ["Prima H.",      4.3289, 15.6278, 3.65, 4900,"Taureau"],      // 130
+  ["Zeta Tau b",    5.6272, 21.1428, 2.97,19000,"Taureau"],      // 131
+  ["Tianguan",      5.4372, 21.1439, 3.00,18000,"Taureau"],      // 132 ζ Tau  05h26m14s +21°08'38"
+  ["Tianguan",      5.4372, 21.1439, 3.00,18000,"Taureau"],      // 133 ζ Tau CIBLE — 05h26m14s +21°08'38"
+  ["Chamukuy b",    4.4292, 15.9617, 3.84, 5300,"Taureau"],      // 134
+  ["119 Tauri",     5.5370, 18.5942, 4.33, 3800,"Taureau"],      // 135 CE Tau  05h32m12s +18°35'39" CIBLE
 ];
 
 // ── 4 étoiles officielles du Taureau pour le jeu ──
 // Aldébaran=12, Elnath=25, Tianguan=133, 119 Tauri=135
-const TAURUS_INDICES = [12, 25, 127, 129]; // Aldébaran=12, Elnath=25, Tianguan=127, 119 Tauri=129
+const TAURUS_INDICES = [12, 25, 133, 135]; // Aldébaran=12, Elnath=25, Tianguan=133, 119 Tauri=135
 // Connexions pour dessin Taureau (page succès)
 const TAURUS_LINKS = [
   [12, 25],    // Aldébaran → Elnath
-  [12, 127],   // Aldébaran → Tianguan
-  [127, 129],  // Tianguan → 119 Tauri
-  [12, 129],   // Aldébaran → 119 Tauri
-  [25, 127],   // Elnath → Tianguan
+  [12, 133],   // Aldébaran → Tianguan
+  [133, 135],  // Tianguan → 119 Tauri
+  [12, 135],   // Aldébaran → 119 Tauri
+  [25, 133],   // Elnath → Tianguan
 ];
 
 // ═══════════════════════════════════════════════════════════════════
@@ -2223,10 +2343,22 @@ function applyZoom(ratio,cx,cy){
 document.getElementById('btn-plus').addEventListener('click',()=>applyZoom(1.3,W/2,H/2));
 document.getElementById('btn-minus').addEventListener('click',()=>applyZoom(.77,W/2,H/2));
 document.getElementById('btn-center').addEventListener('click',()=>{
-  // Recentrer sur le centre de la carte en gardant le zoom actuel
-  state.ox = (W - MAP_W*state.zoom) / 2;
-  state.oy = (H - MAP_H*state.zoom) / 2;
-  draw();
+  // Recentrer avec animation fluide sur 1 seconde
+  const targetOx = (W - MAP_W*state.zoom) / 2;
+  const targetOy = (H - MAP_H*state.zoom) / 2;
+  const startOx = state.ox, startOy = state.oy;
+  const duration = 900;
+  const startTime = performance.now();
+  function easeInOut(t){ return t<0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function animCenter(now){
+    const elapsed = Math.min(now - startTime, duration);
+    const t = easeInOut(elapsed / duration);
+    state.ox = startOx + (targetOx - startOx) * t;
+    state.oy = startOy + (targetOy - startOy) * t;
+    clampPan(); draw();
+    if(elapsed < duration) requestAnimationFrame(animCenter);
+  }
+  requestAnimationFrame(animCenter);
 });
 
 // ═══════════════════════════════════════════════════════════════════
