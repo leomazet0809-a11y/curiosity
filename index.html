@@ -87,6 +87,20 @@ body {
 .stellar-intro {
   padding: 22px 18px 18px;
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+.stellar-bg {
+  position: absolute; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+}
+.stellar-bg svg { width: 100%; height: 100%; display: block; object-fit: cover; }
+.stellar-bg-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: rgba(7,9,15,0.74);
+}
+.stellar-intro > *:not(.stellar-bg):not(.stellar-bg-overlay) {
+  position: relative; z-index: 2;
 }
 .stellar-badge {
   display: flex; align-items: center; gap: 8px;
@@ -102,6 +116,28 @@ body {
   font-size: 12px; font-style: italic; color: #c8e4f4;
   line-height: 1.7; margin-bottom: 20px;
   white-space: pre-wrap; word-break: break-word;
+  flex: 1; min-width: 0;
+}
+.stellar-row {
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.holo-gallery {
+  display: flex; flex-direction: column; gap: 10px;
+  width: 92px; flex-shrink: 0;
+}
+.holo-card {
+  background: rgba(10,18,32,0.5);
+  border: 1px solid rgba(74,154,186,0.22);
+  border-radius: 10px;
+  padding: 8px 6px 6px;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  backdrop-filter: blur(2px);
+}
+.holo-card svg { width: 100%; height: auto; display: block; }
+.holo-card-label {
+  font-family: monospace; font-size: 8px;
+  letter-spacing: 0.22em; color: #6aa8c4;
+  text-transform: uppercase; text-align: center;
 }
 .stellar-nav-btn {
   display: flex; align-items: center; justify-content: center; gap: 12px;
@@ -316,6 +352,11 @@ body {
 .fp-container.scanning .fp-svg { filter: drop-shadow(0 0 8px rgba(74,154,186,0.6)); }
 .fp-container.success  .fp-svg { filter: drop-shadow(0 0 10px rgba(58,176,96,0.7)); }
 .fp-container.error    .fp-svg { filter: drop-shadow(0 0 8px rgba(160,50,50,0.6)); }
+.fp-container.ready    .fp-svg { animation: fpShimmer 2.6s ease-in-out infinite; }
+@keyframes fpShimmer {
+  0%, 100% { filter: brightness(1) drop-shadow(0 0 4px rgba(74,154,186,0.25)); }
+  50%      { filter: brightness(1.55) drop-shadow(0 0 14px rgba(120,200,235,0.65)); }
+}
 
 /* Particules */
 .fp-particle {
@@ -679,6 +720,12 @@ body {
 }
 #snOverlay::-webkit-scrollbar { display: none; }
 #snOverlay.open { display: block; }
+body:has(#snOverlay.open) {
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 #sn-back-btn {
   position: fixed; top: 13px; left: 14px; transform: none;
   z-index: 600;
@@ -808,7 +855,8 @@ body {
 <!-- ══ ACCUEIL ══ -->
 <div class="page" id="pageHome">
   <div class="hero" style="position:relative">
-    <button onclick="toggleFullscreen()" id="btn-fs-home" style="position:absolute;top:10px;left:10px;background:rgba(10,16,30,0.7);border:1px solid #1a3a50;color:#4a8aaa;font-size:10px;letter-spacing:1px;padding:5px 10px;border-radius:4px;cursor:pointer;font-family:monospace">⛶ PLEIN ÉCRAN</button>
+    <div class="back-btn" onclick="showPage('pageRules')" style="position:absolute;top:10px;left:10px;z-index:5">&#8592;</div>
+    <button onclick="toggleFullscreen()" id="btn-fs-home" style="position:absolute;top:10px;right:10px;background:rgba(10,16,30,0.7);border:1px solid #1a3a50;color:#4a8aaa;font-size:10px;letter-spacing:1px;padding:5px 10px;border-radius:4px;cursor:pointer;font-family:monospace">⛶ PLEIN ÉCRAN</button>
     <div class="logo-wrap" style="width:76px;height:76px;background:transparent;border:none"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
   <circle cx="22" cy="22" r="20" stroke="#2a6888" stroke-width="1.5" fill="none"/>
   <circle cx="22" cy="22" r="13" stroke="#1a4860" stroke-width="1" fill="none" stroke-dasharray="3 4"/>
@@ -941,24 +989,8 @@ body {
   </div>
   <div class="content">
     <div class="stellar-intro">
-      <div class="stellar-badge">
-        <div class="stellar-badge-line"></div>
-        <div class="stellar-badge-txt">PARAMÈTRE III · SIGNATURE DES RÉCEPTEURS</div>
-        <div class="stellar-badge-line"></div>
-      </div>
-      <div class="stellar-text" id="e3Text"></div>
-
-      <button class="stellar-nav-btn" id="openStarNavBtn" onclick="openStarNav()">
-        <div class="stellar-nav-btn-ico">✦</div>
-        <div class="stellar-nav-btn-txt">
-          <span class="stellar-nav-btn-label">CARTE</span>
-          <span class="stellar-nav-btn-sub">Ouvrir la carte céleste</span>
-        </div>
-        <span style="font-size:14px;color:#1a3050">›</span>
-      </button>
-
-      <div style="position:relative;width:100%;margin:18px 0 0;overflow:hidden;border-radius:12px;line-height:0">
-        <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+      <div class="stellar-bg">
+<svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
           <defs>
             <radialGradient id="ng1" cx="38%" cy="42%" r="52%">
               <stop offset="0%" stop-color="#1a4060" stop-opacity="0.7"/>
@@ -1090,6 +1122,101 @@ body {
           <rect width="400" height="220" fill="url(#sidefade)"/>
         </svg>
       </div>
+      <div class="stellar-bg-overlay"></div>
+      <div class="stellar-badge">
+        <div class="stellar-badge-line"></div>
+        <div class="stellar-badge-txt">PARAMÈTRE III · SIGNATURE DES RÉCEPTEURS</div>
+        <div class="stellar-badge-line"></div>
+      </div>
+      <div class="stellar-row">
+      <div class="stellar-text" id="e3Text"></div>
+      <div class="holo-gallery">
+        <div class="holo-card">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="qGrad1" cx="50%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#bfe8fa" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#4a9aba" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect x="2" y="2" width="96" height="96" rx="8" fill="rgba(10,30,46,0.4)" stroke="rgba(74,154,186,0.3)" stroke-width="0.5"/>
+            <g stroke="rgba(120,190,220,0.3)" stroke-width="0.4" fill="none">
+              <line x1="8" y1="18" x2="8" y2="82"/><line x1="92" y1="18" x2="92" y2="82"/>
+            </g>
+            <ellipse cx="50" cy="55" rx="32" ry="34" fill="url(#qGrad1)"/>
+            <path d="M50 18 C 41 18 35 25 35 35 L35 55 C 35 68 41 76 50 78 C 59 76 65 68 65 55 L65 35 C 65 25 59 18 50 18 Z" fill="rgba(160,215,240,0.16)" stroke="rgba(190,232,250,0.65)" stroke-width="0.6"/>
+            <path d="M38 33 Q50 22 62 33" fill="none" stroke="rgba(220,245,255,0.8)" stroke-width="0.7"/>
+            <path d="M33 30 L38 22 L43 28 L50 20 L57 28 L62 22 L67 30" fill="none" stroke="rgba(230,248,255,0.85)" stroke-width="0.8" stroke-linejoin="round"/>
+            <circle cx="38" cy="22" r="1.4" fill="#eafcff"/><circle cx="50" cy="20" r="1.6" fill="#eafcff"/><circle cx="62" cy="22" r="1.4" fill="#eafcff"/>
+            <path d="M40 78 L40 86 M60 78 L60 86 M45 80 L43 88 M55 80 L57 88" stroke="rgba(190,232,250,0.5)" stroke-width="0.6"/>
+            <text x="50" y="94" text-anchor="middle" font-family="monospace" font-size="5" fill="rgba(120,190,220,0.5)" letter-spacing="1">RECONSTRUCTION · 51-α</text>
+          </svg>
+          <div class="holo-card-label">Cassiopée</div>
+        </div>
+        <div class="holo-card">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="qGrad2" cx="50%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#bfe8fa" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#4a9aba" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect x="2" y="2" width="96" height="96" rx="8" fill="rgba(10,30,46,0.4)" stroke="rgba(74,154,186,0.3)" stroke-width="0.5"/>
+            <g stroke="rgba(120,190,220,0.3)" stroke-width="0.4" fill="none">
+              <line x1="8" y1="18" x2="8" y2="82"/><line x1="92" y1="18" x2="92" y2="82"/>
+            </g>
+            <ellipse cx="50" cy="55" rx="32" ry="34" fill="url(#qGrad2)"/>
+            <circle cx="50" cy="30" r="9" fill="none" stroke="rgba(190,232,250,0.7)" stroke-width="0.7"/>
+            <path d="M50 39 L50 70 M50 46 L36 64 M50 46 L64 64" fill="none" stroke="rgba(190,232,250,0.65)" stroke-width="0.7" stroke-linecap="round"/>
+            <path d="M20 35 L36 64 M80 35 L64 64" fill="none" stroke="rgba(140,210,240,0.4)" stroke-width="0.5" stroke-dasharray="2 1.5"/>
+            <circle cx="20" cy="35" r="1.6" fill="#eafcff"/><circle cx="80" cy="35" r="1.6" fill="#eafcff"/>
+            <circle cx="36" cy="64" r="1.4" fill="#eafcff"/><circle cx="64" cy="64" r="1.4" fill="#eafcff"/>
+            <path d="M20 35 Q18 50 22 60 M80 35 Q82 50 78 60" fill="none" stroke="rgba(140,210,240,0.4)" stroke-width="0.5"/>
+            <text x="50" y="94" text-anchor="middle" font-family="monospace" font-size="5" fill="rgba(120,190,220,0.5)" letter-spacing="1">RECONSTRUCTION · 48-α</text>
+          </svg>
+          <div class="holo-card-label">Andromède</div>
+        </div>
+        <div class="holo-card">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="qGrad3" cx="50%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#bfe8fa" stop-opacity="0.5"/>
+                <stop offset="100%" stop-color="#4a9aba" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="qGlow3" cx="50%" cy="38%" r="20%">
+                <stop offset="0%" stop-color="#eafcff" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#4a9aba" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <rect x="2" y="2" width="96" height="96" rx="8" fill="rgba(10,30,46,0.4)" stroke="rgba(74,154,186,0.3)" stroke-width="0.5"/>
+            <g stroke="rgba(120,190,220,0.3)" stroke-width="0.4" fill="none">
+              <line x1="8" y1="18" x2="8" y2="82"/><line x1="92" y1="18" x2="92" y2="82"/>
+            </g>
+            <ellipse cx="50" cy="55" rx="32" ry="34" fill="url(#qGrad3)"/>
+            <path d="M50 22 L50 64" stroke="rgba(190,232,250,0.7)" stroke-width="0.7"/>
+            <path d="M50 30 C 30 28 22 38 24 54 C 36 50 46 44 50 36" fill="none" stroke="rgba(190,232,250,0.6)" stroke-width="0.6"/>
+            <path d="M50 30 C 70 28 78 38 76 54 C 64 50 54 44 50 36" fill="none" stroke="rgba(190,232,250,0.6)" stroke-width="0.6"/>
+            <path d="M50 64 Q40 72 34 78 M50 64 Q60 72 66 78" fill="none" stroke="rgba(190,232,250,0.5)" stroke-width="0.6"/>
+            <circle cx="50" cy="38" r="7" fill="url(#qGlow3)"/>
+            <circle cx="50" cy="38" r="1.8" fill="#ffffff"/>
+            <text x="50" y="94" text-anchor="middle" font-family="monospace" font-size="5" fill="rgba(120,190,220,0.5)" letter-spacing="1">RECONSTRUCTION · 3-α</text>
+          </svg>
+          <div class="holo-card-label">Vega</div>
+        </div>
+      </div>
+      </div>
+
+      <div class="stellar-text" id="e3Text"></div>
+
+      <button class="stellar-nav-btn" id="openStarNavBtn" onclick="openStarNav()">
+        <div class="stellar-nav-btn-ico">✦</div>
+        <div class="stellar-nav-btn-txt">
+          <span class="stellar-nav-btn-label">CARTE</span>
+          <span class="stellar-nav-btn-sub">Ouvrir la carte céleste</span>
+        </div>
+        <span style="font-size:14px;color:#1a3050">›</span>
+      </button>
+
 
       <div class="stellar-status" id="stellarStatus">
         ◌ &nbsp; AUCUNE ÉTOILE SÉLECTIONNÉE
@@ -1117,6 +1244,7 @@ body {
     <div id="admin-badge">◈ MODE ADMIN</div>
   </div>
   <div id="btn-row-top">
+    <button class="hud-btn" id="btn-message" style="display:none;border-color:rgba(120,210,160,0.5);color:#8ae0b8">✉ MESSAGE</button>
     <button class="hud-btn" id="btn-admin-toggle">ADMIN</button>
     <button class="hud-btn" id="btn-fs">⛶ PLEIN ÉCRAN</button>
     <button class="hud-btn danger" id="btn-quit">✕ QUITTER</button>
@@ -1173,7 +1301,7 @@ body {
   <canvas id="bg-stars-canvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
   <div id="success-content">
     <div id="success-top-bar">
-      <button class="hud-btn" id="btn-back">← RETOUR À LA CARTE</button>
+      <div class="back-btn" id="btn-back">&#8592;</div>
     </div>
     <canvas id="taurus-canvas"></canvas>
     <div id="success-msg">message succès</div>
@@ -1248,30 +1376,25 @@ la réponse à l'énigme I est "1".`, answer:"1", sub:"Vecteur d'ancrage synchro
     
 LLL YLLL YLL Y LL LA`, answer:"387529", sub:"Clé de résonance calibrée." },
   { title:"ÉNIGME III", badge:"PARAMÈTRE III · SIGNATURE DES RÉCEPTEURS", text:`Les récepteurs permettent d'établir la connexion entre deux époques.
-Depuis plusieurs décennies notre civilisation a caché 4 récepteurs, quelque part dans l'univers.
+Trois reines portent en elles un récepteur.
 
-Le premier brille comme un œil — une géante orange
-parmi les plus brillantes du ciel boréal.
-Son nom arabe signifie "le suiveur" :
-il suit les Pléiades dans leur course nocturne.
+Vaniteuse reine enchaînée à son trône,
+Condamnée à tourner sans jamais se poser.
+Cinq étoiles dessinent sa couronne,
+Dans le ciel boréal, elle ne peut se cacher.
 
-Le deuxième marque l'extrémité d'un ensemble.
-Étoile frontière, elle appartient autant
-à une constellation voisine qu'à celle-ci.
-Les Romains l'appelaient "l'extrémité acérée".
+Enchaînée au rocher par son propre sang royal,
+Offerte en sacrifice aux fureurs de la mer.
+Un héros venu des cieux brisa son carcan,
+Trois étoiles tracent encore ses liens de fer.
 
-Le troisième porte un nom venu d'Orient.
-En mandarin ancien, il désigne une porte —
-celle que les empereurs regardaient
-pour lire l'avenir dans les étoiles.
+La plus brillante tisserande du ciel d'été,
+Séparée de l'aimé par un fleuve de lumière.
+Une nuit par an les oiseaux font le pont,
+Et Lyra chante encore leur amour solitaire.
 
-Le quatrième est discret.
-Une géante rouge presque silencieuse,
-de même nature que l'œil,
-mais cent fois plus effacée dans la nuit.
-Son seul identifiant : un numéro.
 
-Trouve les 4 récepteurs.`, answer:"3", sub:"Signature des récepteurs confirmées." }
+Trouvez les reines. Vous trouverez les récepteurs.`, answer:"3", sub:"Signature des récepteurs confirmées." }
 ];
 /* ── Animations page finale ── */
 var finalAnimTimer = null;
@@ -1426,12 +1549,15 @@ function refreshHome() {
   });
   var lbl = document.getElementById('bioLabel');
   var sub = document.getElementById('bioSubLabel');
+  var fp  = document.getElementById('fpContainer');
   if (all) {
     lbl.textContent = 'Authentification biométrique'; lbl.style.color = '#3a9060';
     sub.textContent = 'Transmission prête · Authentifiez-vous'; sub.style.color = '#1e5030';
+    if (fp) fp.classList.add('ready');
   } else {
     lbl.textContent = 'Authentification biométrique'; lbl.style.color = '#4a8aaa';
     sub.textContent = 'Authentification requise'; sub.style.color = '#1e3040';
+    if (fp) fp.classList.remove('ready');
   }
 }
 
@@ -1458,6 +1584,11 @@ function doReset() {
     state.selected.clear();
     if (typeof updatePanel === 'function') updatePanel();
   }
+  // Masquer le bouton MESSAGE de la carte des étoiles
+  var msgBtn = document.getElementById('btn-message');
+  if (msgBtn) msgBtn.style.display = 'none';
+  if (typeof updateMessageButton === 'function') updateMessageButton();
+  if (window.CuriosityBridge && window.CuriosityBridge.resetTaurusWarp) window.CuriosityBridge.resetTaurusWarp();
   closeModal();
   refreshHome();
   showPage('pageHome');
@@ -1477,7 +1608,7 @@ function handleBioTap() {
 function triggerFpScan(cb) {
   fpBusy = true;
   var fp = document.getElementById('fpContainer');
-  fp.classList.remove('error','success'); fp.classList.add('scanning');
+  fp.classList.remove('error','success','ready'); fp.classList.add('scanning');
   setTimeout(function() {
     fp.classList.remove('scanning'); fp.classList.add('success');
     setTimeout(function() { fp.classList.remove('success'); fpBusy = false; if (cb) cb(); }, 900);
@@ -1486,8 +1617,8 @@ function triggerFpScan(cb) {
 function triggerFpError() {
   fpBusy = true;
   var fp = document.getElementById('fpContainer');
-  fp.classList.remove('scanning','success'); fp.classList.add('error');
-  setTimeout(function() { fp.classList.remove('error'); fpBusy = false; }, 700);
+  fp.classList.remove('scanning','success','ready'); fp.classList.add('error');
+  setTimeout(function() { fp.classList.remove('error'); fpBusy = false; refreshHome(); }, 700);
 }
 function showBioError() {
   var el = document.getElementById('bioErrorMsg');
@@ -1544,8 +1675,8 @@ function openEnigma(n) {
 
 // Clé de stockage partagée avec star-navigator
 var STAR_SEL_KEY = 'celeste_selected_v2';
-// Indices des 4 étoiles cibles dans star-navigator : Aldébaran=12, Elnath=25, Tianguan=127, 119 Tauri=129
-var TARGET_STARS = [12, 25, 133, 135];
+// Indices des 3 étoiles cibles dans star-navigator : Vega=3, Andromède=48, Cassiopée=51
+var TARGET_STARS = [3, 48, 51];
 
 var snInitialized = false;
 function openStarNav() {
@@ -1631,16 +1762,16 @@ function updateStellarStatusWith(sel) {
     el.innerHTML = '◌ &nbsp; AUCUNE ÉTOILE SÉLECTIONNÉE';
   } else if (n < TARGET_STARS.length) {
     el.className = 'stellar-status partial';
-    el.innerHTML = '◑ &nbsp; ' + n + ' / 4 ÉTOILES IDENTIFIÉES';
+    el.innerHTML = '◑ &nbsp; ' + n + ' / ' + TARGET_STARS.length + ' ÉTOILES IDENTIFIÉES';
   } else {
-    // Les 4 cibles sont là — vérifier qu'il n'y a pas d'autres étoiles (sélection stricte)
+    // Les cibles sont là — vérifier qu'il n'y a pas d'autres étoiles (sélection stricte)
     var exact = sel.length === TARGET_STARS.length;
     if (exact) {
       el.className = 'stellar-status complete';
       el.innerHTML = '◉ &nbsp; SIGNATURE COMPLÈTE — VALIDATION EN COURS…';
     } else {
       el.className = 'stellar-status partial';
-      el.innerHTML = '◑ &nbsp; 4 / 4 CIBLES + ' + (sel.length - 4) + ' ÉTOILE(S) EN TROP';
+      el.innerHTML = '◑ &nbsp; ' + TARGET_STARS.length + ' / ' + TARGET_STARS.length + ' CIBLES + ' + (sel.length - TARGET_STARS.length) + ' ÉTOILE(S) EN TROP';
     }
   }
 }
@@ -1651,7 +1782,7 @@ function checkStarSolution() {
 
 function checkStarSolutionWith(sel) {
   if (STATE.solved[2]) return true;
-  // Exactement les 4 étoiles cibles, pas plus
+  // Exactement les étoiles cibles, pas plus
   if (sel.length !== TARGET_STARS.length) return false;
   var allFound = TARGET_STARS.every(function(t){ return sel.indexOf(t) >= 0; });
   if (!allFound) return false;
@@ -1659,6 +1790,7 @@ function checkStarSolutionWith(sel) {
   STATE.solved[2] = true;
   saveState();
   updateStellarStatus();
+  updateMessageButton();
   // Fermer le star nav si ouvert
   var overlay = document.getElementById('starNavOverlay');
   if (overlay.classList.contains('open')) {
@@ -1860,10 +1992,10 @@ const SD = [
   ["Diphda",        0.7265,-17.9866, 2.04, 4797,"Baleine"],       // 45 β Cet  00h43m35s -17°59'12"
   ["Nunki",        18.9213,-26.2960, 2.05,18700,"Sagittaire"],    // 46 σ Sgr  18h55m16s -26°17'48"
   ["Saiph",         5.7953, -9.6696, 2.07,26500,"Orion"],         // 47 κ Ori  05h47m45s -09°40'11"
-  ["Alpheratz",     0.1397, 29.0905, 2.07,13800,"Andromède"],     // 48 α And  00h08m23s +29°05'26"
+  ["Andromède",     0.1397, 29.0905, 2.07,13800,"Andromède"],     // 48 α And (Alpheratz) 00h08m23s +29°05'26"
   ["Mirach",        1.1622, 35.6203, 2.07, 3842,"Andromède"],     // 49 β And  01h09m44s +35°37'14"
   ["Almach",        2.0653, 42.3298, 2.10, 4250,"Andromède"],     // 50 γ And  02h03m54s +42°19'47"
-  ["Schedar",       0.6753, 56.5373, 2.24, 4552,"Cassiopée"],     // 51 α Cas  00h40m31s +56°32'15"
+  ["Cassiopée",     0.6753, 56.5373, 2.24, 4552,"Cassiopée"],     // 51 α Cas (Schedar) 00h40m31s +56°32'15"
   ["Caph",          0.1531, 59.1498, 2.28, 7079,"Cassiopée"],     // 52 β Cas  00h09m11s +59°08'59"
   ["Ruchbah",       1.4302, 60.2353, 2.68, 8912,"Cassiopée"],     // 53 δ Cas  01h25m49s +60°14'07"
   ["Segin",         1.9070, 63.6700, 3.38,15174,"Cassiopée"],     // 54 ε Cas  01h54m24s +63°40'12"
@@ -1952,16 +2084,13 @@ const SD = [
   ["119 Tauri",     5.5370, 18.5942, 4.33, 3800,"Taureau"],      // 135 CE Tau  05h32m12s +18°35'39" CIBLE
 ];
 
-// ── 4 étoiles officielles du Taureau pour le jeu ──
-// Aldébaran=12, Elnath=25, Tianguan=133, 119 Tauri=135
-const TAURUS_INDICES = [12, 25, 133, 135]; // Aldébaran=12, Elnath=25, Tianguan=133, 119 Tauri=135
-// Connexions pour dessin Taureau (page succès)
+// ── 3 étoiles cibles du jeu : Vega, Andromède, Cassiopée ──
+const TAURUS_INDICES = [3, 48, 51]; // Vega=3, Andromède=48, Cassiopée=51
+// Connexions pour dessin (page succès)
 const TAURUS_LINKS = [
-  [12, 25],    // Aldébaran → Elnath
-  [12, 133],   // Aldébaran → Tianguan
-  [133, 135],  // Tianguan → 119 Tauri
-  [12, 135],   // Aldébaran → 119 Tauri
-  [25, 133],   // Elnath → Tianguan
+  [3, 48],    // Vega → Andromède
+  [48, 51],   // Andromède → Cassiopée
+  [3, 51],    // Vega → Cassiopée
 ];
 
 // ═══════════════════════════════════════════════════════════════════
@@ -2215,6 +2344,50 @@ function draw(){
     }
   });
 
+  // ── Liaison + rayonnement renforcé : Vega, Andromède, Cassiopée sélectionnées exactement ──
+  if(tripleLinkStart !== null){
+    const elapsed = Date.now() - tripleLinkStart;
+    const t = Math.min(1, elapsed / TRIPLE_LINK_DURATION);
+    const targetPts = TAURUS_INDICES.map(i=>{
+      const mp=starPositions[i]; return mapToScreen(mp.x,mp.y);
+    });
+
+    // Rayonnement renforcé sur les 3 étoiles
+    const pulse = 1 + .35*Math.sin(animFrame*.12);
+    targetPts.forEach(p=>{
+      const hR = 26 * pulse * (0.5 + t*0.5);
+      const h = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,hR);
+      h.addColorStop(0,'rgba(255,255,255,.85)');
+      h.addColorStop(.35,'rgba(220,240,255,.4)');
+      h.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.beginPath(); ctx.arc(p.x,p.y,hR,0,Math.PI*2); ctx.fillStyle=h; ctx.fill();
+    });
+
+    // Trait blanc animé reliant les 3 étoiles (triangle), tracé progressivement sur 2s
+    const path=[targetPts[0],targetPts[1],targetPts[2],targetPts[0]];
+    let totalLen=0; const segLens=[];
+    for(let s=0;s<3;s++){ const dx=path[s+1].x-path[s].x, dy=path[s+1].y-path[s].y; const l=Math.hypot(dx,dy); segLens.push(l); totalLen+=l; }
+    let drawLen = totalLen * t;
+    ctx.save();
+    ctx.strokeStyle = `rgba(255,255,255,${0.85})`;
+    ctx.lineWidth = 1.4;
+    ctx.shadowColor = 'rgba(255,255,255,0.8)';
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    for(let s=0;s<3;s++){
+      if(drawLen<=0) break;
+      const segLen=segLens[s];
+      const segT=Math.min(1, drawLen/segLen);
+      const sx=path[s].x+(path[s+1].x-path[s].x)*segT;
+      const sy=path[s].y+(path[s+1].y-path[s].y)*segT;
+      ctx.moveTo(path[s].x,path[s].y);
+      ctx.lineTo(sx,sy);
+      drawLen-=segLen;
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
   // ── Étoiles filantes ──
   // Mise à jour et dessin
   maybeSpawnShootingStar();
@@ -2407,21 +2580,34 @@ function updatePanel(){
   });
 }
 
-// Vérifier si toutes les étoiles Taureau sont sélectionnées
+// Vérifier si toutes les étoiles cibles sont sélectionnées
 let warpTriggered = false;
+let tripleLinkStart = null;
+if (window.CuriosityBridge) {
+  window.CuriosityBridge.resetTaurusWarp = function(){
+    warpTriggered = false;
+    tripleLinkStart = null;
+    const fadeDiv = document.getElementById('warp-fade');
+    if (fadeDiv) fadeDiv.style.opacity = '0';
+    warpOverlay.style.display = 'none';
+  };
+}
+const TRIPLE_LINK_DURATION = 2000;
 function checkTaurusComplete(){
   if(warpTriggered) return;
-  const allFour = TAURUS_INDICES.every(i => state.selected.has(i));
-  const exactlyFour = allFour && state.selected.size === TAURUS_INDICES.length;
-  const fourPlusExtras = allFour && state.selected.size > TAURUS_INDICES.length;
+  const allFound = TAURUS_INDICES.every(i => state.selected.has(i));
+  const exactMatch = allFound && state.selected.size === TAURUS_INDICES.length;
+  const foundPlusExtras = allFound && state.selected.size > TAURUS_INDICES.length;
 
-  if(exactlyFour){
+  if(exactMatch){
     warpTriggered = true;
+    tripleLinkStart = Date.now();
     if(window.CuriosityBridge) window.CuriosityBridge.onTaurusComplete();
-    setTimeout(()=>{ startWarpTransition(); }, 300);
+    startTripleLinkFade();
+    setTimeout(()=>{ startWarpTransition(); }, TRIPLE_LINK_DURATION + 300);
   }
-  // Signal visuel si les 4 sont là + extras
-  updateGlowOverlay(fourPlusExtras);
+  // Signal visuel si toutes les cibles sont là + extras
+  updateGlowOverlay(foundPlusExtras);
 }
 
 // Overlay d'éclaircissement quand les 4 sont sélectionnées + extras
@@ -2470,6 +2656,18 @@ document.getElementById('btn-quit').addEventListener('click',()=>{
   if(window.CuriosityBridge) window.CuriosityBridge.closeStarNav();
   else showQuitScreen();
 });
+
+// Bouton MESSAGE — accès direct au message de succès de l'énigme III
+document.getElementById('btn-message').addEventListener('click',()=>{
+  showSuccessPage();
+});
+
+function updateMessageButton(){
+  const btn=document.getElementById('btn-message');
+  if(!btn) return;
+  btn.style.display = STATE.solved[2] ? 'inline-block' : 'none';
+}
+updateMessageButton();
 
 function showQuitScreen(){
   const overlay=document.createElement('div');
@@ -2548,31 +2746,38 @@ const warpCanvas=document.getElementById('warp-canvas');
 const wctx=warpCanvas.getContext('2d');
 let warpRAF=null;
 
-function startWarpTransition(){
-  // Phase 1 : fondu CSS 2s vers le noir (z-index SOUS le warpCanvas)
+// Fondu progressif vers le noir, démarré en même temps que le trait
+// reliant les 3 étoiles, pour une transition continue vers le warp
+function startTripleLinkFade(){
   let fadeDiv = document.getElementById('warp-fade');
   if(!fadeDiv){
     fadeDiv = document.createElement('div');
     fadeDiv.id = 'warp-fade';
-    fadeDiv.style.cssText = 'position:fixed;inset:0;z-index:78;background:#00010c;opacity:0;pointer-events:none;transition:opacity 2s ease';
+    fadeDiv.style.cssText = 'position:fixed;inset:0;z-index:78;background:#00010c;opacity:0;pointer-events:none;';
     document.body.appendChild(fadeDiv);
   }
-  fadeDiv.style.transition = 'opacity 2s ease';
+  const fadeMs = TRIPLE_LINK_DURATION + 600;
+  fadeDiv.style.transition = `opacity ${fadeMs}ms ease-in`;
   fadeDiv.style.opacity = '0';
   fadeDiv.getBoundingClientRect(); // reflow
   fadeDiv.style.opacity = '1';
+}
 
-  // Phase 2 : lancer l'animation warp par-dessus PENDANT le fondu (à 1.5s)
-  // Le warp démarre invisible (alpha géré dans ses premières frames) et
-  // prend le relais sans coupure
+function startWarpTransition(){
+  let fadeDiv = document.getElementById('warp-fade');
+  if(!fadeDiv){
+    fadeDiv = document.createElement('div');
+    fadeDiv.id = 'warp-fade';
+    fadeDiv.style.cssText = 'position:fixed;inset:0;z-index:78;background:#00010c;opacity:1;pointer-events:none;';
+    document.body.appendChild(fadeDiv);
+  }
+  // L'écran est déjà fondu au noir grâce à startTripleLinkFade — on lance
+  // directement l'animation warp, qui démarre invisible et prend le relais.
+  _startWarpAnim();
   setTimeout(()=>{
-    _startWarpAnim();
-    // Retirer le fadeDiv progressivement une fois le warp visible
-    setTimeout(()=>{
-      fadeDiv.style.transition = 'opacity 0.5s ease';
-      fadeDiv.style.opacity = '0';
-    }, 600);
-  }, 1500);
+    fadeDiv.style.transition = 'opacity 0.5s ease';
+    fadeDiv.style.opacity = '0';
+  }, 600);
 }
 
 function _startWarpAnim(){
@@ -2824,7 +3029,7 @@ function drawTaurusConstellation(){
 }
 
 // ═══════════════════════════════════════════════════════════════════
-//  RETOUR DEPUIS PAGE SUCCÈS
+//  RETOUR DEPUIS PAGE SUCCÈS — vers la carte des étoiles
 // ═══════════════════════════════════════════════════════════════════
 document.getElementById('btn-back').addEventListener('click',()=>{
   const page=document.getElementById('success-page');
@@ -2836,6 +3041,13 @@ document.getElementById('btn-back').addEventListener('click',()=>{
     page.style.opacity='';
     page.style.transition='';
     document.getElementById('success-content').classList.remove('visible');
+    // Nettoyer le fondu warp éventuel pour révéler la carte
+    const fadeDiv = document.getElementById('warp-fade');
+    if (fadeDiv) fadeDiv.style.opacity = '0';
+    warpOverlay.style.display = 'none';
+    // S'assurer que la carte des étoiles est visible
+    const snOverlay = document.getElementById('snOverlay');
+    if (snOverlay) snOverlay.classList.add('open');
   }, 2000);
 });
 
