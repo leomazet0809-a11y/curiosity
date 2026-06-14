@@ -1590,7 +1590,7 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
       <input id="gpsLat" type="number" placeholder="Latitude" step="0.0001" style="flex:1;padding:6px;background:rgba(0,0,0,0.5);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;border-radius:4px">
       <input id="gpsLng" type="number" placeholder="Longitude" step="0.0001" style="flex:1;padding:6px;background:rgba(0,0,0,0.5);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;border-radius:4px">
     </div>
-    <button onclick="setTargetGPS()" style="width:100%;padding:6px;background:rgba(90,190,230,0.2);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;cursor:pointer;border-radius:4px">DÉFINIR CIBLE</button>
+    <button id="setTargetBtn" onclick="setTargetGPS()" style="width:100%;padding:8px;background:rgba(90,190,230,0.2);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;cursor:pointer;border-radius:4px;transition:all 0.15s;font-weight:600;letter-spacing:0.5px" onmousedown="this.style.background='rgba(90,190,230,0.4)';this.style.transform='scale(0.98)'" onmouseup="this.style.background='rgba(90,190,230,0.2)';this.style.transform='scale(1)'">DÉFINIR CIBLE</button>
   </div>
   
   <!-- DISTANCE DISPLAY -->
@@ -3745,41 +3745,46 @@ function drawRadar() {
   // Couleur dynamique selon bearing
   var primaryColor = getColorForBearing();
   var secondaryColor = 'rgba(0,204,255,0.3)';
-  var gridColor = 'rgba(0,204,255,0.2)';
+  var gridColor = 'rgba(0,204,255,0.15)';
   
-  // Grille de contour topographique
+  // APPLIQUER ROTATION À TOUTE LA CARTE (sauf le triangle fixe)
+  radarState.ctx.save();
+  radarState.ctx.translate(cx, cy);
+  radarState.ctx.rotate(radarState.currentAlpha * Math.PI / 180);
+  radarState.ctx.translate(-cx, -cy);
+  
+  // Grille fine (quadrillage)
   radarState.ctx.strokeStyle = gridColor;
-  radarState.ctx.lineWidth = 0.5;
-  for (var i = 0; i < 20; i++) {
-    for (var j = 0; j < 20; j++) {
-      var x = (w / 20) * i;
-      var y = (h / 20) * j;
-      var size = 5;
-      radarState.ctx.strokeRect(x - size/2, y - size/2, size, size);
-    }
+  radarState.ctx.lineWidth = 0.4;
+  var gridSize = 20;
+  for (var x = 0; x < w; x += gridSize) {
+    radarState.ctx.beginPath();
+    radarState.ctx.moveTo(x, 0);
+    radarState.ctx.lineTo(x, h);
+    radarState.ctx.stroke();
+  }
+  for (var y = 0; y < h; y += gridSize) {
+    radarState.ctx.beginPath();
+    radarState.ctx.moveTo(0, y);
+    radarState.ctx.lineTo(w, y);
+    radarState.ctx.stroke();
   }
   
-  // Cercles de distance (5m, 10m, 15m, 20m)
-  var distances = [5, 10, 15, 20];
-  var maxDist = 30000;  // 30km max
+  // Cercles concentriques multiples (5, 10, 15, 20, 25, 30m)
+  var distances = [5, 10, 15, 20, 25, 30];
+  var maxDist = 30000;
   
   for (var d = 0; d < distances.length; d++) {
     var meters = distances[d];
     var displayRadius = (meters / maxDist) * radius;
     
     radarState.ctx.strokeStyle = primaryColor;
-    radarState.ctx.lineWidth = d === distances.length - 1 ? 2 : 1;
-    radarState.ctx.globalAlpha = 0.7;
+    radarState.ctx.lineWidth = d === distances.length - 1 ? 2 : 0.8;
+    radarState.ctx.globalAlpha = 0.6 + (d * 0.05);
     radarState.ctx.beginPath();
     radarState.ctx.arc(cx, cy, displayRadius, 0, Math.PI * 2);
     radarState.ctx.stroke();
     radarState.ctx.globalAlpha = 1;
-    
-    // Label distance
-    radarState.ctx.fillStyle = primaryColor;
-    radarState.ctx.font = '10px monospace';
-    radarState.ctx.textAlign = 'center';
-    radarState.ctx.fillText(meters + 'm', cx + displayRadius - 15, cy - 3);
   }
   
   // Cercle externe principal
@@ -3834,13 +3839,18 @@ function drawRadar() {
   // Afficher la cible GPS si définie
   if (radarState.targetLat && radarState.currentLat && radarState.currentLng) {
     drawGPSPoint(cx, cy, radius, primaryColor);
-    updateDistanceDisplay();
   }
   
-  // Triangle pointeur (au centre, tourne vers la cible)
+  // Fin de la rotation
+  radarState.ctx.restore();
+  
+  // TRIANGLE POINTEUR (dessiné APRÈS restore, donc ne tourne pas)
   if (radarState.targetLat && radarState.currentLat) {
     drawTargetTriangle(cx, cy, primaryColor);
   }
+  
+  // Afficher distance
+  updateDistanceDisplay();
 }
 
 function drawGPSPoint(cx, cy, radius, color) {
@@ -3919,12 +3929,12 @@ function updateDistanceDisplay() {
   
   var text;
   if (dist < 1000) {
-    text = dist + ' m';
+    text = dist.toFixed(10) + ' m';
   } else {
-    text = (dist / 1000).toFixed(2) + ' km';
+    text = (dist / 1000).toFixed(10) + ' km';
   }
   
-  document.getElementById('radarDistance').textContent = '◆ ' + text;
+  document.getElementById('radarDistance').textContent = text;
 }
 
 function startRadarAnimation() {
