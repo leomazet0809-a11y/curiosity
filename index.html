@@ -1566,7 +1566,7 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
   <div id="cryptexSub">CRYPTEX · MASSE 312g · MATIÈRE MÉTAL</div>
 </div>
 <!-- ══ RADAR PAGE ══ -->
-<div id="radarPage" class="page" style="display:none;background:#000;flex-direction:column;justify-content:flex-start">
+<div id="radarPage" class="page" style="display:none;background:#000;position:fixed;top:0;left:0;width:100%;height:100vh;flex-direction:column;justify-content:flex-start;z-index:100">
   <div class="topbar" style="position:absolute;top:0;width:100%;background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent);z-index:10">
     <div class="back-btn" onclick="closeRadar()">&#8592;</div>
     <div>
@@ -1578,11 +1578,10 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
   <!-- GPS INPUT moved to bottom -->
   
   <!-- RADAR CANVAS -->
-  <div id="radarContainer" style="position:relative;width:100%;flex:1;display:flex;align-items:center;justify-content:center;margin-top:60px">
-    <canvas id="radarCanvas" style="width:100%;height:100%;max-width:600px;max-height:600px;display:block"></canvas>
+  <div id="radarContainer" style="position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100vh;display:flex;align-items:center;justify-content:center">
+    <canvas id="radarCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block"></canvas>
     
-    <!-- CENTER TRIANGLE (FIXED) -->
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:25px solid #5ad0a0;filter:drop-shadow(0 0 8px rgba(90,208,160,0.8));z-index:20"></div>
+    <!-- Triangle drawn on canvas -->
   </div>
   
   <!-- GPS INPUT BOTTOM -->
@@ -2188,14 +2187,6 @@ document.getElementById('answerInput').addEventListener('keydown', function(e){
 /* ── Animation de glitch — paramètres de reconnaissance ── */
 (function() {
   var bugInterval = null;
-  var originalShowPage = window.showPage;
-  window.showPage = function(id) {
-    if (bugInterval) { clearInterval(bugInterval); bugInterval = null; }
-    originalShowPage.call(this, id);
-    if (id === 'pageBio') {
-      startBugAnimation();
-    }
-  };
   
   function startBugAnimation() {
     var ageEl = document.getElementById('ageValue');
@@ -3550,13 +3541,6 @@ function initTransferState() {
 }
 
 /* ── PAGE BIO — initialiser au chargement ── */
-var originalShowPage2 = window.showPage;
-window.showPage = function(id) {
-  originalShowPage2.call(this, id);
-  if (id === 'pageBio') {
-    initTransferState();
-  }
-};
 
 /* ── Marquer le transfert comme complété ── */
 function markTransferCompleted() {
@@ -3617,15 +3601,18 @@ window.doReset = function() {
 };
 
 
-/* ── RADAR GPS SYSTEM ── */
+
+/* ── RADAR SYSTEM (COMPLÈTEMENT REFAIT) ── */
 var radarState = {
   targetLat: null,
   targetLng: null,
   currentLat: null,
   currentLng: null,
-  currentAlpha: 0,  // orientation device
+  currentAlpha: 0,
   canvas: null,
-  ctx: null
+  ctx: null,
+  watchId: null,
+  rafId: null
 };
 
 function setTargetGPS() {
@@ -3645,16 +3632,17 @@ function setTargetGPS() {
   radarState.targetLat = lat;
   radarState.targetLng = lng;
   
-  // Demander la localisation actuelle
+  // Demander la localisation
   if (navigator.geolocation) {
-    navigator.geolocation.watchPosition(
+    if (radarState.watchId) navigator.geolocation.clearWatch(radarState.watchId);
+    radarState.watchId = navigator.geolocation.watchPosition(
       function(pos) {
         radarState.currentLat = pos.coords.latitude;
         radarState.currentLng = pos.coords.longitude;
       },
       function(err) {
-        console.warn('Géolocalisation non disponible:', err);
-        // Utiliser coordonnées factices pour démo
+        console.warn('Géolocalisation:', err);
+        // Demo: coordonnées Paris
         radarState.currentLat = 48.8566;
         radarState.currentLng = 2.3522;
       }
@@ -3664,8 +3652,7 @@ function setTargetGPS() {
 
 function getDistance(lat1, lng1, lat2, lng2) {
   if (!lat1 || !lng1 || !lat2 || !lng2) return null;
-  
-  var R = 6371000; // Rayon terre en mètres
+  var R = 6371000; // Terre en mètres
   var dLat = (lat2 - lat1) * Math.PI / 180;
   var dLng = (lng2 - lng1) * Math.PI / 180;
   var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
@@ -3675,25 +3662,46 @@ function getDistance(lat1, lng1, lat2, lng2) {
   return Math.round(R * c);
 }
 
+function getColorForBearing() {
+  if (!radarState.targetLat || !radarState.currentLat) return '#00ccff';
+  
+  var dLng = radarState.targetLng - radarState.currentLng;
+  var dLat = radarState.targetLat - radarState.currentLat;
+  var targetBearing = Math.atan2(dLng, dLat) * 180 / Math.PI;
+  targetBearing = (targetBearing - radarState.currentAlpha + 360) % 360;
+  
+  // Plus proche du bearing (0°), plus vert
+  var diff = Math.min(Math.abs(targetBearing), 360 - Math.abs(targetBearing));
+  var greenIntensity = 1 - (diff / 180);  // 1 à 0°, 0.5 à 90°, 0 à 180°
+  greenIntensity = Math.max(0, greenIntensity);
+  
+  // Interpoler cyan → vert
+  var cyan = [0, 204, 255];      // #00ccff
+  var green = [76, 255, 100];    // #4cff64
+  
+  var r = Math.round(cyan[0] + (green[0] - cyan[0]) * greenIntensity);
+  var g = Math.round(cyan[1] + (green[1] - cyan[1]) * greenIntensity);
+  var b = Math.round(cyan[2] + (green[2] - cyan[2]) * greenIntensity);
+  
+  return 'rgb(' + r + ',' + g + ',' + b + ')';
+}
+
 function initRadarCanvas() {
   radarState.canvas = document.getElementById('radarCanvas');
   if (!radarState.canvas) return;
   
   radarState.ctx = radarState.canvas.getContext('2d');
   
-  // Attendre que le canvas ait des dimensions
   if (radarState.canvas.offsetWidth <= 0 || radarState.canvas.offsetHeight <= 0) {
     setTimeout(initRadarCanvas, 100);
     return;
   }
   
-  // Redimensionner canvas au DPR
   var dpr = window.devicePixelRatio || 1;
   radarState.canvas.width = radarState.canvas.offsetWidth * dpr;
   radarState.canvas.height = radarState.canvas.offsetHeight * dpr;
   radarState.ctx.scale(dpr, dpr);
   
-  // Demander orientation device
   if (typeof DeviceOrientationEvent !== 'undefined') {
     if (typeof DeviceOrientationEvent.requestPermission === 'function') {
       DeviceOrientationEvent.requestPermission()
@@ -3706,13 +3714,10 @@ function initRadarCanvas() {
       window.addEventListener('deviceorientationabsolute', updateRadarOrientation);
     }
   }
-  
-  drawRadar();
 }
 
 function updateRadarOrientation(event) {
   radarState.currentAlpha = event.alpha || 0;
-  drawRadar();
 }
 
 function drawRadar() {
@@ -3721,7 +3726,6 @@ function drawRadar() {
   var w = radarState.canvas.offsetWidth;
   var h = radarState.canvas.offsetHeight;
   
-  // Vérifier que le canvas a des dimensions
   if (w <= 0 || h <= 0) {
     requestAnimationFrame(drawRadar);
     return;
@@ -3729,89 +3733,183 @@ function drawRadar() {
   
   var cx = w / 2;
   var cy = h / 2;
-  var radius = Math.max(20, Math.min(w, h) / 2 - 30);  // Assurer radius >= 20
+  var radius = Math.min(w, h) / 2;
   
-  // Clear canvas
-  radarState.ctx.fillStyle = '#0a1a2e';
+  // Fond noir avec gradient radial
+  var gradient = radarState.ctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+  gradient.addColorStop(0, '#0a1a2e');
+  gradient.addColorStop(1, '#000000');
+  radarState.ctx.fillStyle = gradient;
   radarState.ctx.fillRect(0, 0, w, h);
   
-  // Draw radar circles
-  radarState.ctx.strokeStyle = 'rgba(42,112,144,0.6)';
-  radarState.ctx.lineWidth = 1;
+  // Couleur dynamique selon bearing
+  var primaryColor = getColorForBearing();
+  var secondaryColor = 'rgba(0,204,255,0.3)';
+  var gridColor = 'rgba(0,204,255,0.2)';
+  
+  // Grille de contour topographique
+  radarState.ctx.strokeStyle = gridColor;
+  radarState.ctx.lineWidth = 0.5;
+  for (var i = 0; i < 20; i++) {
+    for (var j = 0; j < 20; j++) {
+      var x = (w / 20) * i;
+      var y = (h / 20) * j;
+      var size = 5;
+      radarState.ctx.strokeRect(x - size/2, y - size/2, size, size);
+    }
+  }
+  
+  // Cercles de distance (5m, 10m, 15m, 20m)
+  var distances = [5, 10, 15, 20];
+  var maxDist = 30000;  // 30km max
+  
+  for (var d = 0; d < distances.length; d++) {
+    var meters = distances[d];
+    var displayRadius = (meters / maxDist) * radius;
+    
+    radarState.ctx.strokeStyle = primaryColor;
+    radarState.ctx.lineWidth = d === distances.length - 1 ? 2 : 1;
+    radarState.ctx.globalAlpha = 0.7;
+    radarState.ctx.beginPath();
+    radarState.ctx.arc(cx, cy, displayRadius, 0, Math.PI * 2);
+    radarState.ctx.stroke();
+    radarState.ctx.globalAlpha = 1;
+    
+    // Label distance
+    radarState.ctx.fillStyle = primaryColor;
+    radarState.ctx.font = '10px monospace';
+    radarState.ctx.textAlign = 'center';
+    radarState.ctx.fillText(meters + 'm', cx + displayRadius - 15, cy - 3);
+  }
+  
+  // Cercle externe principal
+  radarState.ctx.strokeStyle = primaryColor;
+  radarState.ctx.lineWidth = 2;
   radarState.ctx.beginPath();
   radarState.ctx.arc(cx, cy, radius, 0, Math.PI * 2);
   radarState.ctx.stroke();
   
-  for (var i = 1; i < 4; i++) {
-    radarState.ctx.strokeStyle = 'rgba(42,112,144,0.3)';
+  // Degrés autour du cercle (0-360)
+  for (var deg = 0; deg < 360; deg += 10) {
+    var angle = (deg - 90) * Math.PI / 180;
+    var x1 = cx + Math.cos(angle) * radius;
+    var y1 = cy + Math.sin(angle) * radius;
+    var x2 = cx + Math.cos(angle) * (radius - 15);
+    var y2 = cy + Math.sin(angle) * (radius - 15);
+    
+    radarState.ctx.strokeStyle = primaryColor;
+    radarState.ctx.lineWidth = 1;
+    radarState.ctx.globalAlpha = 0.6;
     radarState.ctx.beginPath();
-    radarState.ctx.arc(cx, cy, radius * (i / 4), 0, Math.PI * 2);
+    radarState.ctx.moveTo(x1, y1);
+    radarState.ctx.lineTo(x2, y2);
     radarState.ctx.stroke();
+    radarState.ctx.globalAlpha = 1;
+    
+    // Label degré tous les 30°
+    if (deg % 30 === 0) {
+      var labelAngle = (deg - 90) * Math.PI / 180;
+      var lx = cx + Math.cos(labelAngle) * (radius - 25);
+      var ly = cy + Math.sin(labelAngle) * (radius - 25);
+      radarState.ctx.fillStyle = primaryColor;
+      radarState.ctx.font = 'bold 10px monospace';
+      radarState.ctx.textAlign = 'center';
+      radarState.ctx.textBaseline = 'middle';
+      radarState.ctx.fillText(('000' + deg).slice(-3), lx, ly);
+    }
   }
   
-  // Draw cardinal directions
-  radarState.ctx.fillStyle = 'rgba(154,200,232,0.5)';
-  radarState.ctx.font = '11px monospace';
-  radarState.ctx.textAlign = 'center';
-  radarState.ctx.textBaseline = 'middle';
-  radarState.ctx.fillText('N', cx, cy - radius - 10);
-  radarState.ctx.fillText('S', cx, cy + radius + 10);
-  radarState.ctx.fillText('E', cx + radius + 10, cy);
-  radarState.ctx.fillText('O', cx - radius - 10, cy);
-  
-  // Draw bearing line (nord device)
-  radarState.ctx.strokeStyle = 'rgba(90,208,160,0.4)';
-  radarState.ctx.lineWidth = 2;
+  // Croix centrale
+  radarState.ctx.strokeStyle = primaryColor;
+  radarState.ctx.lineWidth = 1;
+  radarState.ctx.globalAlpha = 0.5;
   radarState.ctx.beginPath();
-  radarState.ctx.moveTo(cx, cy);
-  radarState.ctx.lineTo(cx, cy - radius * 0.8);
+  radarState.ctx.moveTo(cx - 20, cy);
+  radarState.ctx.lineTo(cx + 20, cy);
+  radarState.ctx.moveTo(cx, cy - 20);
+  radarState.ctx.lineTo(cx, cy + 20);
   radarState.ctx.stroke();
+  radarState.ctx.globalAlpha = 1;
   
-  // Afficher cible GPS si définie
-  if (radarState.targetLat && radarState.targetLng && radarState.currentLat && radarState.currentLng) {
-    drawGPSPoint(cx, cy, radius);
+  // Afficher la cible GPS si définie
+  if (radarState.targetLat && radarState.currentLat && radarState.currentLng) {
+    drawGPSPoint(cx, cy, radius, primaryColor);
     updateDistanceDisplay();
+  }
+  
+  // Triangle pointeur (au centre, tourne vers la cible)
+  if (radarState.targetLat && radarState.currentLat) {
+    drawTargetTriangle(cx, cy, primaryColor);
   }
 }
 
-function drawGPSPoint(cx, cy, radius) {
-  // Calculer le bearing et la distance relative
+function drawGPSPoint(cx, cy, radius, color) {
   var dLat = radarState.targetLat - radarState.currentLat;
   var dLng = radarState.targetLng - radarState.currentLng;
-  
-  // Bearing en degrés (0=Nord)
   var bearing = Math.atan2(dLng, dLat) * 180 / Math.PI;
   bearing = (bearing - radarState.currentAlpha + 360) % 360;
   
-  // Distance
-  var dist = getDistance(radarState.currentLat, radarState.currentLng, 
+  var dist = getDistance(radarState.currentLat, radarState.currentLng,
                          radarState.targetLat, radarState.targetLng);
   
-  // Afficher le point dans la limite du radar
-  var maxDist = 50000; // 50km max d'affichage
-  var relativeRadius = Math.min(radius * (dist / maxDist), radius * 0.9);
+  var maxDist = 30000;
+  var displayDist = Math.min(radius * (dist / maxDist), radius * 0.9);
   
   var angle = bearing * Math.PI / 180;
-  var x = cx + relativeRadius * Math.sin(angle);
-  var y = cy - relativeRadius * Math.cos(angle);
+  var x = cx + displayDist * Math.sin(angle);
+  var y = cy - displayDist * Math.cos(angle);
   
-  // Draw GPS point avec scintillement
+  // Scintillement du point
   var pulse = Math.abs(Math.sin(Date.now() / 300));
-  var glowSize = 8 + pulse * 4;
+  var glowSize = 8 + pulse * 6;
   
-  radarState.ctx.fillStyle = 'rgba(90,230,160,' + (0.6 + pulse * 0.4) + ')';
+  radarState.ctx.fillStyle = color;
+  radarState.ctx.globalAlpha = 0.6 + pulse * 0.4;
   radarState.ctx.beginPath();
   radarState.ctx.arc(x, y, glowSize, 0, Math.PI * 2);
   radarState.ctx.fill();
   
-  radarState.ctx.fillStyle = 'rgba(90,230,160,1)';
+  radarState.ctx.fillStyle = color;
+  radarState.ctx.globalAlpha = 1;
   radarState.ctx.beginPath();
   radarState.ctx.arc(x, y, 4, 0, Math.PI * 2);
   radarState.ctx.fill();
 }
 
+function drawTargetTriangle(cx, cy, color) {
+  if (!radarState.targetLat) return;
+  
+  var dLng = radarState.targetLng - radarState.currentLng;
+  var dLat = radarState.targetLat - radarState.currentLat;
+  var bearing = Math.atan2(dLng, dLat) * 180 / Math.PI;
+  var rotation = (bearing - radarState.currentAlpha) * Math.PI / 180;
+  
+  radarState.ctx.save();
+  radarState.ctx.translate(cx, cy);
+  radarState.ctx.rotate(rotation);
+  
+  // Triangle pointeur
+  radarState.ctx.fillStyle = color;
+  radarState.ctx.globalAlpha = 0.9;
+  radarState.ctx.beginPath();
+  radarState.ctx.moveTo(0, -30);      // pointe haut
+  radarState.ctx.lineTo(-12, 15);     // bas gauche
+  radarState.ctx.lineTo(12, 15);      // bas droite
+  radarState.ctx.closePath();
+  radarState.ctx.fill();
+  
+  // Glow du triangle
+  radarState.ctx.strokeStyle = color;
+  radarState.ctx.lineWidth = 2;
+  radarState.ctx.globalAlpha = 0.5;
+  radarState.ctx.stroke();
+  
+  radarState.ctx.globalAlpha = 1;
+  radarState.ctx.restore();
+}
+
 function updateDistanceDisplay() {
-  if (!radarState.targetLat || !radarState.targetLng || !radarState.currentLat || !radarState.currentLng) {
+  if (!radarState.targetLat || !radarState.currentLat || !radarState.currentLng) {
     document.getElementById('radarDistance').textContent = 'Aucune cible';
     return;
   }
@@ -3826,24 +3924,34 @@ function updateDistanceDisplay() {
     text = (dist / 1000).toFixed(2) + ' km';
   }
   
-  document.getElementById('radarDistance').textContent = 'Distance: ' + text;
+  document.getElementById('radarDistance').textContent = '◆ ' + text;
 }
 
 function startRadarAnimation() {
   initRadarCanvas();
-  // Utiliser RAF pour un rendu plus fluide
   function radarLoop() {
     drawRadar();
-    requestAnimationFrame(radarLoop);
+    radarState.rafId = requestAnimationFrame(radarLoop);
   }
   radarLoop();
 }
 
-// Initialiser radar au clic sur openRadar
 var originalOpenRadar = window.openRadar;
 window.openRadar = function() {
-  originalOpenRadar.call(this);
+  if (originalOpenRadar && typeof originalOpenRadar === 'function') {
+    originalOpenRadar.call(this);
+  }
   setTimeout(startRadarAnimation, 100);
+};
+
+// Cleanup au fermer Radar
+var originalCloseRadar = window.closeRadar;
+window.closeRadar = function() {
+  if (radarState.rafId) cancelAnimationFrame(radarState.rafId);
+  if (radarState.watchId) navigator.geolocation.clearWatch(radarState.watchId);
+  if (originalCloseRadar && typeof originalCloseRadar === 'function') {
+    originalCloseRadar.call(this);
+  }
 };
 
 </script>
