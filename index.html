@@ -1575,14 +1575,7 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
     </div>
   </div>
   
-  <!-- GPS INPUT -->
-  <div style="position:absolute;top:60px;left:10px;right:10px;z-index:15;background:rgba(10,26,46,0.9);padding:12px;border:1px solid rgba(42,112,144,0.5);border-radius:6px;font-size:12px">
-    <div style="display:flex;gap:8px;margin-bottom:8px">
-      <input id="gpsLat" type="number" placeholder="Latitude" step="0.0001" style="flex:1;padding:6px;background:rgba(0,0,0,0.5);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;border-radius:4px">
-      <input id="gpsLng" type="number" placeholder="Longitude" step="0.0001" style="flex:1;padding:6px;background:rgba(0,0,0,0.5);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;border-radius:4px">
-    </div>
-    <button onclick="setTargetGPS()" style="width:100%;padding:6px;background:rgba(90,190,230,0.2);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;cursor:pointer;border-radius:4px">DÉFINIR CIBLE</button>
-  </div>
+  <!-- GPS INPUT moved to bottom -->
   
   <!-- RADAR CANVAS -->
   <div id="radarContainer" style="position:relative;width:100%;flex:1;display:flex;align-items:center;justify-content:center;margin-top:60px">
@@ -1590,6 +1583,15 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
     
     <!-- CENTER TRIANGLE (FIXED) -->
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:25px solid #5ad0a0;filter:drop-shadow(0 0 8px rgba(90,208,160,0.8));z-index:20"></div>
+  </div>
+  
+  <!-- GPS INPUT BOTTOM -->
+  <div style="position:absolute;bottom:100px;left:10px;right:10px;z-index:15;background:rgba(10,26,46,0.9);padding:12px;border:1px solid rgba(42,112,144,0.5);border-radius:6px;font-size:12px">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <input id="gpsLat" type="number" placeholder="Latitude" step="0.0001" style="flex:1;padding:6px;background:rgba(0,0,0,0.5);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;border-radius:4px">
+      <input id="gpsLng" type="number" placeholder="Longitude" step="0.0001" style="flex:1;padding:6px;background:rgba(0,0,0,0.5);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;border-radius:4px">
+    </div>
+    <button onclick="setTargetGPS()" style="width:100%;padding:6px;background:rgba(90,190,230,0.2);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;cursor:pointer;border-radius:4px">DÉFINIR CIBLE</button>
   </div>
   
   <!-- DISTANCE DISPLAY -->
@@ -3675,12 +3677,21 @@ function getDistance(lat1, lng1, lat2, lng2) {
 
 function initRadarCanvas() {
   radarState.canvas = document.getElementById('radarCanvas');
+  if (!radarState.canvas) return;
+  
   radarState.ctx = radarState.canvas.getContext('2d');
   
-  // Redimensionner canvas
-  radarState.canvas.width = radarState.canvas.offsetWidth * window.devicePixelRatio;
-  radarState.canvas.height = radarState.canvas.offsetHeight * window.devicePixelRatio;
-  radarState.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  // Attendre que le canvas ait des dimensions
+  if (radarState.canvas.offsetWidth <= 0 || radarState.canvas.offsetHeight <= 0) {
+    setTimeout(initRadarCanvas, 100);
+    return;
+  }
+  
+  // Redimensionner canvas au DPR
+  var dpr = window.devicePixelRatio || 1;
+  radarState.canvas.width = radarState.canvas.offsetWidth * dpr;
+  radarState.canvas.height = radarState.canvas.offsetHeight * dpr;
+  radarState.ctx.scale(dpr, dpr);
   
   // Demander orientation device
   if (typeof DeviceOrientationEvent !== 'undefined') {
@@ -3705,13 +3716,20 @@ function updateRadarOrientation(event) {
 }
 
 function drawRadar() {
-  if (!radarState.ctx) return;
+  if (!radarState.ctx || !radarState.canvas) return;
   
   var w = radarState.canvas.offsetWidth;
   var h = radarState.canvas.offsetHeight;
+  
+  // Vérifier que le canvas a des dimensions
+  if (w <= 0 || h <= 0) {
+    requestAnimationFrame(drawRadar);
+    return;
+  }
+  
   var cx = w / 2;
   var cy = h / 2;
-  var radius = Math.min(w, h) / 2 - 30;
+  var radius = Math.max(20, Math.min(w, h) / 2 - 30);  // Assurer radius >= 20
   
   // Clear canvas
   radarState.ctx.fillStyle = '#0a1a2e';
@@ -3813,7 +3831,12 @@ function updateDistanceDisplay() {
 
 function startRadarAnimation() {
   initRadarCanvas();
-  setInterval(drawRadar, 50); // Redessiner radar toutes les 50ms
+  // Utiliser RAF pour un rendu plus fluide
+  function radarLoop() {
+    drawRadar();
+    requestAnimationFrame(radarLoop);
+  }
+  radarLoop();
 }
 
 // Initialiser radar au clic sur openRadar
