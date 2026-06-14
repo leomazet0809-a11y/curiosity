@@ -654,10 +654,12 @@ body {
 #hologramContainer {
   position: relative;
   height: auto;
-  padding: 20px 0;
+  padding: 30px 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  margin: 0 auto;
   margin: 20px 0;
   perspective: 1000px;
 }
@@ -682,6 +684,26 @@ body {
 }
 @keyframes hologramPulse {
   0%, 100% { transform: scale(1) translateY(0); }
+
+#hologramImg {
+  position: relative;
+  filter: brightness(1.3) drop-shadow(0 0 20px rgba(90,190,230,0.6));
+}
+#hologramImg::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(255,255,255,0.03) 0px,
+    rgba(255,255,255,0.03) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  pointer-events: none;
+  border-radius: 4px;
+}
+
   25% { transform: scale(1.05) translateY(-5px); }
   50% { transform: scale(0.95) translateY(5px); }
   75% { transform: scale(1.02) translateY(-3px); }
@@ -1544,31 +1566,36 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
   <div id="cryptexSub">CRYPTEX · MASSE 312g · MATIÈRE MÉTAL</div>
 </div>
 <!-- ══ RADAR PAGE ══ -->
-<div id="radarPage" class="page" style="display:none;background:#000;justify-content:center;align-items:center">
-  <div class="topbar" style="position:absolute;top:0;width:100%;background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent)">
+<div id="radarPage" class="page" style="display:none;background:#000;flex-direction:column;justify-content:flex-start">
+  <div class="topbar" style="position:absolute;top:0;width:100%;background:linear-gradient(to bottom,rgba(0,0,0,0.9),transparent);z-index:10">
     <div class="back-btn" onclick="closeRadar()">&#8592;</div>
     <div>
-      <div class="topbar-title">RADAR CÉLESTE</div>
-      <div class="topbar-sub">Navigation temporelle</div>
+      <div class="topbar-title">RADAR</div>
+      <div class="topbar-sub">Localisation des coordonnées</div>
     </div>
   </div>
-  <svg id="radarSvg" viewBox="0 0 400 400" style="width:100%;height:100%;max-width:400px;max-height:400px" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="radarGrad" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#0a1a2e"/>
-        <stop offset="100%" stop-color="#000"/>
-      </radialGradient>
-    </defs>
-    <circle cx="200" cy="200" r="180" fill="url(#radarGrad)" stroke="#1a4a6a" stroke-width="2"/>
-    <circle cx="200" cy="200" r="120" fill="none" stroke="#0a3a5a" stroke-width="1" opacity="0.5"/>
-    <circle cx="200" cy="200" r="60" fill="none" stroke="#0a3a5a" stroke-width="1" opacity="0.5"/>
-    <line x1="200" y1="20" x2="200" y2="50" stroke="#4a9aba" stroke-width="2"/>
-    <g id="radarNeedle" transform="translate(200,200)">
-      <line x1="0" y1="-160" x2="0" y2="0" stroke="#5ad0a0" stroke-width="3" opacity="0.9"/>
-      <circle cx="0" cy="0" r="6" fill="#5ad0a0"/>
-    </g>
-    <text x="200" y="380" text-anchor="middle" font-family="monospace" font-size="10" fill="#4a8aa8" letter-spacing="2">N</text>
-  </svg>
+  
+  <!-- GPS INPUT -->
+  <div style="position:absolute;top:60px;left:10px;right:10px;z-index:15;background:rgba(10,26,46,0.9);padding:12px;border:1px solid rgba(42,112,144,0.5);border-radius:6px;font-size:12px">
+    <div style="display:flex;gap:8px;margin-bottom:8px">
+      <input id="gpsLat" type="number" placeholder="Latitude" step="0.0001" style="flex:1;padding:6px;background:rgba(0,0,0,0.5);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;border-radius:4px">
+      <input id="gpsLng" type="number" placeholder="Longitude" step="0.0001" style="flex:1;padding:6px;background:rgba(0,0,0,0.5);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;border-radius:4px">
+    </div>
+    <button onclick="setTargetGPS()" style="width:100%;padding:6px;background:rgba(90,190,230,0.2);border:1px solid #2a7090;color:#9ac8e8;font-size:11px;cursor:pointer;border-radius:4px">DÉFINIR CIBLE</button>
+  </div>
+  
+  <!-- RADAR CANVAS -->
+  <div id="radarContainer" style="position:relative;width:100%;flex:1;display:flex;align-items:center;justify-content:center;margin-top:60px">
+    <canvas id="radarCanvas" style="width:100%;height:100%;max-width:600px;max-height:600px;display:block"></canvas>
+    
+    <!-- CENTER TRIANGLE (FIXED) -->
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:25px solid #5ad0a0;filter:drop-shadow(0 0 8px rgba(90,208,160,0.8));z-index:20"></div>
+  </div>
+  
+  <!-- DISTANCE DISPLAY -->
+  <div id="radarDistance" style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(10,26,46,0.95);padding:12px 24px;border:1px solid rgba(42,112,144,0.5);border-radius:6px;text-align:center;color:#9ac8e8;font-size:13px;z-index:15;font-family:monospace">
+    Aucune cible
+  </div>
 </div>
 
 
@@ -3514,8 +3541,9 @@ function initTransferState() {
   if (transferCompleted && scanBtn) {
     // Remplacer bouton Lancer par Message
     scanBtn.textContent = '✉ Message reçu';
-    scanBtn.style.pointerEvents = 'none';
-    scanBtn.style.opacity = '0.6';
+    scanBtn.style.pointerEvents = 'auto';
+    scanBtn.style.opacity = '1';
+    scanBtn.onclick = function() { showPage('pageFinal'); };
   }
 }
 
@@ -3585,6 +3613,216 @@ window.doReset = function() {
   transferCompleted = false;
   try { localStorage.removeItem('transfer_completed'); } catch(e) {}
 };
+
+
+/* ── RADAR GPS SYSTEM ── */
+var radarState = {
+  targetLat: null,
+  targetLng: null,
+  currentLat: null,
+  currentLng: null,
+  currentAlpha: 0,  // orientation device
+  canvas: null,
+  ctx: null
+};
+
+function setTargetGPS() {
+  var lat = parseFloat(document.getElementById('gpsLat').value);
+  var lng = parseFloat(document.getElementById('gpsLng').value);
+  
+  if (isNaN(lat) || isNaN(lng)) {
+    alert('Entrez des coordonnées valides');
+    return;
+  }
+  
+  if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    alert('Coordonnées invalides');
+    return;
+  }
+  
+  radarState.targetLat = lat;
+  radarState.targetLng = lng;
+  
+  // Demander la localisation actuelle
+  if (navigator.geolocation) {
+    navigator.geolocation.watchPosition(
+      function(pos) {
+        radarState.currentLat = pos.coords.latitude;
+        radarState.currentLng = pos.coords.longitude;
+      },
+      function(err) {
+        console.warn('Géolocalisation non disponible:', err);
+        // Utiliser coordonnées factices pour démo
+        radarState.currentLat = 48.8566;
+        radarState.currentLng = 2.3522;
+      }
+    );
+  }
+}
+
+function getDistance(lat1, lng1, lat2, lng2) {
+  if (!lat1 || !lng1 || !lat2 || !lng2) return null;
+  
+  var R = 6371000; // Rayon terre en mètres
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLng = (lng2 - lng1) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+          Math.sin(dLng/2) * Math.sin(dLng/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return Math.round(R * c);
+}
+
+function initRadarCanvas() {
+  radarState.canvas = document.getElementById('radarCanvas');
+  radarState.ctx = radarState.canvas.getContext('2d');
+  
+  // Redimensionner canvas
+  radarState.canvas.width = radarState.canvas.offsetWidth * window.devicePixelRatio;
+  radarState.canvas.height = radarState.canvas.offsetHeight * window.devicePixelRatio;
+  radarState.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  
+  // Demander orientation device
+  if (typeof DeviceOrientationEvent !== 'undefined') {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission()
+        .then(function(perm) {
+          if (perm === 'granted') {
+            window.addEventListener('deviceorientationabsolute', updateRadarOrientation);
+          }
+        });
+    } else {
+      window.addEventListener('deviceorientationabsolute', updateRadarOrientation);
+    }
+  }
+  
+  drawRadar();
+}
+
+function updateRadarOrientation(event) {
+  radarState.currentAlpha = event.alpha || 0;
+  drawRadar();
+}
+
+function drawRadar() {
+  if (!radarState.ctx) return;
+  
+  var w = radarState.canvas.offsetWidth;
+  var h = radarState.canvas.offsetHeight;
+  var cx = w / 2;
+  var cy = h / 2;
+  var radius = Math.min(w, h) / 2 - 30;
+  
+  // Clear canvas
+  radarState.ctx.fillStyle = '#0a1a2e';
+  radarState.ctx.fillRect(0, 0, w, h);
+  
+  // Draw radar circles
+  radarState.ctx.strokeStyle = 'rgba(42,112,144,0.6)';
+  radarState.ctx.lineWidth = 1;
+  radarState.ctx.beginPath();
+  radarState.ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+  radarState.ctx.stroke();
+  
+  for (var i = 1; i < 4; i++) {
+    radarState.ctx.strokeStyle = 'rgba(42,112,144,0.3)';
+    radarState.ctx.beginPath();
+    radarState.ctx.arc(cx, cy, radius * (i / 4), 0, Math.PI * 2);
+    radarState.ctx.stroke();
+  }
+  
+  // Draw cardinal directions
+  radarState.ctx.fillStyle = 'rgba(154,200,232,0.5)';
+  radarState.ctx.font = '11px monospace';
+  radarState.ctx.textAlign = 'center';
+  radarState.ctx.textBaseline = 'middle';
+  radarState.ctx.fillText('N', cx, cy - radius - 10);
+  radarState.ctx.fillText('S', cx, cy + radius + 10);
+  radarState.ctx.fillText('E', cx + radius + 10, cy);
+  radarState.ctx.fillText('O', cx - radius - 10, cy);
+  
+  // Draw bearing line (nord device)
+  radarState.ctx.strokeStyle = 'rgba(90,208,160,0.4)';
+  radarState.ctx.lineWidth = 2;
+  radarState.ctx.beginPath();
+  radarState.ctx.moveTo(cx, cy);
+  radarState.ctx.lineTo(cx, cy - radius * 0.8);
+  radarState.ctx.stroke();
+  
+  // Afficher cible GPS si définie
+  if (radarState.targetLat && radarState.targetLng && radarState.currentLat && radarState.currentLng) {
+    drawGPSPoint(cx, cy, radius);
+    updateDistanceDisplay();
+  }
+}
+
+function drawGPSPoint(cx, cy, radius) {
+  // Calculer le bearing et la distance relative
+  var dLat = radarState.targetLat - radarState.currentLat;
+  var dLng = radarState.targetLng - radarState.currentLng;
+  
+  // Bearing en degrés (0=Nord)
+  var bearing = Math.atan2(dLng, dLat) * 180 / Math.PI;
+  bearing = (bearing - radarState.currentAlpha + 360) % 360;
+  
+  // Distance
+  var dist = getDistance(radarState.currentLat, radarState.currentLng, 
+                         radarState.targetLat, radarState.targetLng);
+  
+  // Afficher le point dans la limite du radar
+  var maxDist = 50000; // 50km max d'affichage
+  var relativeRadius = Math.min(radius * (dist / maxDist), radius * 0.9);
+  
+  var angle = bearing * Math.PI / 180;
+  var x = cx + relativeRadius * Math.sin(angle);
+  var y = cy - relativeRadius * Math.cos(angle);
+  
+  // Draw GPS point avec scintillement
+  var pulse = Math.abs(Math.sin(Date.now() / 300));
+  var glowSize = 8 + pulse * 4;
+  
+  radarState.ctx.fillStyle = 'rgba(90,230,160,' + (0.6 + pulse * 0.4) + ')';
+  radarState.ctx.beginPath();
+  radarState.ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+  radarState.ctx.fill();
+  
+  radarState.ctx.fillStyle = 'rgba(90,230,160,1)';
+  radarState.ctx.beginPath();
+  radarState.ctx.arc(x, y, 4, 0, Math.PI * 2);
+  radarState.ctx.fill();
+}
+
+function updateDistanceDisplay() {
+  if (!radarState.targetLat || !radarState.targetLng || !radarState.currentLat || !radarState.currentLng) {
+    document.getElementById('radarDistance').textContent = 'Aucune cible';
+    return;
+  }
+  
+  var dist = getDistance(radarState.currentLat, radarState.currentLng,
+                         radarState.targetLat, radarState.targetLng);
+  
+  var text;
+  if (dist < 1000) {
+    text = dist + ' m';
+  } else {
+    text = (dist / 1000).toFixed(2) + ' km';
+  }
+  
+  document.getElementById('radarDistance').textContent = 'Distance: ' + text;
+}
+
+function startRadarAnimation() {
+  initRadarCanvas();
+  setInterval(drawRadar, 50); // Redessiner radar toutes les 50ms
+}
+
+// Initialiser radar au clic sur openRadar
+var originalOpenRadar = window.openRadar;
+window.openRadar = function() {
+  originalOpenRadar.call(this);
+  setTimeout(startRadarAnimation, 100);
+};
+
 </script>
 
 <!-- ══ PARAMÈTRES ══ -->
