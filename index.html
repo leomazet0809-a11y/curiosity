@@ -671,6 +671,14 @@ body {
   animation: hologramRise 6s ease-out forwards;
   cursor: pointer;
   transition: all 0.3s;
+  border: 3px solid rgba(90,190,230,0.8);
+  border-radius: 2px;
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(10,26,46,0.3), rgba(26,56,86,0.3));
+  box-shadow: 
+    inset 0 0 10px rgba(90,190,230,0.2),
+    0 0 20px rgba(90,190,230,0.4),
+    0 0 40px rgba(90,190,230,0.2);
 }
 #hologramImg:hover {
   filter: brightness(1.5) drop-shadow(0 0 30px rgba(90,190,230,0.8));
@@ -2097,7 +2105,7 @@ function checkStarSolutionWith(sel) {
   if (overlay && overlay.classList.contains('open')) {
     setTimeout(function(){ closeStarNav(); }, 800);
   }
-  // Afficher le succès avec double vérification
+  // Afficher le succès (sans longue animation)
   setTimeout(function(){
     var b3 = document.getElementById('solvedBanner3');
     var btn3 = document.getElementById('openStarNavBtn');
@@ -2106,14 +2114,8 @@ function checkStarSolutionWith(sel) {
       b3.classList.add('active');
     }
     if (btn3) { btn3.style.opacity='1'; btn3.style.pointerEvents='auto'; }
-    // Forcer l'animation de succès avec timeout de sécurité
-    try {
-      launchSuccessAnim(2, function(){ goHome(); });
-    } catch(e) {
-      console.error('launchSuccessAnim error:', e);
-      // Fallback: montrer le succès après délai
-      setTimeout(function(){ goHome(); }, 15000);
-    }
+    // Courte transition (3 secondes) puis retour accueil
+    setTimeout(function(){ goHome(); }, 3000);
   }, 600);
   return true;
 }
@@ -3849,6 +3851,14 @@ function drawRadar() {
     drawTargetTriangle(cx, cy, primaryColor);
   }
   
+  // PARTICULES ÉTOILES (animation rapprochement)
+  var currentDist = null;
+  if (radarState.targetLat && radarState.currentLat && radarState.currentLng) {
+    currentDist = getDistance(radarState.currentLat, radarState.currentLng,
+                              radarState.targetLat, radarState.targetLng);
+  }
+  updateAndDrawStarParticles(radarState.ctx, currentDist);
+  
   // Afficher distance
   updateDistanceDisplay();
 }
@@ -3887,16 +3897,10 @@ function drawGPSPoint(cx, cy, radius, color) {
 }
 
 function drawTargetTriangle(cx, cy, color) {
-  if (!radarState.targetLat) return;
-  
-  var dLng = radarState.targetLng - radarState.currentLng;
-  var dLat = radarState.targetLat - radarState.currentLat;
-  var bearing = Math.atan2(dLng, dLat) * 180 / Math.PI;
-  var rotation = (bearing - radarState.currentAlpha) * Math.PI / 180;
-  
+  // Triangle FIXE au centre pointant toujours vers le haut (ne tourne jamais)
   radarState.ctx.save();
   radarState.ctx.translate(cx, cy);
-  radarState.ctx.rotate(rotation);
+  // PAS DE ROTATION - le triangle reste toujours orienté vers le haut
   
   // Triangle pointeur
   radarState.ctx.fillStyle = color;
@@ -3917,6 +3921,68 @@ function drawTargetTriangle(cx, cy, color) {
   radarState.ctx.globalAlpha = 1;
   radarState.ctx.restore();
 }
+
+
+/* ── RADAR STAR PARTICLES (< 30m) ── */
+var starParticles = [];
+
+function createStarParticle() {
+  return {
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    vx: (Math.random() - 0.5) * 8,
+    vy: (Math.random() - 0.5) * 8,
+    life: Math.random() * 0.5 + 0.5,
+    maxLife: Math.random() * 0.5 + 0.5,
+    size: Math.random() * 3 + 1
+  };
+}
+
+function updateAndDrawStarParticles(ctx, distance) {
+  // Distance minimum = 30m
+  if (distance === null || distance >= 30000) {
+    starParticles = [];
+    return;
+  }
+  
+  // Intensité basée sur distance
+  var closeness = 1 - (distance / 30000);  // 0 à 1, 1 = très proche
+  var particleCount = Math.floor(closeness * 50 + 20);  // 20 à 70 particules
+  var speed = 1 + closeness * 5;  // 1x à 6x vitesse
+  var brightness = 0.5 + closeness * 0.5;  // 50% à 100% luminosité
+  
+  // Ajouter nouvelles particules
+  while (starParticles.length < particleCount) {
+    starParticles.push(createStarParticle());
+  }
+  
+  // Mettre à jour et dessiner
+  for (var i = starParticles.length - 1; i >= 0; i--) {
+    var p = starParticles[i];
+    
+    p.x += p.vx * speed;
+    p.y += p.vy * speed;
+    p.life -= 0.02 * speed;
+    
+    if (p.life <= 0) {
+      starParticles.splice(i, 1);
+      continue;
+    }
+    
+    var alpha = (p.life / p.maxLife) * brightness;
+    ctx.fillStyle = 'rgba(90, 200, 255, ' + alpha + ')';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Glow
+    ctx.fillStyle = 'rgba(150, 220, 255, ' + (alpha * 0.5) + ')';
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size * 2, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
 
 function updateDistanceDisplay() {
   if (!radarState.targetLat || !radarState.currentLat || !radarState.currentLng) {
