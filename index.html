@@ -18,7 +18,8 @@
 * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
 body {
   background: #07090f;
-  color: #e8f0f5;
+  color: #f3f9fd;
+  font-size: 16.5px;
   font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
   min-height: 100vh;
   user-select: none;
@@ -1171,14 +1172,59 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 /* ═══ ADMIN BADGE ═══ */
 #admin-badge{position:fixed;top:46px;left:50%;transform:translateX(-50%);font-size:8px;letter-spacing:3px;color:rgba(255,200,50,0.6);z-index:20;pointer-events:none;display:none}
 
+
+/* ════════ AMÉLIORATIONS : lisibilité + bandeau futuriste unifié ════════ */
+/* — Texte un peu plus clair et légèrement plus grand — */
+.enigma-text   { font-size: 14.5px; color: #e6f3fc; }
+.stellar-text  { font-size: 13px;   color: #ddf0fb; }
+.app-desc      { font-size: 13px;   color: #c6dfed; }
+.section-label { font-size: 9px;    color: #a6cee1; }
+.answer-label  { color: #9fbcd0; }
+.app-version   { color: #8aa8ba; }
+
+/* — Bandeau (topbar) style futuriste — */
+.topbar {
+  background: linear-gradient(180deg, #0c121e 0%, #080c14 100%);
+  border-bottom: 1px solid #1a2c3e;
+  box-shadow: 0 6px 18px -12px rgba(0,0,0,0.85);
+  position: relative;
+}
+.topbar::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(74,154,186,0.55), transparent);
+}
+.topbar-title { color: #eaf6ff; }
+.topbar-sub   { color: #aeccdd; }
+.topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.topbar-btn {
+  background: #101824; border: 1px solid #20384c; border-radius: 7px;
+  color: #9cd2ec; width: 34px; height: 34px; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background .18s, border-color .18s, box-shadow .18s, color .18s;
+}
+.topbar-btn svg { width: 17px; height: 17px; display: block; }
+.topbar-btn:active {
+  background: #16263a; border-color: #3a6a88; color: #d4f0ff;
+  box-shadow: 0 0 12px rgba(74,154,186,0.4);
+}
+.back-btn { border-radius: 7px; border-color: #20384c; }
 </style>
 </head>
 <body>
 
 <!-- ══ RÈGLES DU JEU ══ -->
 <div class="page active" id="pageRules">
+  <div class="topbar">
+    <div>
+      <div class="topbar-title">Curiosity</div>
+      <div class="topbar-sub">Temporal Bridge Protocol</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleFullscreen()" title="Plein écran" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+      <button class="topbar-btn" onclick="showPage('pageSettings')" title="Paramètres" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    </div>
+  </div>
   <div class="hero" style="position:relative;padding-bottom:16px">
-    <button onclick="toggleFullscreen()" id="btn-fs-rules" style="position:absolute;top:10px;left:10px;background:rgba(10,16,30,0.7);border:1px solid #1a3a50;color:#4a8aaa;font-size:10px;letter-spacing:1px;padding:5px 10px;border-radius:4px;cursor:pointer;font-family:monospace">⛶ PLEIN ÉCRAN</button>
     <div style="margin:0 auto 10px;width:60px;height:60px;display:flex;align-items:center;justify-content:center"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
   <circle cx="22" cy="22" r="20" stroke="#2a6888" stroke-width="1.5" fill="none"/>
   <circle cx="22" cy="22" r="13" stroke="#1a4860" stroke-width="1" fill="none" stroke-dasharray="3 4"/>
@@ -1209,9 +1255,18 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 
 <!-- ══ ACCUEIL ══ -->
 <div class="page" id="pageHome">
+  <div class="topbar">
+    <div class="back-btn" onclick="showPage('pageRules')" title="Retour" aria-label="Retour">&#8592;</div>
+    <div>
+      <div class="topbar-title">Curiosity</div>
+      <div class="topbar-sub">Protocole de transmission · Accueil</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleFullscreen()" title="Plein écran" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+      <button class="topbar-btn" onclick="showPage('pageSettings')" title="Paramètres" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    </div>
+  </div>
   <div class="hero" style="position:relative">
-    <div class="back-btn" onclick="showPage('pageRules')" style="position:absolute;top:10px;left:10px;z-index:5">&#8592;</div>
-    <button onclick="toggleFullscreen()" id="btn-fs-home" style="position:absolute;top:58px;right:10px;background:rgba(10,16,30,0.7);border:1px solid #1a3a50;color:#4a8aaa;font-size:10px;letter-spacing:1px;padding:5px 10px;border-radius:4px;cursor:pointer;font-family:monospace;z-index:4">⛶ PLEIN ÉCRAN</button>
     <div class="logo-wrap" style="width:76px;height:76px;background:transparent;border:none"><svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
   <circle cx="22" cy="22" r="20" stroke="#2a6888" stroke-width="1.5" fill="none"/>
   <circle cx="22" cy="22" r="13" stroke="#1a4860" stroke-width="1" fill="none" stroke-dasharray="3 4"/>
@@ -1226,7 +1281,6 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
     <div class="app-name">Curiosity</div>
     <div class="app-version">TEMPORAL BRIDGE PROTOCOL · v2082.1 · BUILD 20820106</div>
     <div class="app-desc">Logiciel de transmission d'objets physiques<br>entre époques par vecteur chrono-quantique</div>
-    <button class="settings-btn" onclick="showPage('pageSettings')" title="Paramètres">&#9881;</button>
   </div>
   <div class="content">
     <div class="section-label">Paramètres de transmission</div>
@@ -1305,6 +1359,10 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
       <div class="topbar-title" id="enigmaTitle">ÉNIGME I</div>
       <div class="topbar-sub">Curiosity · Paramètre de transmission</div>
     </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleFullscreen()" title="Plein écran" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+      <button class="topbar-btn" onclick="showPage('pageSettings')" title="Paramètres" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    </div>
   </div>
   <div class="content">
     <div class="enigma-badge">
@@ -1355,6 +1413,10 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
     <div>
       <div class="topbar-title">ÉNIGME III</div>
       <div class="topbar-sub">Curiosity · Paramètre de transmission</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleFullscreen()" title="Plein écran" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+      <button class="topbar-btn" onclick="showPage('pageSettings')" title="Paramètres" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
   </div>
   <div class="content">
@@ -1614,6 +1676,10 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
       <div class="topbar-title">Transfert temporel</div>
       <div class="topbar-sub">Curiosity · Authentification confirmée</div>
     </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleFullscreen()" title="Plein écran" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+      <button class="topbar-btn" onclick="showPage('pageSettings')" title="Paramètres" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    </div>
   </div>
       <div id="hologramContainer">
       <div id="idCard">
@@ -1664,6 +1730,10 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
     <div>
       <div class="topbar-title">Message reçu</div>
       <div class="topbar-sub">Transmis · Authentifié · Déchiffré</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleFullscreen()" title="Plein écran" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+      <button class="topbar-btn" onclick="showPage('pageSettings')" title="Paramètres" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
   </div>
   <div class="final-wrap" id="finalWrap">
@@ -1834,6 +1904,10 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
     <div>
       <div class="topbar-title">RADAR</div>
       <div class="topbar-sub">Localisation des coordonnées</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleFullscreen()" title="Plein écran" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+      <button class="topbar-btn" onclick="closeRadar();showPage('pageSettings')" title="Paramètres" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
   </div>
   
@@ -2448,22 +2522,33 @@ document.getElementById('answerInput').addEventListener('keydown', function(e){
     var ageEl = document.getElementById('ageValue');
     var yearEl = document.getElementById('yearValue');
     if (!ageEl || !yearEl) return;
-    
+    if (bugInterval) return;
+
+    var FUTURE_YEAR = 2085, FUTURE_AGE = 93;
+    var todayYear = new Date().getFullYear();
+    var todayAge = FUTURE_AGE - (FUTURE_YEAR - todayYear);
+
     var toggle = false;
     bugInterval = setInterval(function() {
       if (toggle) {
-        ageEl.textContent = '93';
-        yearEl.textContent = '2085';
+        ageEl.textContent = '' + FUTURE_AGE;
+        yearEl.textContent = '' + FUTURE_YEAR;
         document.getElementById('bugAge').classList.remove('text-glitch');
         document.getElementById('bugYear').classList.remove('text-glitch');
       } else {
-        ageEl.textContent = '34';
-        yearEl.textContent = '2026';
+        ageEl.textContent = '' + todayAge;
+        yearEl.textContent = '' + todayYear;
         document.getElementById('bugAge').classList.add('text-glitch');
         document.getElementById('bugYear').classList.add('text-glitch');
       }
       toggle = !toggle;
     }, 2000);  // Toutes les 2 secondes
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', startBugAnimation);
+  } else {
+    startBugAnimation();
   }
 })();
 
@@ -4264,6 +4349,10 @@ window.closeRadar = function() {
     <div>
       <div class="topbar-title">Paramètres</div>
       <div class="topbar-sub">Curiosity · Gestion du système</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" onclick="toggleFullscreen()" title="Plein écran" aria-label="Plein écran"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+      <button class="topbar-btn" onclick="showPage('pageSettings')" title="Paramètres" aria-label="Paramètres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     </div>
   </div>
   <div class="content">
