@@ -606,6 +606,35 @@ body {
   filter: blur(10px);
   z-index: -1;
 }
+.cryptex-frame {
+  position: relative;
+  border: 1px solid rgba(90,190,230,0.35);
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 0 24px rgba(90,190,230,0.12), inset 0 0 24px rgba(90,190,230,0.06);
+  background: rgba(6,14,24,0.25);
+}
+.cf-corner {
+  position: absolute;
+  width: 16px; height: 16px;
+  pointer-events: none;
+}
+.cf-corner::before, .cf-corner::after {
+  content: '';
+  position: absolute;
+  background: rgba(154,224,248,0.85);
+  box-shadow: 0 0 6px rgba(120,210,255,0.7);
+}
+.cf-corner::before { width: 100%; height: 1.5px; }
+.cf-corner::after  { width: 1.5px; height: 100%; }
+.cf-tl { top: -1px; left: -1px; }
+.cf-tr { top: -1px; right: -1px; }
+.cf-bl { bottom: -1px; left: -1px; }
+.cf-br { bottom: -1px; right: -1px; }
+.cf-tl::before, .cf-tl::after { top: 0; left: 0; }
+.cf-tr::before, .cf-tr::after { top: 0; right: 0; }
+.cf-bl::before, .cf-bl::after { bottom: 0; left: 0; }
+.cf-br::before, .cf-br::after { bottom: 0; right: 0; }
 #cryptexImg {
   display: block; width: 100%; border-radius: 6px;
   filter: brightness(1.25) saturate(0.35) sepia(0.45) hue-rotate(165deg) contrast(1.15) drop-shadow(0 0 22px rgba(90,190,230,0.55));
@@ -1062,23 +1091,7 @@ body:has(#snOverlay.open) {
   -ms-overflow-style: none;
 }
 body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
-#sn-back-btn {
-  position: fixed; top: 13px; left: 14px; transform: none;
-  z-index: 600;
-  background: #101620;
-  border: 1px solid #1a2a38;
-  border-radius: 6px;
-  color: #a8d8f0;
-  font-family: monospace; font-size: 15px; letter-spacing: 0;
-  width: 34px; height: 34px;
-  display: none;
-  align-items: center; justify-content: center;
-  cursor: pointer;
-  padding: 0;
-  backdrop-filter: none;
-  line-height: 1;
-}
-#snOverlay.open #sn-back-btn { display: flex; }
+#sn-back-btn { font-family: monospace; }
 
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Orbitron:wght@400;600;700&family=Exo+2:wght@300;400;600&display=swap');
@@ -1091,8 +1104,7 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 #canvas:active{cursor:grabbing}
 
 /* ═══ HUD TOP ═══ */
-#hud-top{position:fixed;top:0;left:0;right:0;padding:10px 14px 8px;background:linear-gradient(to bottom,rgba(0,0,0,0.88),transparent);display:flex;justify-content:space-between;align-items:center;pointer-events:none;z-index:20}
-#title{font-family:'Orbitron',sans-serif;font-size:11px;letter-spacing:4px;color:var(--gold);opacity:.85}
+#hud-top{position:fixed;top:0;left:0;right:0;z-index:20;pointer-events:all}
 #coords{font-size:9px;letter-spacing:1px;color:rgba(100,150,220,0.6);text-align:right}
 
 /* ═══ BOUTONS HUD ═══ */
@@ -1155,19 +1167,6 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 #modal-input:focus{border-color:rgba(58,123,213,0.8)}
 #modal-error{font-size:9px;color:#e05050;letter-spacing:1px;min-height:14px;margin-bottom:10px}
 #modal-buttons{display:flex;gap:8px;justify-content:center}
-
-/* ═══ PAGE SUCCÈS ═══ */
-#success-page{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;align-items:center;justify-content:center;background:#000;overflow:hidden}
-#success-page>#bg-stars-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
-#success-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;width:100%;height:100%;padding:60px 20px 30px;gap:0;opacity:0;transition:opacity 1.2s ease;overflow-y:auto}
-#success-content.visible{opacity:1}
-#success-top-bar{position:fixed;top:14px;left:16px;z-index:10}
-#taurus-canvas{display:block;width:min(360px,80vw);height:min(240px,28vh);flex:none;border:1px solid rgba(200,168,75,0.18);border-radius:4px;box-shadow:0 0 30px rgba(200,168,75,0.12);margin-bottom:24px}
-#success-msg{font-family:'Orbitron',sans-serif;font-size:15px;letter-spacing:5px;color:var(--gold);text-align:center;line-height:2;max-width:500px;flex-shrink:0;text-shadow:0 0 20px rgba(200,168,75,0.5);padding-bottom:20px}
-
-/* ═══ ANIMATION VOYAGE ═══ */
-#warp-overlay{position:fixed;inset:0;z-index:80;display:none;pointer-events:all}
-#warp-overlay canvas{width:100%;height:100%}
 
 /* ═══ ADMIN BADGE ═══ */
 #admin-badge{position:fixed;top:46px;left:50%;transform:translateX(-50%);font-size:8px;letter-spacing:3px;color:rgba(255,200,50,0.6);z-index:20;pointer-events:none;display:none}
@@ -1591,21 +1590,21 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 
 <!-- ══ STAR NAVIGATOR INTÉGRÉ ══ -->
 <div id="snOverlay">
-  <button id="sn-back-btn" onclick="closeStarNav()">&#8592;</button>
   <div id="sn-wrap" style="width:100%;height:100%;overflow:visible;position:relative;">
 <canvas id="canvas"></canvas>
 
 <!-- HUD -->
-<div id="hud-top">
-  <div style="display:flex;align-items:center;gap:10px;padding-left:52px">
-    <div id="title">CARTE CÉLESTE</div>
-    <div id="admin-badge">◈ MODE ADMIN</div>
+<div id="hud-top" class="topbar">
+  <div class="back-btn" id="sn-back-btn">&#8592;</div>
+  <div>
+    <div class="topbar-title">ÉNIGME III</div>
+    <div class="topbar-sub">Curiosity · Navigation stellaire</div>
   </div>
-  <div id="btn-row-top">
+  <div id="admin-badge">◈ MODE ADMIN</div>
+  <div class="topbar-actions" id="btn-row-top">
     <button class="hud-btn" id="btn-message" style="display:none;border-color:rgba(120,210,160,0.5);color:#8ae0b8">✉ MESSAGE</button>
     <button class="hud-btn" id="btn-admin-toggle">ADMIN</button>
     <button class="hud-btn" id="btn-fs" title="Plein écran" style="font-size:16px;padding:4px 8px">⛶</button>
-    <button class="hud-btn danger" id="btn-quit">✕ QUITTER</button>
   </div>
 </div>
 <div id="coords" style="position:fixed;top:42px;right:14px;font-size:9px;letter-spacing:1px;color:rgba(100,150,220,0.5);z-index:20;pointer-events:none;text-align:right"></div>
@@ -1652,19 +1651,6 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 </div>
 
 <!-- OVERLAY VOYAGE INTERSTELLAIRE -->
-<div id="warp-overlay"><canvas id="warp-canvas"></canvas></div>
-
-<!-- PAGE SUCCÈS -->
-<div id="success-page">
-  <canvas id="bg-stars-canvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
-  <div id="success-content">
-    <div id="success-top-bar">
-      <div class="back-btn" id="btn-back">&#8592;</div>
-    </div>
-    <canvas id="taurus-canvas"></canvas>
-    <div id="success-msg">message succès</div>
-  </div>
-</div>
 </div>
 </div>
 
@@ -1759,7 +1745,13 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 <div id="cryptexOverlay">
   <div class="cryptex-grid"></div>
   <div class="cryptex-stage" id="cryptexStage">
-    <canvas id="cryptexCanvas" width="490" height="380" style="width:100%;height:auto;display:block;position:relative;z-index:2"></canvas>
+    <div class="cryptex-frame">
+      <span class="cf-corner cf-tl"></span>
+      <span class="cf-corner cf-tr"></span>
+      <span class="cf-corner cf-bl"></span>
+      <span class="cf-corner cf-br"></span>
+      <canvas id="cryptexCanvas" width="490" height="380" style="width:100%;height:auto;display:block;position:relative;z-index:2"></canvas>
+    </div>
   </div>
   <div id="cryptexStatus">Analyse holographique en cours…</div>
   <div id="cryptexSub">CRYPTEX · MASSE 312g · MATIÈRE MÉTAL</div>
@@ -2196,6 +2188,7 @@ function handleBioTap() {
   triggerFpScan(function() {
     scanning = false;
     document.getElementById('scanBtn').style.display = 'block';
+    initTransferState();
     showPage('pageBio');
   });
 }
@@ -2325,8 +2318,17 @@ function closeStarNav() {
 window.CuriosityBridge = {
   closeStarNav: closeStarNav,
   onTaurusComplete: function() {
-    // Appelé par le SN quand les 4 étoiles sont sélectionnées
-    // La validation se fait aussi via polling, pas besoin d'action immédiate
+    // Appelé par le SN une fois le faisceau lumineux (5s) terminé
+    STATE.solved[2] = true;
+    saveState();
+    updateStellarStatus();
+    updateMessageButton();
+    var b3 = document.getElementById('solvedBanner3');
+    if (b3) { b3.style.display = 'block'; b3.classList.add('active'); }
+    var btn3 = document.getElementById('openStarNavBtn');
+    if (btn3) { btn3.style.opacity='1'; btn3.style.pointerEvents='auto'; }
+    closeStarNav();
+    setTimeout(function(){ showPage('pageEnigma3'); }, 600);
   }
 };
 
@@ -2406,46 +2408,13 @@ function updateMessageButton(){
 }
 
 
-/* FIX: Forcer l'animation de succès énigme III */
-function forceEnigma3SuccessAnimation() {
-  setTimeout(function() {
-    var banner = document.getElementById('solvedBanner3');
-    if (banner && banner.style.display !== 'flex') {
-      banner.style.display = 'flex';
-      showSuccessPage();
-    }
-  }, 500);
-}
-
+// Vérification passive (statut affiché) — la résolution réelle et la
+// transition se font exclusivement via CuriosityBridge.onTaurusComplete(),
+// déclenché par le faisceau lumineux du star navigator.
 function checkStarSolutionWith(sel) {
   if (STATE.solved[2]) return true;
-  // Exactement les étoiles cibles, pas plus
   if (sel.length !== TARGET_STARS.length) return false;
-  var allFound = TARGET_STARS.every(function(t){ return sel.indexOf(t) >= 0; });
-  if (!allFound) return false;
-  // Résoudre l'énigme 3
-  STATE.solved[2] = true;
-  saveState();
-  updateStellarStatus();
-  updateMessageButton();
-  // Fermer le star nav si ouvert
-  var overlay = document.getElementById('snOverlay');
-  if (overlay && overlay.classList.contains('open')) {
-    setTimeout(function(){ closeStarNav(); }, 800);
-  }
-  // Afficher le succès (sans longue animation)
-  setTimeout(function(){
-    var b3 = document.getElementById('solvedBanner3');
-    var btn3 = document.getElementById('openStarNavBtn');
-    if (b3) {
-      b3.style.display = 'block';
-      b3.classList.add('active');
-    }
-    if (btn3) { btn3.style.opacity='1'; btn3.style.pointerEvents='auto'; }
-    // Courte transition (3 secondes) puis retour accueil
-    setTimeout(function(){ goHome(); }, 3000);
-  }, 600);
-  return true;
+  return TARGET_STARS.every(function(t){ return sel.indexOf(t) >= 0; });
 }
 
 function checkAnswer() {
@@ -2752,7 +2721,6 @@ const SD = [
   ["Mintaka",       5.5331, -0.2991, 2.23,29500,"Orion"],         // 56 δ Ori  05h32m00s -00°17'57"
   ["Alnitak",       5.6793, -1.9426, 1.74,29500,"Orion"],         // 57 ζ Ori  05h40m46s -01°56'34"
   ["Meissa",        5.5878,  9.9342, 3.33,26000,"Orion"],         // 58 λ Ori  05h35m08s +09°56'03"
-  ["Saiph",         5.7953, -9.6696, 2.07,26500,"Orion"],         // 59 κ Ori (doublon pour constellation)
   ["Rigil Kent.",  14.6601,-60.8330, 2.30, 4865,"Centaure"],      // 60 α Cen  14h39m36s -60°50'00"
   ["Graffias",     16.0904,-19.8057, 2.62,17000,"Scorpion"],      // 61 β Sco  16h05m26s -19°48'20"
   ["Dschubba",     16.0054,-22.6217, 2.32,27400,"Scorpion"],      // 62 δ Sco  16h00m20s -22°37'18"
@@ -2821,16 +2789,9 @@ const SD = [
   ["Ain",           4.4771, 19.1806, 3.53, 4950,"Taureau"],      // 124 ε Tau  04h28m37s +19°10'50"  Hyades
   ["Prima Hyadum",  4.3289, 15.6278, 3.65, 4900,"Taureau"],      // 125 γ Tau  04h19m47s +15°37'40"  Hyades
   ["Zeta Tau",      5.6272, 21.1428, 2.97,19000,"Taureau"],      // 126 ζ Tau  05h37m39s +21°08'33"  corne sud
-  ["Tianguan",      5.4438, 21.1422, 3.00,18000,"Taureau"],      // 127 ζ Tau = Tianguan 05h26m18s (même que Zeta Tau — alias)
+  ["Tianguan",      5.4372, 21.1439, 3.00,18000,"Taureau"],      // 127 ζ Tau  05h26m14s +21°08'38"
   ["Chamukuy",      4.4292, 15.9617, 3.84, 5300,"Taureau"],      // 128 θ2 Tau 04h25m45s +15°57'42"  Hyades
-  // ── Les vraies cibles du jeu (indices 129-131) ──
-  ["Ain",           4.4771, 19.1806, 3.53, 4950,"Taureau"],      // 129 doublon Ain
-  ["Prima H.",      4.3289, 15.6278, 3.65, 4900,"Taureau"],      // 130
-  ["Zeta Tau b",    5.6272, 21.1428, 2.97,19000,"Taureau"],      // 131
-  ["Tianguan",      5.4372, 21.1439, 3.00,18000,"Taureau"],      // 132 ζ Tau  05h26m14s +21°08'38"
-  ["Tianguan",      5.4372, 21.1439, 3.00,18000,"Taureau"],      // 133 ζ Tau CIBLE — 05h26m14s +21°08'38"
-  ["Chamukuy b",    4.4292, 15.9617, 3.84, 5300,"Taureau"],      // 134
-  ["119 Tauri",     5.5370, 18.5942, 4.33, 3800,"Taureau"],      // 135 CE Tau  05h32m12s +18°35'39" CIBLE
+  ["119 Tauri",     5.5370, 18.5942, 4.33, 3800,"Taureau"],      // 129 CE Tau  05h32m12s +18°35'39"
 ];
 
 // ── 3 étoiles cibles du jeu : Vega, Andromède, Cassiopée ──
@@ -3336,12 +3297,10 @@ if (window.CuriosityBridge) {
   window.CuriosityBridge.resetTaurusWarp = function(){
     warpTriggered = false;
     tripleLinkStart = null;
-    const fadeDiv = document.getElementById('warp-fade');
-    if (fadeDiv) fadeDiv.style.opacity = '0';
-    warpOverlay.style.display = 'none';
   };
 }
-const TRIPLE_LINK_DURATION = 2000;
+// Durée du faisceau lumineux unique reliant les 3 étoiles
+const TRIPLE_LINK_DURATION = 5000;
 function checkTaurusComplete(){
   if(warpTriggered) return;
   const allFound = TAURUS_INDICES.every(i => state.selected.has(i));
@@ -3351,9 +3310,7 @@ function checkTaurusComplete(){
   if(exactMatch){
     warpTriggered = true;
     tripleLinkStart = Date.now();
-    if(window.CuriosityBridge) window.CuriosityBridge.onTaurusComplete();
-    startTripleLinkFade();
-    setTimeout(()=>{ startWarpTransition(); }, TRIPLE_LINK_DURATION + 300);
+    setTimeout(()=>{ if(window.CuriosityBridge) window.CuriosityBridge.onTaurusComplete(); }, TRIPLE_LINK_DURATION + 300);
   }
   // Signal visuel si toutes les cibles sont là + extras
   updateGlowOverlay(foundPlusExtras);
@@ -3398,17 +3355,18 @@ document.addEventListener('fullscreenchange',()=>{
 });
 
 // ═══════════════════════════════════════════════════════════════════
-//  BOUTON QUITTER
+//  BOUTON RETOUR
 // ═══════════════════════════════════════════════════════════════════
-document.getElementById('btn-quit').addEventListener('click',()=>{
+document.getElementById('sn-back-btn').addEventListener('click',()=>{
   if(isFullscreen()) exitFullscreen();
   if(window.CuriosityBridge) window.CuriosityBridge.closeStarNav();
   else showQuitScreen();
 });
 
-// Bouton MESSAGE — accès direct au message de succès de l'énigme III
+// Bouton MESSAGE — accès direct à la page de consignes de l'énigme III
 document.getElementById('btn-message').addEventListener('click',()=>{
-  showSuccessPage();
+  closeStarNav();
+  setTimeout(()=>{ showPage('pageEnigma3'); }, 600);
 });
 updateMessageButton();
 
@@ -3416,7 +3374,6 @@ function showQuitScreen(){
   const overlay=document.createElement('div');
   overlay.style.cssText='position:fixed;inset:0;background:rgba(0,1,12,0.97);z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;font-family:\'Exo 2\',sans-serif;';
   overlay.innerHTML=`
-    <div style="font-family:\'Orbitron\',sans-serif;font-size:13px;letter-spacing:5px;color:#c8a84b;opacity:.8">CARTE CÉLESTE</div>
     <div style="font-size:9px;letter-spacing:3px;color:rgba(100,150,220,0.5)">SESSION TERMINÉE</div>
     <button id="btn-resume" style="margin-top:16px;background:rgba(4,10,22,0.9);border:1px solid rgba(58,123,213,0.4);color:#7aabdc;font-family:\'Exo 2\',sans-serif;font-size:10px;letter-spacing:2px;padding:10px 20px;cursor:pointer;border-radius:2px;">↩ REPRENDRE</button>
   `;
@@ -3479,325 +3436,6 @@ function updateAdminUI(){
 document.getElementById('btn-clear').addEventListener('click',()=>{
   state.selected.clear(); saveSelected(); updatePanel(); draw();
   updateGlowOverlay(false);
-});
-
-// ═══════════════════════════════════════════════════════════════════
-//  ANIMATION WARP (voyage interstellaire)
-// ═══════════════════════════════════════════════════════════════════
-const warpOverlay=document.getElementById('warp-overlay');
-const warpCanvas=document.getElementById('warp-canvas');
-const wctx=warpCanvas.getContext('2d');
-let warpRAF=null;
-
-// Fondu progressif vers le noir, démarré en même temps que le trait
-// reliant les 3 étoiles, pour une transition continue vers le warp
-function startTripleLinkFade(){
-  let fadeDiv = document.getElementById('warp-fade');
-  if(!fadeDiv){
-    fadeDiv = document.createElement('div');
-    fadeDiv.id = 'warp-fade';
-    fadeDiv.style.cssText = 'position:fixed;inset:0;z-index:78;background:#00010c;opacity:0;pointer-events:none;';
-    document.body.appendChild(fadeDiv);
-  }
-  const fadeMs = TRIPLE_LINK_DURATION + 600;
-  fadeDiv.style.transition = `opacity ${fadeMs}ms ease-in`;
-  fadeDiv.style.opacity = '0';
-  fadeDiv.getBoundingClientRect(); // reflow
-  fadeDiv.style.opacity = '1';
-}
-
-function startWarpTransition(){
-  let fadeDiv = document.getElementById('warp-fade');
-  if(!fadeDiv){
-    fadeDiv = document.createElement('div');
-    fadeDiv.id = 'warp-fade';
-    fadeDiv.style.cssText = 'position:fixed;inset:0;z-index:78;background:#00010c;opacity:1;pointer-events:none;';
-    document.body.appendChild(fadeDiv);
-  }
-  // L'écran est déjà fondu au noir grâce à startTripleLinkFade — on lance
-  // directement l'animation warp, qui démarre invisible et prend le relais.
-  _startWarpAnim();
-  setTimeout(()=>{
-    fadeDiv.style.transition = 'opacity 0.5s ease';
-    fadeDiv.style.opacity = '0';
-  }, 600);
-}
-
-function _startWarpAnim(){
-  warpCanvas.width=window.innerWidth; warpCanvas.height=window.innerHeight;
-  warpOverlay.style.display='block';
-  // 900 étoiles pour densité maximale
-  const stars=[];
-  for(let i=0;i<900;i++) stars.push({
-    x:(Math.random()-.5)*2.2, y:(Math.random()-.5)*2.2,
-    z:Math.random(), speed:Math.random()*.022+.003,
-    col: Math.random()<.12?[255,180,80]:Math.random()<.1?[140,200,255]:Math.random()<.05?[255,120,200]:[220,235,255],
-    size: Math.random()<.1 ? 2.5 : 1   // quelques étoiles géantes
-  });
-  const WW=warpCanvas.width, WH=warpCanvas.height, CX=WW/2, CY=WH/2;
-  const DURATION=12000;
-  const start=Date.now();
-  // Enregistrer état initial z pour le retour
-  const initZ=stars.map(s=>s.z);
-
-  let nebAngle=0;
-  function frame(){
-    const elapsed=Date.now()-start;
-    const t=Math.min(elapsed/DURATION,1);
-    // Accélération en 3 phases : montée lente (0-40%), accélération (40-85%), flash (85-100%)
-    const ease = t<.4 ? t*t*6.25 : t<.85 ? 1-(1-(t-.4)/.45)*(1-(t-.4)/.45)*.3 : 1;
-    const speedFactor = 0.5 + ease*55;
-    const alpha = t<.12?t/.12 : t>.92?(1-t)/.08 : 1; // démarrage doux sur 12%
-    nebAngle += 0.008;
-
-    // Traîne motion blur — opacité variable selon phase
-    wctx.fillStyle=`rgba(0,1,16,${t<.3?.65:t<.7?.82:.94})`;
-    wctx.fillRect(0,0,WW,WH);
-
-    // Nébuleuses colorées rotatives (phase centrale)
-    if(t>.1&&t<.88){
-      const nebA=(t-.1<.2?(t-.1)/.2:t>.7?(1-(t-.7)/.18):1)*0.06*alpha;
-      const nebColors=[[80,30,160],[20,80,200],[160,40,80],[30,140,120]];
-      nebColors.forEach((col,ni)=>{
-        const angle=nebAngle+ni*Math.PI/2;
-        const dist=Math.min(WW,WH)*0.28*(1+Math.sin(t*Math.PI)*.3);
-        const nx=CX+Math.cos(angle)*dist;
-        const ny=CY+Math.sin(angle)*dist;
-        const nr=Math.min(WW,WH)*(0.25+t*.15);
-        const ng=wctx.createRadialGradient(nx,ny,0,nx,ny,nr);
-        ng.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},${nebA*1.5})`);
-        ng.addColorStop(.5,`rgba(${col[0]},${col[1]},${col[2]},${nebA*.5})`);
-        ng.addColorStop(1,'rgba(0,0,0,0)');
-        wctx.beginPath(); wctx.arc(nx,ny,nr,0,Math.PI*2);
-        wctx.fillStyle=ng; wctx.fill();
-      });
-    }
-
-    // Halo central qui pulse et grossit
-    if(t>.15){
-      const hA=Math.min(1,(t-.15)/.6)*.18*alpha;
-      const hR=Math.min(WW,WH)*(0.15+ease*.55);
-      const pulse=1+.06*Math.sin(elapsed*.003);
-      const hg=wctx.createRadialGradient(CX,CY,0,CX,CY,hR*pulse);
-      hg.addColorStop(0,`rgba(120,80,255,${hA*2})`);
-      hg.addColorStop(.3,`rgba(60,40,180,${hA})`);
-      hg.addColorStop(.7,`rgba(20,10,80,${hA*.4})`);
-      hg.addColorStop(1,'rgba(0,0,0,0)');
-      wctx.beginPath(); wctx.arc(CX,CY,hR*pulse,0,Math.PI*2);
-      wctx.fillStyle=hg; wctx.fill();
-    }
-
-    // Étoiles filantes avec épaisseur variable
-    stars.forEach(s=>{
-      s.z-=s.speed*speedFactor*.0167;
-      if(s.z<=0.001) s.z=1;
-      const px=CX+s.x*(1/s.z)*WW*.45;
-      const py=CY+s.y*(1/s.z)*WH*.45;
-      const prevZ=Math.min(1,s.z+s.speed*speedFactor*.0167);
-      const ppx=CX+s.x*(1/prevZ)*WW*.45;
-      const ppy=CY+s.y*(1/prevZ)*WH*.45;
-      const ddx=px-ppx, ddy=py-ppy;
-      if(Math.abs(ddx)<0.05&&Math.abs(ddy)<0.05) return;
-      if(px<-80||px>WW+80||py<-80||py>WH+80) return;
-      const bright=Math.min(1,(1-s.z)*2)*alpha;
-      const lw=Math.max(.3,(1-s.z)*3.5*(s.size||1)*Math.min(1,speedFactor/20));
-      const grad=wctx.createLinearGradient(ppx,ppy,px,py);
-      grad.addColorStop(0,`rgba(${s.col[0]},${s.col[1]},${s.col[2]},0)`);
-      grad.addColorStop(1,`rgba(${s.col[0]},${s.col[1]},${s.col[2]},${bright})`);
-      wctx.strokeStyle=grad; wctx.lineWidth=lw;
-      wctx.beginPath(); wctx.moveTo(ppx,ppy); wctx.lineTo(px,py); wctx.stroke();
-    });
-
-    // Anneaux de distorsion multiples
-    if(t>.25&&t<.88){
-      [0,.15,.3].forEach((offset,ri)=>{
-        const rt=((t-.25+offset)/.63)%1;
-        if(rt<=0||rt>=1) return;
-        const rR=rt*Math.max(WW,WH)*0.9;
-        const rA=(1-rt)*0.35*(ri===0?1:.6)*alpha;
-        const rColors=[[140,180,255],[180,140,255],[100,200,255]];
-        const rc=rColors[ri];
-        wctx.beginPath(); wctx.arc(CX,CY,rR,0,Math.PI*2);
-        wctx.strokeStyle=`rgba(${rc[0]},${rc[1]},${rc[2]},${rA})`;
-        wctx.lineWidth=1.5+rt*3; wctx.stroke();
-      });
-    }
-
-    // Éclair central ponctuel à mi-parcours
-    if(t>.48&&t<.54){
-      const flashT=(t-.48)/.06;
-      const fA=flashT<.5?flashT/.5:(1-flashT)/.5;
-      wctx.fillStyle=`rgba(200,220,255,${fA*.4})`;
-      wctx.fillRect(0,0,WW,WH);
-    }
-
-    // Flash final
-    if(t>.9){
-      const flashA=(t-.9)/.1;
-      wctx.fillStyle=`rgba(235,245,255,${flashA})`;
-      wctx.fillRect(0,0,WW,WH);
-    }
-
-    if(t<1){ warpRAF=requestAnimationFrame(frame); }
-    else { showSuccessPage(); }
-  }
-  warpRAF=requestAnimationFrame(frame);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  PAGE SUCCÈS
-// ═══════════════════════════════════════════════════════════════════
-function showSuccessPage(){
-  warpTriggered = false;
-  warpOverlay.style.display='none';
-  if(warpRAF){ cancelAnimationFrame(warpRAF); warpRAF=null; }
-  const page=document.getElementById('success-page');
-  page.style.display='flex';
-  // Un seul bouton "retour" doit être visible — masquer celui de la carte des étoiles
-  const snBack = document.getElementById('sn-back-btn');
-  if (snBack) snBack.style.display = 'none';
-  drawBgStars();
-  drawTaurusConstellation();
-  setTimeout(()=>{ document.getElementById('success-content').classList.add('visible'); },200);
-}
-
-// Fond étoilé animé page succès
-function drawBgStars(){
-  const c=document.getElementById('bg-stars-canvas');
-  c.width=window.innerWidth; c.height=window.innerHeight;
-  const x=c.getContext('2d');
-  const bgs=[];
-  for(let i=0;i<300;i++) bgs.push({px:Math.random()*c.width,py:Math.random()*c.height,r:Math.random()*.9+.1,a:Math.random()*.5+.05,phase:Math.random()*Math.PI*2});
-  let af=0;
-  function loop(){
-    x.fillStyle='#00010c'; x.fillRect(0,0,c.width,c.height);
-    bgs.forEach(s=>{
-      const tw=s.a*(1+.2*Math.sin(af*.03+s.phase));
-      x.beginPath(); x.arc(s.px,s.py,s.r,0,Math.PI*2);
-      x.fillStyle=`rgba(200,220,255,${tw})`; x.fill();
-    });
-    af++; requestAnimationFrame(loop);
-  }
-  loop();
-}
-
-// Dessin constellation Taureau — plein canvas, grande taille
-function drawTaurusConstellation(){
-  const tc=document.getElementById('taurus-canvas');
-  // Dimensionner le canvas à la taille réelle de l'élément
-  // Taille cohérente avec le CSS (360x240 ou 80vw x 28vh)
-  tc.width=Math.min(360, window.innerWidth*0.8);
-  tc.height=Math.min(240, window.innerHeight*0.28);
-  const tx=tc.getContext('2d');
-  const TW=tc.width, TH=tc.height;
-
-  const tauStars=TAURUS_INDICES.map(i=>SD[i]);
-  const ras=tauStars.map(s=>s[1]), decs=tauStars.map(s=>s[2]);
-  const minRA=Math.min(...ras), maxRA=Math.max(...ras);
-  const minDEC=Math.min(...decs), maxDEC=Math.max(...decs);
-  const pad=Math.min(TW,TH)*0.22; // marge généreuse pour les noms
-  function proj(ra,dec){
-    const x=pad+(1-(ra-minRA)/(maxRA-minRA))*(TW-pad*2);
-    const y=pad+(1-(dec-minDEC)/(maxDEC-minDEC))*(TH-pad*2);
-    return {x,y};
-  }
-
-  // Fond
-  tx.fillStyle='rgba(0,1,14,0)'; tx.fillRect(0,0,TW,TH);
-
-  // Étoiles de fond fixes (seed déterministe)
-  const bgRng=(function(){let s=55555;return()=>{s^=s<<13;s^=s>>17;s^=s<<5;return(s>>>0)/4294967296};})();
-  for(let i=0;i<200;i++){
-    const bx=bgRng()*TW, by=bgRng()*TH, br=bgRng()*.6+.1, ba=bgRng()*.35+.04;
-    tx.beginPath(); tx.arc(bx,by,br,0,Math.PI*2);
-    tx.fillStyle=`rgba(180,205,245,${ba})`; tx.fill();
-  }
-  // Sauvegarder le fond
-  const bgData=tx.getImageData(0,0,TW,TH);
-
-  // Animation progressive des lignes
-  let lineProgress=0;
-  const totalLines=TAURUS_LINKS.length;
-  let animAF=0;
-
-  function animateLines(){
-    lineProgress++;
-    // Restaurer fond
-    tx.putImageData(bgData,0,0);
-
-    // Lignes déjà tracées — avec glow
-    TAURUS_LINKS.slice(0,lineProgress).forEach(([ai,bi])=>{
-      const pa=proj(SD[ai][1],SD[ai][2]);
-      const pb=proj(SD[bi][1],SD[bi][2]);
-      // Glow large
-      tx.shadowColor='rgba(200,168,75,0.6)';
-      tx.shadowBlur=18;
-      tx.strokeStyle='rgba(200,168,75,0.5)'; tx.lineWidth=2.5;
-      tx.setLineDash([]);
-      tx.beginPath(); tx.moveTo(pa.x,pa.y); tx.lineTo(pb.x,pb.y); tx.stroke();
-      // Ligne fine brillante par-dessus
-      tx.shadowBlur=6;
-      tx.strokeStyle='rgba(255,230,140,0.85)'; tx.lineWidth=1;
-      tx.beginPath(); tx.moveTo(pa.x,pa.y); tx.lineTo(pb.x,pb.y); tx.stroke();
-      tx.shadowBlur=0;
-      tx.setLineDash([]);
-    });
-
-    // Étoiles (toujours visibles)
-    TAURUS_INDICES.forEach(i=>{
-      const [name,ra,dec,mag,temp]=SD[i];
-      const p=proj(ra,dec);
-      const rgb=starRGB(temp);
-      const r=Math.max(4, 12-mag*1.8); // grande taille
-      // Grand halo
-      tx.shadowColor=`rgba(${rgb[0]},${rgb[1]},${rgb[2]},0.6)`;
-      tx.shadowBlur=r*3;
-      const g=tx.createRadialGradient(p.x,p.y,0,p.x,p.y,r*3.5);
-      g.addColorStop(0,rgbStr(rgb,.9)); g.addColorStop(.4,rgbStr(rgb,.35)); g.addColorStop(1,rgbStr(rgb,0));
-      tx.beginPath(); tx.arc(p.x,p.y,r*3.5,0,Math.PI*2); tx.fillStyle=g; tx.fill();
-      // Corps
-      tx.shadowBlur=r*2;
-      tx.beginPath(); tx.arc(p.x,p.y,r,0,Math.PI*2); tx.fillStyle=rgbStr(rgb,1); tx.fill();
-      tx.shadowBlur=0;
-      // Nom — toujours affiché, taille adaptée au canvas
-      tx.shadowBlur=0;
-      const fontSize=Math.max(10,Math.min(14,TW/26));
-      tx.font=`${fontSize}px 'Exo 2'`;
-      tx.fillStyle='rgba(230,200,100,0.95)'; tx.textAlign='left';
-      // Décaler vers le bas si proche du bord supérieur
-      const labelY = p.y < TH*0.15 ? p.y+r+fontSize+2 : p.y+5;
-      tx.fillText(name, p.x+r+6, labelY);
-    });
-
-    if(lineProgress<totalLines) setTimeout(animateLines,280);
-  }
-  setTimeout(animateLines,500);
-}
-
-// ═══════════════════════════════════════════════════════════════════
-//  RETOUR DEPUIS PAGE SUCCÈS — vers la carte des étoiles
-// ═══════════════════════════════════════════════════════════════════
-document.getElementById('btn-back').addEventListener('click',()=>{
-  const page=document.getElementById('success-page');
-  // Fondu sortant sur 2 secondes via CSS transition
-  page.style.transition='opacity 2s ease';
-  page.style.opacity='0';
-  setTimeout(()=>{
-    page.style.display='none';
-    page.style.opacity='';
-    page.style.transition='';
-    document.getElementById('success-content').classList.remove('visible');
-    // Nettoyer le fondu warp éventuel pour révéler la carte
-    const fadeDiv = document.getElementById('warp-fade');
-    if (fadeDiv) fadeDiv.style.opacity = '0';
-    warpOverlay.style.display = 'none';
-    // S'assurer que la carte des étoiles est visible
-    const snOverlay = document.getElementById('snOverlay');
-    if (snOverlay) snOverlay.classList.add('open');
-    // Réafficher le bouton retour de la carte des étoiles
-    const snBack = document.getElementById('sn-back-btn');
-    if (snBack) snBack.style.display = '';
-  }, 2000);
 });
 
 // ═══════════════════════════════════════════════════════════════════
@@ -3896,6 +3534,7 @@ window.doReset = function() {
     scanBtn.textContent = 'Lancer le transfert temporel';
     scanBtn.style.pointerEvents = 'auto';
     scanBtn.style.opacity = '1';
+    scanBtn.onclick = startScan;
   }
   // Masquer le bouton Radar
   var radarBtn = document.getElementById('radarBtn');
@@ -4077,7 +3716,7 @@ function drawRadar() {
   
   // Cercles concentriques multiples (5, 10, 15, 20, 25, 30m)
   var distances = [5, 10, 15, 20, 25, 30];
-  var maxDist = 30000;
+  var maxDist = 30;
   
   for (var d = 0; d < distances.length; d++) {
     var meters = distances[d];
@@ -4179,10 +3818,12 @@ function drawGPSPoint(cx, cy, radius, color) {
   
   var dist = getDistance(radarState.currentLat, radarState.currentLng,
                          radarState.targetLat, radarState.targetLng);
-  
-  var maxDist = 30000;
-  var displayDist = Math.min(radius * (dist / maxDist), radius * 0.9);
-  
+
+  // < 30m : la cible est positionnée à l'intérieur du cercle, proportionnellement à la distance.
+  // >= 30m : la cible reste affichée sur le bord du cercle (hors de portée).
+  var maxDist = 30;
+  var displayDist = dist >= maxDist ? radius * 0.95 : radius * 0.9 * (dist / maxDist);
+
   var angle = bearing * Math.PI / 180;
   var x = cx + displayDist * Math.sin(angle);
   var y = cy - displayDist * Math.cos(angle);
@@ -4247,17 +3888,11 @@ function createStarParticle() {
 }
 
 function updateAndDrawStarParticles(ctx, distance) {
-  // Distance minimum = 30m
-  if (distance === null || distance >= 30000) {
-    starParticles = [];
-    return;
-  }
-  
-  // Intensité basée sur distance
-  var closeness = 1 - (distance / 30000);  // 0 à 1, 1 = très proche
-  var particleCount = Math.floor(closeness * 50 + 20);  // 20 à 70 particules
-  var speed = 1 + closeness * 5;  // 1x à 6x vitesse
-  var brightness = 0.5 + closeness * 0.5;  // 50% à 100% luminosité
+  // Intensité basée sur la proximité de la cible : 0 = loin (>= 30m), 1 = au contact (0m)
+  var closeness = (distance === null || distance >= 30) ? 0 : Math.max(0, 1 - distance / 30);
+  var particleCount = Math.floor(closeness * 50 + 12);  // 12 (loin, lent) à 62 (proche, rapide)
+  var speed = 0.4 + closeness * 5.6;  // 0.4x (lent, loin) à 6x (rapide, proche)
+  var brightness = 0.35 + closeness * 0.65;  // 35% à 100% luminosité
   
   // Ajouter nouvelles particules
   while (starParticles.length < particleCount) {
@@ -4298,7 +3933,7 @@ function updateDistanceDisplay() {
     return;
   }
   
-  // Distance précise (haversine, sans arrondi) — toujours en mètres, 10 décimales
+  // Distance précise (haversine) — toujours en mètres, 2 décimales
   var R = 6371000;
   var lat1 = radarState.currentLat, lng1 = radarState.currentLng;
   var lat2 = radarState.targetLat, lng2 = radarState.targetLng;
@@ -4310,7 +3945,7 @@ function updateDistanceDisplay() {
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
   var dist = R * c;
   
-  document.getElementById('radarDistance').textContent = dist.toFixed(10) + ' m';
+  document.getElementById('radarDistance').textContent = dist.toFixed(2) + ' m';
 }
 
 function startRadarAnimation() {
