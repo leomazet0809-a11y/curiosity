@@ -1734,8 +1734,8 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
       <div class="fdl"></div>
     </div>
     <div class="final-msg" id="finalMsg" style="font-family:'Inter',sans-serif;font-size:14px;line-height:1.9;color:#d0e8f4;letter-spacing:0.02em"></div>
-        <div id="finalControls" style="display:none;margin-top:20px;display:flex;gap:12px;justify-content:center">
-      <button id="radarBtn" onclick="openRadar()" style="flex:1;max-width:100px;padding:12px;background:rgba(90,190,230,0.2);border:1px solid #3a80b0;border-radius:6px;color:#9ac8e8;font-size:11px;letter-spacing:1px;cursor:pointer">📡 RADAR</button>
+        <div id="finalControls" style="display:none;margin-top:20px;gap:12px;justify-content:center">
+      <button id="radarBtn" onclick="openRadar()" style="flex:1;max-width:200px;padding:12px;background:rgba(90,190,230,0.2);border:1px solid #3a80b0;border-radius:6px;color:#9ac8e8;font-size:11px;letter-spacing:1px;cursor:pointer">📡 RADAR</button>
     </div>
     <div class="final-footer" style="font-family:'Orbitron',sans-serif;letter-spacing:0.22em;font-size:7px;font-weight:400">CURIOSITY · TEMPORAL BRIDGE v2082.1</div>
   </div>
@@ -2328,7 +2328,10 @@ window.CuriosityBridge = {
     var btn3 = document.getElementById('openStarNavBtn');
     if (btn3) { btn3.style.opacity='1'; btn3.style.pointerEvents='auto'; }
     closeStarNav();
-    setTimeout(function(){ showPage('pageEnigma3'); }, 600);
+    setTimeout(function(){
+      showPage('pageEnigma3');
+      launchSuccessAnim(2, function() {});
+    }, 600);
   }
 };
 
@@ -2611,6 +2614,23 @@ function showFinal() {
     }
   }
   setTimeout(typeNormal, 400);
+}
+
+// Affiche directement la page "message reçu" (sans animation de frappe),
+// utilisée quand le transfert a déjà été effectué une première fois.
+function showFinalInstant() {
+  var el = document.getElementById('finalMsg');
+  el.innerHTML = '';
+  var normalSpan = document.createElement('span');
+  var morseSpan = document.createElement('span');
+  morseSpan.className = 'final-msg-morse';
+  normalSpan.textContent = FINAL_MESSAGE_PREFIX;
+  morseSpan.textContent = FINAL_MESSAGE_MORSE;
+  el.appendChild(normalSpan);
+  el.appendChild(morseSpan);
+  startFinalAnimations();
+  var controls = document.getElementById('finalControls');
+  if (controls) controls.style.display = 'flex';
 }
 
 window.addEventListener('beforeunload', saveState);
@@ -3479,7 +3499,10 @@ function initTransferState() {
     scanBtn.textContent = '✉ Message reçu';
     scanBtn.style.pointerEvents = 'auto';
     scanBtn.style.opacity = '1';
-    scanBtn.onclick = function() { showPage('pageFinal'); };
+    scanBtn.onclick = function() {
+      showPage('pageFinal');
+      showFinalInstant();
+    };
   }
 }
 
@@ -3785,14 +3808,16 @@ function drawRadar() {
   radarState.ctx.stroke();
   radarState.ctx.globalAlpha = 1;
   
-  // Afficher la cible GPS si définie
+  // Fin de la rotation (le cadran/grille tourne, le reste est en repère écran fixe)
+  radarState.ctx.restore();
+
+  // CIBLE GPS (dessinée APRÈS restore, en repère écran fixe : sa position
+  // représente sa direction réelle par rapport au pointeur fixe, qui lui
+  // indique l'orientation du téléphone)
   if (radarState.targetLat && radarState.currentLat && radarState.currentLng) {
     drawGPSPoint(cx, cy, radius, primaryColor);
   }
-  
-  // Fin de la rotation
-  radarState.ctx.restore();
-  
+
   // TRIANGLE POINTEUR (dessiné APRÈS restore, donc ne tourne pas)
   if (radarState.targetLat && radarState.currentLat) {
     drawTargetTriangle(cx, cy, primaryColor);
