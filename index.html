@@ -3684,7 +3684,16 @@ function initRadarCanvas() {
 }
 
 function updateRadarOrientation(event) {
-  radarState.currentAlpha = event.alpha || 0;
+  // event.alpha suit la convention DeviceOrientation (sens inverse d'un cap
+  // compas classique) ; webkitCompassHeading (iOS) est déjà un cap compas
+  // correct (0°=Nord, augmente vers l'Est/droite).
+  var heading;
+  if (typeof event.webkitCompassHeading === 'number') {
+    heading = event.webkitCompassHeading;
+  } else {
+    heading = 360 - (event.alpha || 0);
+  }
+  radarState.currentAlpha = (heading + 360) % 360;
 }
 
 function drawRadar() {
@@ -3717,7 +3726,7 @@ function drawRadar() {
   // APPLIQUER ROTATION À TOUTE LA CARTE (sauf le triangle fixe)
   radarState.ctx.save();
   radarState.ctx.translate(cx, cy);
-  radarState.ctx.rotate(radarState.currentAlpha * Math.PI / 180);
+  radarState.ctx.rotate(-radarState.currentAlpha * Math.PI / 180);
   radarState.ctx.translate(-cx, -cy);
   
   // Grille fine (quadrillage)
@@ -3786,7 +3795,7 @@ function drawRadar() {
       // On contre-tourne le texte pour qu'il reste à l'endroit malgré la rotation de la carte
       radarState.ctx.save();
       radarState.ctx.translate(lx, ly);
-      radarState.ctx.rotate(-radarState.currentAlpha * Math.PI / 180);
+      radarState.ctx.rotate(radarState.currentAlpha * Math.PI / 180);
       radarState.ctx.fillStyle = primaryColor;
       radarState.ctx.font = 'bold 10px monospace';
       radarState.ctx.textAlign = 'center';
