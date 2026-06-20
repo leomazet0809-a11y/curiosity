@@ -1326,7 +1326,7 @@ Enfin, recherchez l'objet dans l'espace.
       </div>
       <div class="param-card" id="card3" onclick="openEnigma(3)">
         <div class="param-num" id="num3"><i>III</i></div>
-        <div class="param-title">Signature récepteur</div>
+        <div class="param-title">Signatures récepteurs</div>
         <div class="param-check">&#10022;</div>
         <div class="param-status" id="st3">EN ATTENTE</div>
         <div class="param-arrow" id="arr3">&#8595;</div>
@@ -1402,7 +1402,7 @@ Enfin, recherchez l'objet dans l'espace.
     <div id="tetraSection" style="display:none;">
       <button class="tetra-btn" id="tetraOpenBtn" onclick="openTetraGame()" aria-label="Ouvrir le jeu tétraèdre">
         <svg viewBox="0 0 100 100" width="34" height="34"><polygon points="50,8 90,82 10,82" fill="none" stroke="currentColor" stroke-width="4"/><polygon points="50,8 50,82 10,82" fill="none" stroke="currentColor" stroke-width="2.2" opacity="0.6"/></svg>
-        <span>ACCÉDER AU TÉTRAÈDRE</span>
+        <span>VECTEUR D'ANCRAGE</span>
       </button>
     </div>
     <div id="answerSection">
@@ -1995,14 +1995,16 @@ Enfin, recherchez l'objet dans l'espace.
 <script>
 /* ══ CONFIGURATION ══ */
 var ENIGMAS = [
-  { title:"ÉNIGME I - Mensonges & vérités",   badge:"PARAMÈTRE I · VECTEUR D'ANCRAGE",      text:`Le vecteur d'ancrage est un tetraèdre.
+  { title:"I) VECTEUR D'ANCRAGE",   badge:"PARAMÈTRE I",      text:`Le vecteur d'ancrage est un tetraèdre.
 
 Il permet d'ancrer des points de références temporels.
 
 Pour l'activer, toutes ses faces doivent être déverouillées.`, answer:"1", sub:"Vecteur d'ancrage synchronisé." },
-  { title:"ÉNIGME II",  badge:"PARAMÈTRE II · CLÉ DE RÉSONANCE",        text:`Dans les archives, nous avons retrouvé une méthode utilisée par les messagers de guerre.
+  { title:"CLÉ DE RÉSONNANCE",  badge:"PARAMÈTRE II",        text:`Dans les archives, nous avons retrouvé une méthode utilisée par les messagers de guerre.
+  
 On raconte qu’une civilisation disparue il y a 2000 ans utilisait un système de cryptage simple mais redoutablement efficace.`, cipher:"LLL YLLL YLL Y LL LA", answer:"387529", sub:"Clé de résonance calibrée." },
-  { title:"ÉNIGME III", badge:"PARAMÈTRE III · SIGNATURE DES RÉCEPTEURS", text:`Les récepteurs permettent d'établir la connexion entre deux époques.
+  { title:"SIGNATURES DES RÉCEPTEURS", badge:"PARAMÈTRE III", text:`Les récepteurs permettent d'établir la connexion entre deux époques.
+  
 Trois reines portent en elles un récepteur.
 
 Vaniteuse reine enchaînée à son trône,
