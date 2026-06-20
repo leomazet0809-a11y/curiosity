@@ -1134,8 +1134,8 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 #coords{font-size:9px;letter-spacing:1px;color:rgba(100,150,220,0.6);text-align:right}
 
 /* ═══ BOUTONS HUD ═══ */
-.hud-btn{pointer-events:all;background:rgba(4,10,22,0.82);border:1px solid rgba(58,123,213,0.35);color:#7aabdc;font-family: 'Exo 2',sans-serif;font-size:9px;letter-spacing:1.5px;padding:5px 10px;cursor:pointer;border-radius:2px;backdrop-filter:blur(8px);transition:all .15s;white-space:nowrap}
-.hud-btn:hover{background:rgba(58,123,213,0.2);color:#c8d8f0;border-color:rgba(58,123,213,0.7)}
+.hud-btn{pointer-events:all;background:#101824;border:1px solid #20384c;color:#9cd2ec;font-family: 'Exo 2',sans-serif;font-size:9px;letter-spacing:1.5px;padding:5px 10px;cursor:pointer;border-radius:7px;backdrop-filter:blur(8px);transition:all .15s;white-space:nowrap}
+.hud-btn:hover{background:#16263a;color:#d4f0ff;border-color:#3a6a88}
 .hud-btn.danger{border-color:rgba(220,80,80,0.4);color:#e08080}
 .hud-btn.danger:hover{background:rgba(220,80,80,0.2);color:#ffb0b0;border-color:rgba(220,80,80,0.8)}
 .hud-btn.admin-on{border-color:rgba(255,200,50,0.6);color:#ffc832}
@@ -1352,7 +1352,7 @@ body:has(#snOverlay.open)::-webkit-scrollbar { display: none; }
 <b>Bienvenue sur Curiosity.</b>
 <br>
 <br>
-Cet appareil vous permet de transférer la matière entre deux réalités temporelles.
+Cet appareil vous permet de transférer la matière entre deux moments distincts de la réalité temporelle.
 <br>
 <br>
 Pour lancer le transfert temporel veuillez activer 3 paramètres :
@@ -1489,7 +1489,6 @@ Enfin, recherchez l'objet dans l'espace.
     </div>
     <div id="tetraSection" style="display:none;">
       <button class="tetra-btn" id="tetraOpenBtn" onclick="openTetraGame()" aria-label="Ouvrir le jeu tétraèdre">
-        <svg viewBox="0 0 100 100" width="34" height="34"><polygon points="50,8 90,82 10,82" fill="none" stroke="currentColor" stroke-width="4"/><polygon points="50,8 50,82 10,82" fill="none" stroke="currentColor" stroke-width="2.2" opacity="0.6"/></svg>
         <span>VECTEUR D'ANCRAGE</span>
       </button>
     </div>
@@ -1732,7 +1731,7 @@ Enfin, recherchez l'objet dans l'espace.
     <button class="hud-btn" id="btn-fs" title="Plein écran" style="font-size:16px;padding:4px 8px">⛶</button>
   </div>
 </div>
-<div id="coords" style="position:fixed;top:42px;right:14px;font-size:9px;letter-spacing:1px;color:rgba(100,150,220,0.5);z-index:20;pointer-events:none;text-align:right"></div>
+<div id="coords" style="display:none;position:fixed;top:42px;right:14px;font-size:9px;letter-spacing:1px;color:rgba(100,150,220,0.5);z-index:20;pointer-events:none;text-align:right"></div>
 
 <!-- ZOOM / COMPASS -->
 <div id="zoom-ctrl">
@@ -2088,30 +2087,36 @@ var ENIGMAS = [
 Il permet d'ancrer des points de références temporels.
 
 Pour l'activer, toutes ses faces doivent être déverouillées.`, answer:"1", sub:"Vecteur d'ancrage synchronisé." },
-  { title:"CLÉ DE RÉSONNANCE",  badge:"PARAMÈTRE II",        text:`Dans les archives, nous avons retrouvé une méthode utilisée par les messagers de guerre.
+  { title:"II) CLÉ DE RÉSONNANCE",  badge:"PARAMÈTRE II",       text:`Dans les archives, nous avons retrouvé une méthode utilisée par les messagers de guerre.
   
 On raconte qu’une civilisation disparue il y a 2000 ans utilisait un système de cryptage simple mais redoutablement efficace.`, cipher:"LLL YLLL YLL Y LL LA", answer:"387529", sub:"Clé de résonance calibrée." },
-  { title:"SIGNATURES DES RÉCEPTEURS", badge:"PARAMÈTRE III", text:`Les récepteurs permettent d'établir la connexion entre deux époques.
-  
-Trois reines portent en elles un récepteur.
+  { title:"III) SIGNATURES RÉCEPTEURS", badge:"PARAMÈTRE III", text:`Les quatre récepteurs permettent d'établir la connexion entre deux temporalités.
 
-Vaniteuse reine enchaînée à son trône,
-Condamnée à tourner sans jamais se poser.
-Cinq étoiles dessinent sa couronne,
-Dans le ciel boréal, elle ne peut se cacher.
+Chaque récepteur se trouve sur une étoile differente.
 
-Enchaînée au rocher par son propre sang royal,
-Offerte en sacrifice aux fureurs de la mer.
-Un héros venu des cieux brisa son carcan,
-Trois étoiles tracent encore ses liens de fer.
+Première étoile :
+Une jeune géante brille d'un bleu pur et fier,
+Elle illumine l'été d'un éclat singulier,
+Cinquième des lueurs qui dominent le ciel :
+Elle est la clarté même, la beauté éternelle.
 
-La plus brillante tisserande du ciel d'été,
-Séparée de l'aimé par un fleuve de lumière.
-Une nuit par an les oiseaux font le pont,
-Et Lyra chante encore leur amour solitaire.
+Deuxième étoile :
+Une géante orange chauffe nos cœurs tremblants,
+Quatrième en brillance, elle règne sur les printemps,
+Sa douce teinte d'or nous rassure et nous guide :
+Elle veille, elle protège, nulle crainte ne la vide.
 
+Troisième étoile :
+La plus brillante de toutes vêtue de blanc pur,
+Elle nous frôle, plus proche que l'espoir qui dure,
+Système double de fidélité sans fin :
+Elle ne nous abandonne jamais, c'est son destin.
 
-Trouvez les reines. Vous trouverez les récepteurs.`, answer:"3", sub:"Signature des récepteurs confirmées." }
+Quatrième étoile :
+Au cœur du ciel du nord, elle ne bouge jamais,
+Lointaine super-géante qui fixe à jamais,
+Les navigateurs l'ont suivie depuis l'aube des temps :
+Elle est l'ancre immobile, l'étoile des passants.`, answer:"4", sub:"Signature des récepteurs confirmées." }
 ];
 /* ── Animations page finale ── */
 var finalAnimTimer = null;
@@ -2197,6 +2202,35 @@ var fpBusy = false;
 var errorTimer = null;
 
 /* ── Plein écran ── */
+function requestFullscreenSafe() {
+  var el = document.documentElement;
+  var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
+  if (isFs) return;
+  if (el.requestFullscreen) el.requestFullscreen().catch(function(){});
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+}
+(function() {
+  // Le plein écran auto ne peut être déclenché qu'après une interaction
+  // utilisateur (restriction des navigateurs) : on tente au chargement,
+  // puis on se rattrape à la toute première interaction sur la page verrou.
+  document.addEventListener('DOMContentLoaded', function() {
+    requestFullscreenSafe();
+  });
+  var lockFsArmed = true;
+  function armLockFullscreen() {
+    if (!lockFsArmed) return;
+    var lockPage = document.getElementById('pageLock');
+    if (lockPage && lockPage.classList.contains('active')) {
+      requestFullscreenSafe();
+    }
+    lockFsArmed = false;
+    document.removeEventListener('pointerdown', armLockFullscreen, true);
+    document.removeEventListener('keydown', armLockFullscreen, true);
+  }
+  document.addEventListener('pointerdown', armLockFullscreen, true);
+  document.addEventListener('keydown', armLockFullscreen, true);
+})();
 function toggleFullscreen() {
   var el = document.documentElement;
   var isFs = !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement);
@@ -2545,7 +2579,7 @@ window.addEventListener('message', function(ev) {
 
 // Clé de stockage partagée avec star-navigator
 var STAR_SEL_KEY = 'celeste_selected_v2';
-// Indices des 3 étoiles cibles dans star-navigator : Vega=3, Andromède=48, Cassiopée=51
+// Indices des 4 étoiles cibles dans star-navigator : Sirius=0, Arcturus=2, Vega=3, Polaris=42
 var TARGET_STARS = [3, 48, 51];
 
 var snInitialized = false;
@@ -3130,13 +3164,14 @@ const SD = [
   ["119 Tauri",     5.5370, 18.5942, 4.33, 3800,"Taureau"],      // 129 CE Tau  05h32m12s +18°35'39"
 ];
 
-// ── 3 étoiles cibles du jeu : Vega, Andromède, Cassiopée ──
-const TAURUS_INDICES = [3, 48, 51]; // Vega=3, Andromède=48, Cassiopée=51
+// ── 4 étoiles cibles du jeu : Sirius, Arcturus, Vega, Polaris ──
+const TAURUS_INDICES = [0, 2, 3, 42]; // Sirius=0, Arcturus=2, Vega=3, Polaris=42
 // Connexions pour dessin (page succès)
 const TAURUS_LINKS = [
-  [3, 48],    // Vega → Andromède
-  [48, 51],   // Andromède → Cassiopée
-  [3, 51],    // Vega → Cassiopée
+  [0, 2],     // Sirius → Arcturus
+  [2, 3],     // Arcturus → Vega
+  [3, 42],    // Vega → Polaris
+  [42, 0],    // Polaris → Sirius
 ];
 
 // ═══════════════════════════════════════════════════════════════════
@@ -3447,7 +3482,7 @@ function draw(){
     }
   });
 
-  // ── Liaison + rayonnement renforcé : Vega, Andromède, Cassiopée sélectionnées exactement ──
+  // ── Liaison + rayonnement renforcé : Sirius, Arcturus, Vega, Polaris sélectionnées exactement ──
   if(tripleLinkStart !== null){
     const elapsed = Date.now() - tripleLinkStart;
     const t = Math.min(1, elapsed / TRIPLE_LINK_DURATION);
@@ -3455,7 +3490,7 @@ function draw(){
       const mp=starPositions[i]; return mapToScreen(mp.x,mp.y);
     });
 
-    // Rayonnement renforcé sur les 3 étoiles
+    // Rayonnement renforcé sur les 4 étoiles
     const pulse = 1 + .35*Math.sin(animFrame*.12);
     targetPts.forEach(p=>{
       const hR = 26 * pulse * (0.5 + t*0.5);
@@ -3466,10 +3501,11 @@ function draw(){
       ctx.beginPath(); ctx.arc(p.x,p.y,hR,0,Math.PI*2); ctx.fillStyle=h; ctx.fill();
     });
 
-    // Trait blanc animé reliant les 3 étoiles (triangle), tracé progressivement sur 2s
-    const path=[targetPts[0],targetPts[1],targetPts[2],targetPts[0]];
+    // Trait blanc animé reliant les 4 étoiles (quadrilatère fermé), tracé progressivement sur 2s
+    const nPts = targetPts.length;
+    const path = targetPts.concat([targetPts[0]]);
     let totalLen=0; const segLens=[];
-    for(let s=0;s<3;s++){ const dx=path[s+1].x-path[s].x, dy=path[s+1].y-path[s].y; const l=Math.hypot(dx,dy); segLens.push(l); totalLen+=l; }
+    for(let s=0;s<nPts;s++){ const dx=path[s+1].x-path[s].x, dy=path[s+1].y-path[s].y; const l=Math.hypot(dx,dy); segLens.push(l); totalLen+=l; }
     let drawLen = totalLen * t;
     const twinkle = .75 + .25*Math.sin(animFrame*.18);
     ctx.save();
@@ -3478,7 +3514,7 @@ function draw(){
     ctx.shadowColor = 'rgba(255,255,255,0.95)';
     ctx.shadowBlur = 16 + 6*Math.sin(animFrame*.18);
     ctx.beginPath();
-    for(let s=0;s<3;s++){
+    for(let s=0;s<nPts;s++){
       if(drawLen<=0) break;
       const segLen=segLens[s];
       const segT=Math.min(1, drawLen/segLen);
@@ -3697,7 +3733,7 @@ if (window.CuriosityBridge) {
     tripleLinkStart = null;
   };
 }
-// Durée du faisceau lumineux unique reliant les 3 étoiles
+// Durée du faisceau lumineux unique reliant les 4 étoiles
 const TRIPLE_LINK_DURATION = 5000;
 function checkTaurusComplete(){
   if(warpTriggered) return;
